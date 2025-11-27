@@ -189,6 +189,9 @@ export const themeSettings = (mode) => {
                 fontFamily: ["Source Sans 3", "sans-serif"].join(","),
                 fontSize: 14,
             },                    
+        },
+        tooltip: {
+            color: "#626262"
         }
     };
 };
