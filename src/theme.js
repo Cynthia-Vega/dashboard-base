@@ -123,7 +123,7 @@ export const tokens = (mode) => ({
 
 // mui theme settings
 
-export const themeSettings = (mode) => {
+export const themeSettings = (mode, fontScale =1) => {
     const colors = tokens(mode);
 
     return {
@@ -164,30 +164,30 @@ export const themeSettings = (mode) => {
         },
         typography:{
             fontFamily: ["Source Sans 3", "sans-serif"].join(","),
-            fontSize: 12,
+            fontSize: 12*fontScale,
             h1:{
                 fontFamily: ["Source Sans 3", "sans-serif"].join(","),
-                fontSize: 40,
+                fontSize: 40 * fontScale,
             },
             h2:{
                 fontFamily: ["Source Sans 3", "sans-serif"].join(","),
-                fontSize: 32,
+                fontSize: 32 * fontScale,
             },
             h3:{
                 fontFamily: ["Source Sans 3", "sans-serif"].join(","),
-                fontSize: 24,
+                fontSize: 24 * fontScale,
             },    
             h4:{
                 fontFamily: ["Source Sans 3", "sans-serif"].join(","),
-                fontSize: 20,
+                fontSize: 20 * fontScale,
             },    
             h5:{
                 fontFamily: ["Source Sans 3", "sans-serif"].join(","),
-                fontSize: 16,
+                fontSize: 16 * fontScale,
             },    
             h6:{
                 fontFamily: ["Source Sans 3", "sans-serif"].join(","),
-                fontSize: 14,
+                fontSize: 14 * fontScale,
             },                    
         },
         tooltip: {
@@ -196,24 +196,35 @@ export const themeSettings = (mode) => {
     };
 };
 
+
+
+
 // context for color mode
 
 export const ColorModeContext = createContext({
     toggleColorMode: () => {}
 })
+export const FontSizeContext = createContext({
+    fontScale: 1,
+    setFontScale: () => {},
+});
 
 export const useMode =() => {
     const [mode, setMode] = useState("dark");
+    const [fontScale, setFontScale] = useState(1);
 
-    const colorMode = useMemo(
-        () => ({
+      const colorMode = useMemo(
+            () => ({
             toggleColorMode: () =>
-                setMode((prev) => (prev === "light" ? "dark" : "light")), 
-        }),
-        []
+                setMode((prev) => (prev === "light" ? "dark" : "light")),
+            }),
+            []
+        );
+
+    const theme = useMemo(
+        () => createTheme(themeSettings(mode, fontScale)),
+        [mode, fontScale]
     );
 
-    const theme = useMemo(() => createTheme(themeSettings(mode)), [mode])
-
-    return [theme, colorMode];
-}
+  return [theme, colorMode, { fontScale, setFontScale }];
+};
