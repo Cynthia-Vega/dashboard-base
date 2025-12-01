@@ -204,14 +204,10 @@ export const themeSettings = (mode, fontScale =1) => {
 export const ColorModeContext = createContext({
     toggleColorMode: () => {}
 })
-export const FontSizeContext = createContext({
-    fontScale: 1,
-    setFontScale: () => {},
-});
 
-export const useMode =() => {
+
+export const useMode =(fontScale = 1) => {
     const [mode, setMode] = useState("dark");
-    const [fontScale, setFontScale] = useState(1);
 
       const colorMode = useMemo(
             () => ({
@@ -226,5 +222,5 @@ export const useMode =() => {
         [mode, fontScale]
     );
 
-  return [theme, colorMode, { fontScale, setFontScale }];
+  return [theme, colorMode];
 };

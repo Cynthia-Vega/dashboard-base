@@ -1,6 +1,8 @@
-import { ColorModeContext, useMode, FontSizeContext } from "./theme";
+import { ColorModeContext, useMode} from "./theme";
+import { useState } from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
+
 import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import Dashboard from "./scenes/dashboard";
@@ -19,11 +21,12 @@ import Calendar from "./scenes/calendar";
 
 
 function App() {
-  const [theme, colorMode, fontSize] = useMode();
-  console.log("APP FONTSTATE:", fontSize); //
+  const [fontScale, setFontScale] = useState(1); 
+  const [theme, colorMode] = useMode(fontScale); 
+  console.log("APP fontScale:", fontScale);
+
   return (
     <ColorModeContext.Provider value={colorMode}>
-      <FontSizeContext.Provider value={{ fontSize }}>
         <ThemeProvider theme={theme}>
           
           <CssBaseline />
@@ -44,12 +47,11 @@ function App() {
                 <Route path="/geography" element={<Geography />} />
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/user" element={<User />} />
-                <Route path="/config" element={<Config />} />
+                <Route path="/config" element={<Config  fontScale={fontScale} setFontScale={setFontScale} />} />
               </Routes>
             </main>  
           </div>
           </ThemeProvider>
-        </FontSizeContext.Provider>
     </ColorModeContext.Provider>
   );
 }

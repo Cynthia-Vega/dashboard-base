@@ -1,23 +1,18 @@
 
 import { Box, Typography, Slider, useTheme } from "@mui/material";
 import { useContext } from "react";
-import { FontSizeContext, tokens } from "../../theme";
+import { tokens } from "../../theme";
 import Header from "../../components/Header";
 
 
-const Config = () => {
+const Config = ({fontScale, setFontScale }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
 
-    const ctx = useContext(FontSizeContext);
+    console.log("CONFIG fontScale:", fontScale);
 
-    
-    const fontScale =
-        ctx && typeof ctx.fontScale === "number" ? ctx.fontScale : 1;
-    const setFontScale =
-        ctx && typeof ctx.setFontScale === "function"
-        ? ctx.setFontScale
-        : () => {};
+    const value = typeof fontScale === "number" ? fontScale : 1;
+
 
     return (
         <Box p={3}>
@@ -31,15 +26,15 @@ const Config = () => {
             </Typography>
 
             <Slider
-                value={fontScale}
-                min={0.8}
-                max={1.4}
+                value={value}
+                min={0.5}
+                max={2}
                 step={0.1}
                 marks
                 valueLabelDisplay="auto"
-                onChange={(_, value) => {
-                    const v = Array.isArray(value) ? value[0] : value;
-                    setFontScale(v);
+                onChange={(_, v) => {
+                    const newValue = Array.isArray(v) ? v[0] : v;
+                    setFontScale(newValue);
                 }}
                 sx={{
                     color: colors.greenAccent[500], 
