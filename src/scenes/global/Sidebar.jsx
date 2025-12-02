@@ -40,6 +40,7 @@ const Sidebar = () => {
     const colors = tokens(theme.palette.mode);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [selected, setSelected] = useState("Dashboard");
+    console.log("isCollapsed:", isCollapsed);
 
     return (
         <Box
@@ -80,7 +81,7 @@ const Sidebar = () => {
                             ml="15px"
                         >
                             <Typography variant="h3" color={colors.grey[100]}>
-                                Wolas!
+                            ADMIN PANEL
                             </Typography>
                             <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                             <MenuOutlinedIcon />
@@ -96,8 +97,8 @@ const Sidebar = () => {
                             alt="profile-user"
                             width="150px"
                             height="150px"
-                            src={`../../assets/rick-morty.png`}
-                            style={{ cursor: "pointer", borderRadius: "50%" }}
+                            src={`../../assets/us.jpg`}
+                            style={{ cursor: "pointer", borderRadius: "70%" }}
                             />
                         </Box>
                         <Box textAlign="center">
@@ -119,13 +120,27 @@ const Sidebar = () => {
                     {/* Menu Items */}
 
                     <Box paddingLeft={isCollapsed ? undefined : "10%"}>
-                        <Item
+                        {/* <Item
                             title="Dashboard"
                             to="/"
                             icon={<HomeOutlinedIcon />}
                             selected={selected}
                             setSelected={setSelected}
-                        />
+                        /> */}
+
+                        <Item
+                            title="Dashboard"
+                            to="/"
+                            icon={
+                                <img
+                                alt="Dashboard"
+                                src="/assets/logo.png"
+                                style={{ width: 30, height: 30, borderRadius: "20%" }}
+                                />
+                            }
+                            selected={selected}
+                            setSelected={setSelected}
+                            />
 
                         <Typography
                             variant="h6"

@@ -6,19 +6,42 @@ const Header = ({ title, subtitle }) => {
   const colors = tokens(theme.palette.mode);
   return (
     <Box mb="30px">
+  <Box
+    display="flex"
+    justifyContent="space-between"
+    alignItems="center"   
+    >
+    <Box>
       <Typography
         variant="h2"
         color={colors.grey[100]}
         fontWeight="bold"
-        sx={{ m: "0 0 5px 0" }}
+        sx={{ m: 0 }}
       >
         {title}
       </Typography>
-      <Typography variant="h5" color={colors.greenAccent[400]}>
+
+      <Typography
+        variant="h5"
+        color={colors.greenAccent[400]}
+        sx={{ m: 0 }}
+      >
         {subtitle}
       </Typography>
-      <hr></hr>
     </Box>
+
+    
+    <img
+      alt="logo"
+      src="/assets/logo.png"
+      width="120"
+      height="120"
+      style={{marginRight: "50px"}}
+    />
+  </Box>
+
+  <hr />
+</Box>
   );
 };
 

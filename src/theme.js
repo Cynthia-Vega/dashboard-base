@@ -1,6 +1,97 @@
 import { createContext, useState, useMemo } from "react";
 import { createTheme } from "@mui/material/styles"
 
+
+
+/* export const tokens = (mode) => ({
+    {green:{
+        100: #edf7f8,
+        200: #40b4ba
+        300: #4caf50},
+    orange:{
+        100: #fdf1f0,
+        200: #fd756b,},
+    yellow:{
+        100: #e8d56c,},
+    azul:{
+        100: #567eb9,},
+    purple:{
+        100: #9c7eb6,}
+    primary: {
+                100: "#ffffffff",
+                200: "#000000ff"
+                },
+}) */
+
+
+/* export const themeSettings = (fontScale =1) => {
+    const colors = tokens();
+
+    return {
+        palette: {
+                        primary: {
+                            main: colors.primary[100],
+                        },
+                        secondary: {
+                            main: colors.green[200],
+                        },
+                        background:{
+                            default: "#ffffffff",   
+                        }
+                    }),
+        },
+        typography:{
+            fontFamily: ["Avenir Regular", "sans-serif"].join(","),
+            fontSize: 12*fontScale,
+            h1:{
+                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
+                fontSize: 40 * fontScale,
+            },
+            h2:{
+                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
+                fontSize: 32 * fontScale,
+            },
+            h3:{
+                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
+                fontSize: 24 * fontScale,
+            },    
+            h4:{
+                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
+                fontSize: 20 * fontScale,
+            },    
+            h5:{
+                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
+                fontSize: 16 * fontScale,
+            },    
+            h6:{
+                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
+                fontSize: 14 * fontScale,
+            },                    
+        },
+        tooltip: {
+            color: "#626262"
+        }
+    };
+}; */
+
+/* 
+// context for color mode
+
+export const ColorModeContext = createContext({
+    toggleColorMode: () => {}
+})
+
+
+export const useMode =(fontScale = 1) => {
+    
+    const theme = useMemo(
+        () => createTheme(themeSettings(fontScale)),
+        [fontScale]
+    );
+
+  return [theme];
+}; */
+
 // color design tokens
 export const tokens = (mode) => ({
     ...(mode === "dark"
