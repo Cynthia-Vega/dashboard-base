@@ -15,8 +15,7 @@ const data = [
 
 
 const GeographyChart = ({ isDashboard = false }) => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
+  const colors = tokens();
 
   // 👇 aseguramos que cada feature tenga id que machea con data.id
   const mappedFeatures = geoFeatures.features.map((f) => ({
@@ -32,32 +31,32 @@ const GeographyChart = ({ isDashboard = false }) => {
         axis: {
           domain: {
             line: {
-              stroke: colors.grey[100],
+              stroke: colors.primary[100],
             },
           },
           legend: {
             text: {
-              fill: colors.grey[100],
+              fill: colors.primary[100],
             },
           },
           ticks: {
             line: {
-              stroke: colors.grey[100],
+              stroke: colors.primary[100],
               strokeWidth: 1,
             },
             text: {
-              fill: colors.grey[100],
+              fill: colors.primary[100],
             },
           },
         },
         legends: {
           text: {
-            fill: colors.grey[100],
+            fill: colors.primary[100],
           },
         },
         tooltip: {
           container: {
-            color: colors.primary[500],
+            color: colors.primary[100],
           },
         },
       }}
@@ -87,7 +86,7 @@ const GeographyChart = ({ isDashboard = false }) => {
                 itemWidth: 94,
                 itemHeight: 18,
                 itemDirection: "left-to-right",
-                itemTextColor: colors.grey[100],
+                itemTextColor: colors.primary[100],
                 itemOpacity: 0.85,
                 symbolSize: 18,
                 effects: [
@@ -112,7 +111,7 @@ const GeographyChart = ({ isDashboard = false }) => {
                 itemWidth: 65,
                 itemHeight: 10,
                 itemDirection: "left-to-right",
-                itemTextColor: colors.grey[100],
+                itemTextColor: colors.primary[100],
                 itemOpacity: 0.85,
                 symbolSize: 9,
                 effects: [

@@ -22,11 +22,11 @@ import Geography from "./scenes/geography";
 
 function App() {
   const [fontScale, setFontScale] = useState(1); 
-  const [theme, colorMode] = useMode(fontScale); 
+  const [theme] = useMode(fontScale); 
   console.log("APP fontScale:", fontScale);
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
+    <ColorModeContext.Provider >
         <ThemeProvider theme={theme}>
           
           <CssBaseline />

@@ -4,8 +4,7 @@ import { tokens } from "../theme";
 import { mockBarData as data } from "../data/mockData";
 
 const BarChart = ({ isDashboard = false }) => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
+  const colors = tokens();
 
   return (
     <ResponsiveBar
@@ -15,32 +14,32 @@ const BarChart = ({ isDashboard = false }) => {
         axis: {
           domain: {
             line: {
-              stroke: colors.grey[100],
+              stroke: colors.primary[100],
             },
           },
           legend: {
             text: {
-              fill: colors.grey[100],
+              fill: colors.primary[100],
             },
           },
           ticks: {
             line: {
-              stroke: colors.grey[100],
+              stroke: colors.primary[100],
               strokeWidth: 1,
             },
             text: {
-              fill: colors.grey[100],
+              fill: colors.primary[100],
             },
           },
         },
         legends: {
           text: {
-            fill: colors.grey[100],
+            fill: colors.primary[100],
           },
         },
         tooltip: {
           container: {
-            color: colors.primary[500],
+            color: colors.primary[100],
           },
         },
       }}

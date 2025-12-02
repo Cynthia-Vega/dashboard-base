@@ -36,8 +36,7 @@ const data = [
 ];
 
 const PieChart = () => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
+  const colors = tokens();
   return (
     <ResponsivePie
       data={data}
@@ -45,32 +44,32 @@ const PieChart = () => {
         axis: {
           domain: {
             line: {
-              stroke: colors.grey[100],
+              stroke: colors.primary[100],
             },
           },
           legend: {
             text: {
-              fill: colors.grey[100],
+              fill: colors.primary[100],
             },
           },
           ticks: {
             line: {
-              stroke: colors.grey[100],
+              stroke: colors.primary[100],
               strokeWidth: 1,
             },
             text: {
-              fill: colors.grey[100],
+              fill: colors.primary[100],
             },
           },
         },
         legends: {
           text: {
-            fill: colors.grey[100],
+            fill: colors.primary[100],
           },
         },
         tooltip: {
           container: {
-            color: colors.primary[500],
+            color: colors.primary[100],
           },
         },
       }}
@@ -84,13 +83,13 @@ const PieChart = () => {
         modifiers: [["darker", 0.2]],
       }}
       arcLinkLabelsSkipAngle={10}
-      arcLinkLabelsTextColor={colors.grey[100]}
+      arcLinkLabelsTextColor={colors.primary[100]}
       arcLinkLabelsThickness={2}
       arcLinkLabelsColor={{ from: "color" }}
       enableArcLabels={true}
       arcLabelsRadiusOffset={0.4}
       arcLabelsSkipAngle={7}
-      arcLabelsTextColor={colors.grey[900]}
+      arcLabelsTextColor={colors.primary[100]}
       defs={[
         {
           id: "dots",
@@ -121,7 +120,7 @@ const PieChart = () => {
           itemsSpacing: 0,
           itemWidth: 100,
           itemHeight: 18,
-          itemTextColor: colors.grey[100],
+          itemTextColor: colors.primary[100],
           itemDirection: "left-to-right",
           itemOpacity: 1,
           symbolSize: 18,

@@ -24,7 +24,7 @@ const Item = ({title, to, icon, selected, setSelected})=> {
     return(
         <MenuItem
             active={selected === title}
-            style={{color: colors.grey[100]}}
+            style={{color: colors.primary[100]}}
             onClick={()=> setSelected(title)}
             icon={icon}
         >
@@ -36,8 +36,7 @@ const Item = ({title, to, icon, selected, setSelected})=> {
 
 
 const Sidebar = () => {
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
+    const colors = tokens();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [selected, setSelected] = useState("Dashboard");
     console.log("isCollapsed:", isCollapsed);
@@ -46,7 +45,7 @@ const Sidebar = () => {
         <Box
             sx={{
                 "& .pro-sidebar-inner": {
-                    background: `${colors.primary[400]} !important`,
+                    background: `${colors.primary[200]} !important`,
                 },
                 "& .pro-icon-wrapper": {
                     backgroundColor: "transparent !important",
@@ -70,7 +69,7 @@ const Sidebar = () => {
                         icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
                         style={{
                         margin: "10px 0 20px 0",
-                        color: colors.grey[100],
+                        color: colors.primary[100],
                         }}
                     >
                         {!isCollapsed && (
@@ -80,7 +79,7 @@ const Sidebar = () => {
                             alignItems="center"
                             ml="15px"
                         >
-                            <Typography variant="h3" color={colors.grey[100]}>
+                            <Typography variant="h3" color={colors.primary[100]}>
                             ADMIN PANEL
                             </Typography>
                             <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
@@ -104,13 +103,13 @@ const Sidebar = () => {
                         <Box textAlign="center">
                             <Typography
                             variant="h2"
-                            color={colors.grey[100]}
+                            color={colors.primary[100]}
                             fontWeight="bold"
                             sx={{ m: "10px 0 0 0" }}
                             >
                             Usuario
                             </Typography>
-                            <Typography variant="h5" color={colors.greenAccent[500]}>
+                            <Typography variant="h5" color={colors.green[200]}>
                             probando admin
                             </Typography>
                         </Box>
@@ -144,7 +143,7 @@ const Sidebar = () => {
 
                         <Typography
                             variant="h6"
-                            color={colors.grey[300]}
+                            color={colors.primary[300]}
                             sx={{ m: "15px 0 5px 20px" }}
                         >
                             Data
@@ -176,7 +175,7 @@ const Sidebar = () => {
 
                         <Typography
                             variant="h6"
-                            color={colors.grey[300]}
+                            color={colors.primary[300]}
                             sx={{ m: "15px 0 5px 20px" }}
                         >
                             Pages 
@@ -208,7 +207,7 @@ const Sidebar = () => {
 
                         <Typography
                             variant="h6"
-                            color={colors.grey[300]}
+                            color={colors.primary[300]}
                             sx={{ m: "15px 0 5px 20px" }}
                         >
                             Charts

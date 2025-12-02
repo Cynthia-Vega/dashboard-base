@@ -1,4 +1,5 @@
 import { tokens } from "../theme";
+const colors = tokens();
 export const mockDataTeam = [
   {
     id: 1,
@@ -432,7 +433,7 @@ export const mockPieData = [
 export const mockLineData = [
   {
     id: "japan",
-    color: tokens("dark").greenAccent[500],
+    color: colors.green[200],
     data: [
       {
         x: "plane",
@@ -486,7 +487,7 @@ export const mockLineData = [
   },
   {
     id: "france",
-    color: tokens("dark").blueAccent[300],
+    color: colors.azul[100],
     data: [
       {
         x: "plane",
@@ -540,7 +541,7 @@ export const mockLineData = [
   },
   {
     id: "us",
-    color: tokens("dark").redAccent[200],
+    color: colors.purple[100],
     data: [
       {
         x: "plane",

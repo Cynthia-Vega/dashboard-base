@@ -14,8 +14,7 @@ import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
 
 const Dashboard = () => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
+  const colors = tokens();
 
   return (
     <Box m="20px">
@@ -26,8 +25,8 @@ const Dashboard = () => {
         <Box mt="-10px" mb="20px" display="flex" justifyContent="flex-end">
           <Button
             sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.grey[100],
+              backgroundColor: colors.green[100],
+              color: colors.primary[100],
               fontSize: "14px",
               fontWeight: "bold",
               padding: "10px 20px",
@@ -50,7 +49,7 @@ const Dashboard = () => {
         {/* ROW 1 */}
         <Box
           gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
+          backgroundColor={colors.primary[200]}
           display="flex"
           alignItems="center"
           justifyContent="center"
@@ -62,14 +61,14 @@ const Dashboard = () => {
             increase="+14%"
             icon={
               <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                sx={{ color: colors.green[200], fontSize: "26px" }}
               />
             }
           />
         </Box>
         <Box
           gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
+          backgroundColor={colors.primary[200]}
           display="flex"
           alignItems="center"
           justifyContent="center"
@@ -81,14 +80,14 @@ const Dashboard = () => {
             increase="+21%"
             icon={
               <PointOfSaleIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                sx={{ color: colors.green[200], fontSize: "26px" }}
               />
             }
           />
         </Box>
         <Box
           gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
+          backgroundColor={colors.primary[200]}
           display="flex"
           alignItems="center"
           justifyContent="center"
@@ -100,14 +99,14 @@ const Dashboard = () => {
             increase="+5%"
             icon={
               <PersonAddIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                sx={{ color: colors.green[200], fontSize: "26px" }}
               />
             }
           />
         </Box>
         <Box
           gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
+          backgroundColor={colors.primary[200]}
           display="flex"
           alignItems="center"
           justifyContent="center"
@@ -119,7 +118,7 @@ const Dashboard = () => {
             increase="+43%"
             icon={
               <TrafficIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                sx={{ color: colors.green[200], fontSize: "26px" }}
               />
             }
           />
@@ -129,7 +128,7 @@ const Dashboard = () => {
         <Box
           gridColumn="span 8"
           gridRow="span 2"
-          backgroundColor={colors.primary[400]}
+          backgroundColor={colors.primary[200]}
         >
           <Box
             mt="25px"
@@ -142,14 +141,14 @@ const Dashboard = () => {
               <Typography
                 variant="h5"
                 fontWeight="600"
-                color={colors.grey[100]}
+                color={colors.primary[100]}
               >
                 Revenue Generated
               </Typography>
               <Typography
                 variant="h3"
                 fontWeight="bold"
-                color={colors.greenAccent[500]}
+                color={colors.green[200]}
               >
                 $59,342.32
               </Typography>
@@ -157,7 +156,7 @@ const Dashboard = () => {
             <Box>
               <IconButton>
                 <DownloadOutlinedIcon
-                  sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
+                  sx={{ fontSize: "26px", color: colors.green[200] }}
                 />
               </IconButton>
             </Box>
@@ -169,18 +168,18 @@ const Dashboard = () => {
         <Box
           gridColumn="span 4"
           gridRow="span 2"
-          backgroundColor={colors.primary[400]}
+          backgroundColor={colors.primary[200]}
           overflow="auto"
         >
           <Box
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            borderBottom={`4px solid ${colors.primary[500]}`}
-            colors={colors.grey[100]}
+            borderBottom={`4px solid ${colors.primary[200]}`}
+            colors={colors.primary[100]}
             p="15px"
           >
-            <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
+            <Typography color={colors.primary[100]} variant="h5" fontWeight="600">
               Recent Transactions
             </Typography>
           </Box>
@@ -190,24 +189,24 @@ const Dashboard = () => {
               display="flex"
               justifyContent="space-between"
               alignItems="center"
-              borderBottom={`4px solid ${colors.primary[500]}`}
+              borderBottom={`4px solid ${colors.primary[200]}`}
               p="15px"
             >
               <Box>
                 <Typography
-                  color={colors.greenAccent[500]}
+                  color={colors.green[200]}
                   variant="h5"
                   fontWeight="600"
                 >
                   {transaction.txId}
                 </Typography>
-                <Typography color={colors.grey[100]}>
+                <Typography color={colors.primary[100]}>
                   {transaction.user}
                 </Typography>
               </Box>
-              <Box color={colors.grey[100]}>{transaction.date}</Box>
+              <Box color={colors.primary[100]}>{transaction.date}</Box>
               <Box
-                backgroundColor={colors.greenAccent[500]}
+                backgroundColor={colors.green[200]}
                 p="5px 10px"
                 borderRadius="4px"
               >
@@ -221,7 +220,7 @@ const Dashboard = () => {
         <Box
           gridColumn="span 4"
           gridRow="span 2"
-          backgroundColor={colors.primary[400]}
+          backgroundColor={colors.primary[200]}
           p="30px"
         >
           <Typography variant="h5" fontWeight="600">
@@ -236,7 +235,7 @@ const Dashboard = () => {
             <ProgressCircle size="125" />
             <Typography
               variant="h5"
-              color={colors.greenAccent[500]}
+              color={colors.green[200]}
               sx={{ mt: "15px" }}
             >
               $48,352 revenue generated
@@ -247,7 +246,7 @@ const Dashboard = () => {
         <Box
           gridColumn="span 4"
           gridRow="span 2"
-          backgroundColor={colors.primary[400]}
+          backgroundColor={colors.primary[200]}
         >
           <Typography
             variant="h5"
@@ -263,7 +262,7 @@ const Dashboard = () => {
         <Box
           gridColumn="span 4"
           gridRow="span 2"
-          backgroundColor={colors.primary[400]}
+          backgroundColor={colors.primary[200]}
           padding="30px"
         >
           <Typography

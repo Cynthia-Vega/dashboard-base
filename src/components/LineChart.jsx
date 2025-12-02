@@ -6,7 +6,7 @@ const data = [
   {
     id: "japan",
     // color: "hsl(33, 70%, 50%)",
-    color: tokens("dark").greenAccent[500],
+    color: tokens().green[300],
     data: [
       {
         x: "plane",
@@ -61,7 +61,7 @@ const data = [
   {
     id: "france",
     // color: "hsl(36, 70%, 50%)",
-    color: tokens("dark").blueAccent[300],
+    color: tokens().azul[100],
     data: [
       {
         x: "plane",
@@ -116,7 +116,7 @@ const data = [
   {
     id: "us",
     // color: "hsl(7, 70%, 50%)",
-    color: tokens("dark").redAccent[200],
+    color: tokens().purple[100],
     data: [
       {
         x: "plane",
@@ -171,8 +171,7 @@ const data = [
 ];
 
 const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
+  const colors = tokens();
 
   return (
     <ResponsiveLine
@@ -181,32 +180,32 @@ const LineChart = ({ isCustomLineColors = false, isDashboard = false }) => {
         axis: {
           domain: {
             line: {
-              stroke: colors.grey[100],
+              stroke: colors.primary[100],
             },
           },
           legend: {
             text: {
-              fill: colors.grey[100],
+              fill: colors.primary[100],
             },
           },
           ticks: {
             line: {
-              stroke: colors.grey[100],
+              stroke: colors.primary[100],
               strokeWidth: 1,
             },
             text: {
-              fill: colors.grey[100],
+              fill: colors.primary[100],
             },
           },
         },
         legends: {
           text: {
-            fill: colors.grey[100],
+            fill: colors.primary[100],
           },
         },
         tooltip: {
           container: {
-            color: colors.primary[500],
+            color: colors.primary[100],
           },
         },
       }}
