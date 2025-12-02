@@ -54,10 +54,10 @@ const Sidebar = () => {
                     padding: "5px 35px 5px 20px !important",
                 },
                 "& .pro-inner.item:hover": {
-                    color: "#868dfb !important",
+                    color: `${colors.green[100]} !important`,
                 },
                 "& .pro-menu-item.active": {
-                    color: "#6870fa !important",
+                    color: `${colors.green[200]} !important`,
                 },
             }}
         >
@@ -69,7 +69,7 @@ const Sidebar = () => {
                         icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
                         style={{
                         margin: "10px 0 20px 0",
-                        color: colors.primary[100],
+                        color: colors.green[200],
                         }}
                     >
                         {!isCollapsed && (
@@ -143,7 +143,8 @@ const Sidebar = () => {
 
                         <Typography
                             variant="h6"
-                            color={colors.primary[300]}
+                            color={colors.green[200]}
+                            fontWeight="bold"
                             sx={{ m: "15px 0 5px 20px" }}
                         >
                             Data
@@ -175,7 +176,8 @@ const Sidebar = () => {
 
                         <Typography
                             variant="h6"
-                            color={colors.primary[300]}
+                            color={colors.green[200]}
+                            fontWeight="bold"
                             sx={{ m: "15px 0 5px 20px" }}
                         >
                             Pages 
@@ -207,7 +209,8 @@ const Sidebar = () => {
 
                         <Typography
                             variant="h6"
-                            color={colors.primary[300]}
+                            fontWeight="bold"
+                            color={colors.green[200]}
                             sx={{ m: "15px 0 5px 20px" }}
                         >
                             Charts

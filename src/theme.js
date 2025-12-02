@@ -5,7 +5,7 @@ import { createTheme } from "@mui/material/styles"
 
 export const tokens = () => ({
   green:{
-        100: "#edf7f8",
+        100: "#cce3e6ff",
         200: "#40b4ba",
         300: "#4caf50"},
     orange:{

@@ -1,6 +1,6 @@
 import { Box,} from "@mui/material";
 import { useEffect, useState } from "react";
-import { parseExcel } from "../../utils/parceExcel";
+import { parseExcel } from "../../utils/parseExcel";
 
 import Header from "../../components/Header";
 

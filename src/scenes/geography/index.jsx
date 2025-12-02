@@ -2,8 +2,10 @@ import { Box, useTheme } from "@mui/material";
 import GeographyChart from "../../components/GeographyChart";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
+import { ParticipantesData } from "../../data/ParticipantesData";
 
 const Geography = () => {
+  const Data = ParticipantesData()
   const colors = tokens();
   return (
     <Box m="20px">
@@ -14,7 +16,8 @@ const Geography = () => {
         border={`1px solid ${colors.primary[100]}`}
         borderRadius="4px"
       >
-        <GeographyChart />
+        <GeographyChart data={Data.byRegionForMap} />
+        {console.log("Data en Geography:", Data)}
       </Box>
     </Box>
   );

@@ -12,9 +12,11 @@ import GeographyChart from "../../components/GeographyChart";
 import BarChart from "../../components/BarChart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
+import { ParticipantesData } from "../../data/ParticipantesData";
 
 const Dashboard = () => {
   const colors = tokens();
+  const Data = ParticipantesData();
 
   return (
     <Box m="20px">
@@ -273,7 +275,7 @@ const Dashboard = () => {
             Geography Based Traffic
           </Typography>
           <Box height="300px">
-            <GeographyChart isDashboard={true} />
+            <GeographyChart isDashboard={true} data={Data.byRegionForMap}/>
           </Box>
         </Box>
       </Box>
