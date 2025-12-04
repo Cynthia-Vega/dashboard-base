@@ -2,44 +2,30 @@ import { ResponsivePie } from "@nivo/pie";
 import { tokens } from "../theme";
 import { useTheme } from "@mui/material";
 
-const data = [
-  {
-    id: "hack",
-    label: "hack",
-    value: 239,
-    color: "hsl(104, 70%, 50%)",
-  },
-  {
-    id: "make",
-    label: "make",
-    value: 170,
-    color: "hsl(162, 70%, 50%)",
-  },
-  {
-    id: "go",
-    label: "go",
-    value: 322,
-    color: "hsl(291, 70%, 50%)",
-  },
-  {
-    id: "lisp",
-    label: "lisp",
-    value: 503,
-    color: "hsl(229, 70%, 50%)",
-  },
-  {
-    id: "scala",
-    label: "scala",
-    value: 584,
-    color: "hsl(344, 70%, 50%)",
-  },
-];
 
-const PieChart = () => {
+const PieChart = ({ totalPorGenero, isDashboard = false }) => {
   const colors = tokens();
+
+  // totalPorGenero viene como: { HOMBRE, MUJER, OTRO }
+  const { HOMBRE = 0, MUJER = 0, OTRO = 0 } = totalPorGenero || {};
+
+  // Transformar al formato que espera Nivo
+  const data = [
+    { id: "HOMBRE", label: "Hombre", value: HOMBRE },
+    { id: "MUJER", label: "Mujer", value: MUJER },
+    { id: "OTRO", label: "Otro", value: OTRO },
+  ].filter((d) => d.value > 0); // opcional: sacamos categorías con 0
+
+  const genderColorMap = {
+  HOMBRE: colors.green[200],
+  MUJER: colors.orange[200],
+  OTRO: colors.purple[100],
+};
+
   return (
     <ResponsivePie
       data={data}
+      colors={({ id }) => genderColorMap[id] || colors.primary[100]}
       theme={{
         axis: {
           domain: {
@@ -69,6 +55,7 @@ const PieChart = () => {
         },
         tooltip: {
           container: {
+            background: colors.primary[200],
             color: colors.primary[100],
           },
         },
@@ -110,31 +97,35 @@ const PieChart = () => {
           spacing: 10,
         },
       ]}
-      legends={[
-        {
-          anchor: "bottom",
-          direction: "row",
-          justify: false,
-          translateX: 0,
-          translateY: 56,
-          itemsSpacing: 0,
-          itemWidth: 100,
-          itemHeight: 18,
-          itemTextColor: colors.primary[100],
-          itemDirection: "left-to-right",
-          itemOpacity: 1,
-          symbolSize: 18,
-          symbolShape: "circle",
-          effects: [
-            {
-              on: "hover",
-              style: {
-                itemTextColor: "#ffffffff",
+      legends={
+        isDashboard
+          ? [] // si no quieres leyenda en el dashboard
+          : [
+              {
+                anchor: "bottom",
+                direction: "row",
+                justify: false,
+                translateX: 0,
+                translateY: 56,
+                itemsSpacing: 0,
+                itemWidth: 100,
+                itemHeight: 18,
+                itemTextColor: colors.primary[100],
+                itemDirection: "left-to-right",
+                itemOpacity: 1,
+                symbolSize: 18,
+                symbolShape: "circle",
+                effects: [
+                  {
+                    on: "hover",
+                    style: {
+                      itemTextColor: "#ffffffff",
+                    },
+                  },
+                ],
               },
-            },
-          ],
-        },
-      ]}
+            ]
+      }
     />
   );
 };

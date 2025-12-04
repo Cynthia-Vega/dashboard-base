@@ -16,8 +16,7 @@ import Header from "../../components/Header";
 import { tokens } from "../../theme";
 
 const Calendar = () => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
+  const colors = tokens();
   const [currentEvents, setCurrentEvents] = useState([]);
 
   const handleDateClick = (selected) => {
@@ -54,7 +53,7 @@ const Calendar = () => {
         {/* CALENDAR SIDEBAR */}
         <Box
           flex="1 1 20%"
-          backgroundColor={colors.primary[400]}
+          backgroundColor={colors.primary[200]}
           p="15px"
           borderRadius="4px"
         >
@@ -64,7 +63,7 @@ const Calendar = () => {
               <ListItem
                 key={event.id}
                 sx={{
-                  backgroundColor: colors.greenAccent[500],
+                  backgroundColor: colors.green[200],
                   margin: "10px 0",
                   borderRadius: "2px",
                 }}

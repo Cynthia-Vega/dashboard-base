@@ -6,7 +6,7 @@ import { Routes, Route } from "react-router-dom";
 import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import Dashboard from "./scenes/dashboard";
-/* import Team from "./scenes/team";
+import Team from "./scenes/team";
 import Invoices from "./scenes/invoices";
 import Contacts from "./scenes/contacts";
 import Bar from "./scenes/bar";
@@ -15,7 +15,7 @@ import Line from "./scenes/line";
 import Pie from "./scenes/pie";
 import FAQ from "./scenes/faq";
 
-import Calendar from "./scenes/calendar"; */
+import Calendar from "./scenes/calendar";
 import User from "./scenes/user";
 import Config from "./scenes/config";
 import Geography from "./scenes/geography";
@@ -36,7 +36,7 @@ function App() {
               <Topbar />
               <Routes>
                 <Route path="/" element={<Dashboard />} />
-                {/* <Route path="/team" element={<Team />} />
+                <Route path="/team" element={<Team />} />
                 <Route path="/invoices" element={<Invoices />} />
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/bar" element={<Bar />} />
@@ -45,7 +45,7 @@ function App() {
                 <Route path="/pie" element={<Pie />} />
                 <Route path="/faq" element={<FAQ />} />
                 
-                <Route path="/calendar" element={<Calendar />} />  */}
+                <Route path="/calendar" element={<Calendar />} /> 
                 <Route path="/user" element={<User />} />
                 <Route path="/config" element={<Config  fontScale={fontScale} setFontScale={setFontScale} />} />
                 <Route path="/geography" element={<Geography />} />

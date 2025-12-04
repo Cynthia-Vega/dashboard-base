@@ -44,6 +44,9 @@ const Sidebar = () => {
     return (
         <Box
             sx={{
+                " .pro-sidebar":{
+                    height: "150vh",
+                },
                 "& .pro-sidebar-inner": {
                     background: `${colors.primary[200]} !important`,
                 },
@@ -53,7 +56,7 @@ const Sidebar = () => {
                 "& .pro-inner-item": {
                     padding: "5px 35px 5px 20px !important",
                 },
-                "& .pro-inner.item:hover": {
+                "& .pro-inner-item:hover": {
                     color: `${colors.green[100]} !important`,
                 },
                 "& .pro-menu-item.active": {

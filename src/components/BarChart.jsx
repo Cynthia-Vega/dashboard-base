@@ -1,14 +1,22 @@
 import { useTheme } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
 import { tokens } from "../theme";
-import { mockBarData as data } from "../data/mockData";
 
-const BarChart = ({ isDashboard = false }) => {
+const BarChart = ({ isDashboard = false, data }) => {
   const colors = tokens();
+
+  let safeData = [];
+  if (Array.isArray(data)) {
+    safeData = data;
+  } else if (data && typeof data === "object") {
+    safeData = Object.entries(data).map(([key, value]) => ({
+      universidad: key,
+      cantidad: value,
+    }));
+  }
 
   return (
     <ResponsiveBar
-      data={data}
       theme={{
         // added
         axis: {
@@ -43,8 +51,9 @@ const BarChart = ({ isDashboard = false }) => {
           },
         },
       }}
-      keys={["hot dog", "burger", "sandwich", "kebab", "fries", "donut"]}
-      indexBy="country"
+      data={safeData}
+      keys={["cantidad"]}
+      indexBy="universidad"
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
       padding={0.3}
       valueScale={{ type: "linear" }}
@@ -80,7 +89,7 @@ const BarChart = ({ isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "country", // changed
+        legend: isDashboard ? undefined : "Universidad", // changed
         legendPosition: "middle",
         legendOffset: 32,
       }}
@@ -88,7 +97,7 @@ const BarChart = ({ isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "food", // changed
+        legend: isDashboard ? undefined : "N° participantes", // changed
         legendPosition: "middle",
         legendOffset: -40,
       }}
@@ -124,9 +133,9 @@ const BarChart = ({ isDashboard = false }) => {
         },
       ]}
       role="application"
-      barAriaLabel={function (e) {
-        return e.id + ": " + e.formattedValue + " in country: " + e.indexValue;
-      }}
+      barAriaLabel={ (bar) => 
+        `${bar.indexValue}: ${bar.formattedValue} participantes`
+      }
     />
   );
 };

@@ -20,6 +20,8 @@ const User = () => {
 
   if (loading) return <p>Cargando base de datos...</p>;
 
+  console.log("Datos de usuarios:", rows);
+
   if (!rows.length) return <p>No hay datos</p>;
 
   return (

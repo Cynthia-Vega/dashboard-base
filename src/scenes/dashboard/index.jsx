@@ -14,6 +14,8 @@ import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
 import { ParticipantesData } from "../../data/ParticipantesData";
 
+
+
 const Dashboard = () => {
   const colors = tokens();
   const Data = ParticipantesData();
@@ -217,16 +219,19 @@ const Dashboard = () => {
             </Box>
           ))}
         </Box>
+        </Box>
+        <Box display={"flex"} flexWrap={"wrap"}>
 
         {/* ROW 3 */}
         <Box
           gridColumn="span 4"
           gridRow="span 2"
           backgroundColor={colors.primary[200]}
-          p="30px"
+          p="3px"
+          minWidth={"400px"}
         >
           <Typography variant="h5" fontWeight="600">
-            Campaign
+            Regiones abarcadas
           </Typography>
           <Box
             display="flex"
@@ -234,31 +239,32 @@ const Dashboard = () => {
             alignItems="center"
             mt="25px"
           >
-            <ProgressCircle size="125" />
+            <ProgressCircle size="125" data={Data.byRegionForMap} />
             <Typography
               variant="h5"
               color={colors.green[200]}
               sx={{ mt: "15px" }}
             >
-              $48,352 revenue generated
+              {/* $48,352 revenue generated */}
             </Typography>
-            <Typography>Includes extra misc expenditures and costs</Typography>
+            {/* <Typography></Typography> */}
           </Box>
         </Box>
         <Box
           gridColumn="span 4"
           gridRow="span 2"
           backgroundColor={colors.primary[200]}
+          minWidth={"300px"}
         >
           <Typography
             variant="h5"
             fontWeight="600"
             sx={{ padding: "30px 30px 0 30px" }}
           >
-            Sales Quantity
+            Cantidades por universidad
           </Typography>
           <Box height="250px" mt="-20px">
-            <BarChart isDashboard={true} />
+            <BarChart isDashboard={true} data={Data.totalPorUniversidad}/>
           </Box>
         </Box>
         <Box
@@ -266,13 +272,14 @@ const Dashboard = () => {
           gridRow="span 2"
           backgroundColor={colors.primary[200]}
           padding="30px"
+          minWidth={"300px"}
         >
           <Typography
             variant="h5"
             fontWeight="600"
             sx={{ marginBottom: "15px" }}
           >
-            Geography Based Traffic
+            Distribución por región
           </Typography>
           <Box height="300px">
             <GeographyChart isDashboard={true} data={Data.byRegionForMap}/>

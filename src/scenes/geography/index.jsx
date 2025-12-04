@@ -8,13 +8,18 @@ const Geography = () => {
   const Data = ParticipantesData()
   const colors = tokens();
   return (
-    <Box m="20px">
+    <Box m="20px" justifyContent={"center"}>
       <Header title="Geography" subtitle="Wolas, aquí puedes ver el gráfico geográfico" />
 
       <Box
-        height="75vh"
+        height="100vh"
         border={`1px solid ${colors.primary[100]}`}
         borderRadius="4px"
+        maxWidth={"700px"}
+        minWidth={"300px"}
+        justifyContent={"center"}
+        borderColor={colors.primary[200]}
+
       >
         <GeographyChart data={Data.byRegionForMap} />
         {console.log("Data en Geography:", Data)}
