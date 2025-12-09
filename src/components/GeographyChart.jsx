@@ -4,17 +4,6 @@ import { geoFeatures } from "../data/mockGeoFeatures";
 import { tokens } from "../theme";
 
 
-const fallbackData = [
-  { id: "15", value: 42 },
-  { id: "1", value: 18 },
-  { id: "2", value: 25 },
-  { id: "3", value: 10 },
-  { id: "4", value: 30 },
-  { id: "5", value: 55 },
-  { id: "13", value: 120 },
-];
-
-
 
 const GeographyChart = ({ isDashboard = false, data }) => {
   const colors = tokens();
@@ -33,10 +22,7 @@ const GeographyChart = ({ isDashboard = false, data }) => {
     id: String(f.properties.codregion),
   }));
 
-  const chartData =
-    data && data.length > 0
-      ? data
-      : fallbackData;
+  const chartData = Array.isArray(data) ? data : []
 
   const maxValue = Math.max(...chartData.map((d) => d.value), 1);
 

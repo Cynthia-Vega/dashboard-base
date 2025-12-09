@@ -20,6 +20,8 @@ import User from "./scenes/user";
 import Config from "./scenes/config";
 import Geography from "./scenes/geography";
 
+
+
 function App() {
   const [fontScale, setFontScale] = useState(1); 
   const [theme] = useMode(fontScale); 

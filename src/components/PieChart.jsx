@@ -1,20 +1,10 @@
 import { ResponsivePie } from "@nivo/pie";
 import { tokens } from "../theme";
-import { useTheme } from "@mui/material";
 
 
-const PieChart = ({ totalPorGenero, isDashboard = false }) => {
+
+const PieChart = ({ data, isDashboard = false }) => {
   const colors = tokens();
-
-  // totalPorGenero viene como: { HOMBRE, MUJER, OTRO }
-  const { HOMBRE = 0, MUJER = 0, OTRO = 0 } = totalPorGenero || {};
-
-  // Transformar al formato que espera Nivo
-  const data = [
-    { id: "HOMBRE", label: "Hombre", value: HOMBRE },
-    { id: "MUJER", label: "Mujer", value: MUJER },
-    { id: "OTRO", label: "Otro", value: OTRO },
-  ].filter((d) => d.value > 0); // opcional: sacamos categorías con 0
 
   const genderColorMap = {
   HOMBRE: colors.green[200],

@@ -10,7 +10,7 @@ const User = () => {
 
   useEffect(() => {
     async function loadExcel() {
-      const data = await parseExcel("Seguimiento formadores revisada Agosto 2025.xlsx");
+      const data = await parseExcel("/participantes.xlsx", "/encuesta.xlsx");
       setRows(data);
       setLoading(false);
     }
@@ -19,10 +19,13 @@ const User = () => {
   }, []);
 
   if (loading) return <p>Cargando base de datos...</p>;
-
-  console.log("Datos de usuarios:", rows);
-
   if (!rows.length) return <p>No hay datos</p>;
+
+  const allColumns = Array.from(
+    new Set(
+      rows.flatMap((row) => Object.keys(row))
+    )
+  );
 
   return (
     <Box m="20px">
@@ -31,7 +34,7 @@ const User = () => {
         <table style={{ borderCollapse: "collapse", minWidth: "900px" }}>
           <thead>
             <tr>
-              {Object.keys(rows[0]).map((key) => (
+              {allColumns.map((key) => (
                 <th
                   key={key}
                   style={{
@@ -50,7 +53,7 @@ const User = () => {
           <tbody>
             {rows.map((row, i) => (
               <tr key={i}>
-                {Object.keys(rows[0]).map((key) => (
+                {allColumns.map((key) => (
                   <td
                     key={key}
                     style={{

@@ -4,11 +4,18 @@ import PieChart from "../../components/PieChart";
 import { ParticipantesData } from "../../data/ParticipantesData";
 
 const Pie = () => {
+  const { loading, frecuencyData } = ParticipantesData();
+
+  if (loading) return <div>Cargando datos…</div>;
+
+  const totalPorGenero = frecuencyData("Género");   // 👈 usa la helper del hook
+  console.log("totalPorGenero:", totalPorGenero);
+
   return (
     <Box m="20px">
       <Header title="Pie Chart" subtitle="Wolas, aquí puedes ver el gráfico circular" />
       <Box height="75vh">
-        <PieChart totalPorGenero={ParticipantesData().totalPorGenero} />
+        <PieChart data={totalPorGenero} />
       </Box>
     </Box>
   );

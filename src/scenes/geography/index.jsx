@@ -5,7 +5,11 @@ import { tokens } from "../../theme";
 import { ParticipantesData } from "../../data/ParticipantesData";
 
 const Geography = () => {
-  const Data = ParticipantesData()
+  const { loading, frecuencyData } = ParticipantesData();
+
+  if (loading) return <div>Cargando datos…</div>;
+
+  const totalPorRegion = frecuencyData("region_id");   // 👈 usa la helper del hook
   const colors = tokens();
   return (
     <Box m="20px" justifyContent={"center"}>
@@ -21,8 +25,7 @@ const Geography = () => {
         borderColor={colors.primary[200]}
 
       >
-        <GeographyChart data={Data.byRegionForMap} />
-        {console.log("Data en Geography:", Data)}
+        <GeographyChart data={totalPorRegion} />
       </Box>
     </Box>
   );

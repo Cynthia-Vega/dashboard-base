@@ -18,7 +18,12 @@ import { ParticipantesData } from "../../data/ParticipantesData";
 
 const Dashboard = () => {
   const colors = tokens();
-  const Data = ParticipantesData();
+  const { loading, frecuencyData } = ParticipantesData();
+  if (loading) return <div>Cargando datos…</div>;
+  const totalPorGenero = frecuencyData("Género");
+  const totalPorRegion = frecuencyData("region_id");
+  const totalPorUniversidad = frecuencyData("Universidad");
+
 
   return (
     <Box m="20px">
@@ -239,7 +244,7 @@ const Dashboard = () => {
             alignItems="center"
             mt="25px"
           >
-            <ProgressCircle size="125" data={Data.byRegionForMap} />
+            <ProgressCircle size="125" data={totalPorRegion} />
             <Typography
               variant="h5"
               color={colors.green[200]}
@@ -264,7 +269,7 @@ const Dashboard = () => {
             Cantidades por universidad
           </Typography>
           <Box height="250px" mt="-20px">
-            <BarChart isDashboard={true} data={Data.totalPorUniversidad}/>
+            <BarChart isDashboard={true} data={totalPorUniversidad}/>
           </Box>
         </Box>
         <Box
@@ -282,7 +287,7 @@ const Dashboard = () => {
             Distribución por región
           </Typography>
           <Box height="300px">
-            <GeographyChart isDashboard={true} data={Data.byRegionForMap}/>
+            <GeographyChart isDashboard={true} data={totalPorRegion}/>
           </Box>
         </Box>
       </Box>

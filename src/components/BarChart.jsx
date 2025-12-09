@@ -1,4 +1,4 @@
-import { useTheme } from "@mui/material";
+import { useTheme8 } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
 import { tokens } from "../theme";
 
@@ -6,9 +6,15 @@ const BarChart = ({ isDashboard = false, data }) => {
   const colors = tokens();
 
   let safeData = [];
+
   if (Array.isArray(data)) {
-    safeData = data;
+    // viene como [{ id, label, value }]
+    safeData = data.map((d) => ({
+      universidad: d.id,
+      cantidad: d.value,
+    }));
   } else if (data && typeof data === "object") {
+    // viene como { USACH: 10, UCT: 8, ... }
     safeData = Object.entries(data).map(([key, value]) => ({
       universidad: key,
       cantidad: value,
