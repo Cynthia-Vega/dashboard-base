@@ -1,13 +1,12 @@
 
-import { Box, Typography, Slider, useTheme } from "@mui/material";
+import { Box, Typography, Slider} from "@mui/material";
 import { useContext } from "react";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 
 
 const Config = ({fontScale, setFontScale }) => {
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
+    const colors = tokens();
 
     console.log("CONFIG fontScale:", fontScale);
 
@@ -21,7 +20,7 @@ const Config = ({fontScale, setFontScale }) => {
                     subtitle="Wolis, aquí puedes modificar el tamaño de la letra"
                   />
 
-            <Typography variant="h4" gutterBottom color={colors.grey[100]}>
+            <Typography variant="h4" gutterBottom color={colors.primary[100]}>
                 Tamaño de texto
             </Typography>
 
@@ -37,18 +36,18 @@ const Config = ({fontScale, setFontScale }) => {
                     setFontScale(newValue);
                 }}
                 sx={{
-                    color: colors.greenAccent[500], 
+                    color: colors.green[200], 
                     '& .MuiSlider-rail': {
-                    backgroundColor: colors.grey[700],
+                    backgroundColor: colors.primary[100],
                     opacity: 0.4,
                     },
                     '& .MuiSlider-thumb': {
-                    border: `2px solid ${colors.greenAccent[300]}`,
+                    border: `2px solid ${colors.green[200]}`,
                     },
                 }}
             />
 
-            <Typography variant="h4" mt={1} color={colors.grey[100]}>
+            <Typography variant="h4" mt={1} color={colors.primary[100]}>
                 Escala actual: {Number(fontScale).toFixed(1)}x
             </Typography>
         </Box>

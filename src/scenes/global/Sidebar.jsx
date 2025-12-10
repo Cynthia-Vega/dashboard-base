@@ -39,7 +39,6 @@ const Sidebar = () => {
     const colors = tokens();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [selected, setSelected] = useState("Dashboard");
-    console.log("isCollapsed:", isCollapsed);
 
     return (
         <Box
@@ -83,7 +82,7 @@ const Sidebar = () => {
                             ml="15px"
                         >
                             <Typography variant="h3" color={colors.primary[100]}>
-                            ADMIN PANEL
+                            ADMIN
                             </Typography>
                             <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                             <MenuOutlinedIcon />
@@ -98,12 +97,12 @@ const Sidebar = () => {
                             <img
                             alt="profile-user"
                             width="150px"
-                            height="150px"
-                            src={`../../assets/us.jpg`}
-                            style={{ cursor: "pointer", borderRadius: "70%" }}
+                            height="auto"
+                            src={`../../assets/logo.png`}
+                            style={{}}
                             />
                         </Box>
-                        <Box textAlign="center">
+                        {/* <Box textAlign="center">
                             <Typography
                             variant="h2"
                             color={colors.primary[100]}
@@ -115,34 +114,30 @@ const Sidebar = () => {
                             <Typography variant="h5" color={colors.green[200]}>
                             probando admin
                             </Typography>
-                        </Box>
+                        </Box> */}
                         </Box>
                     )}
 
                     {/* Menu Items */}
 
                     <Box paddingLeft={isCollapsed ? undefined : "10%"}>
-                        {/* <Item
-                            title="Dashboard"
-                            to="/"
-                            icon={<HomeOutlinedIcon />}
-                            selected={selected}
-                            setSelected={setSelected}
-                        /> */}
-
                         <Item
                             title="Dashboard"
                             to="/"
                             icon={
-                                <img
-                                alt="Dashboard"
-                                src="/assets/logo.png"
-                                style={{ width: 30, height: 30, borderRadius: "20%" }}
-                                />
+                                isCollapsed ? (
+                                    <img
+                                        alt="Dashboard"
+                                        src="/assets/logo.png"
+                                        style={{ width: 30, height: 30, borderRadius: "20%" }}
+                                    />
+                                    ) : (
+                                    <HomeOutlinedIcon />
+                                    )
                             }
                             selected={selected}
                             setSelected={setSelected}
-                            />
+                        />
 
                         <Typography
                             variant="h6"

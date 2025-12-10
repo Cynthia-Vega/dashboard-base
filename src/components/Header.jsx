@@ -31,13 +31,13 @@ const Header = ({ title, subtitle }) => {
     </Box>
 
     
-    <img
+    {/* <img
       alt="logo"
       src="/assets/logo.png"
       width="120"
       height="120"
       style={{marginRight: "50px"}}
-    />
+    /> */}
   </Box>
 
   <hr />

@@ -20,7 +20,6 @@ const ProgressCircle = ({size = "40" , data, totalRegions = 16}) => {
   const angle = clamped * 360;
 
   return (
-    console.log("Progreso del ProgressCircle:", clamped, angle),
     <Box
       sx={{
         background: `radial-gradient(${colors.primary[200]} 55%, transparent 56%),
