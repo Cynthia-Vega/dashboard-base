@@ -19,6 +19,50 @@ const REGION_TO_CODE = {
   XVI: 16,
 };
 
+const University = {
+  'USACH': 'Universidad de Santiago de Chile',
+  'UCT': 'Universidad Católica de Temuco',
+  'UC': 'Pontificia Universidad Católica de Chile',
+  'UACH': 'Universidad Austral de Chile',
+  'UOH': 'Universidad de O\'Higgins',
+  'UST': 'Universidad Santo Tomás',
+  'UCSH': 'Universidad Católica Silva Henríquez',
+  'USS': 'Universidad San Sebastián',
+  'ULAGOS': 'Universidad de los Lagos',
+  'UCHILE': 'Universidad de Chile',
+  'UDEC': 'Universidad de Concepción',
+  'UMAG': 'Universidad de Magallanes',
+  'UDA': 'Universidad de Atacama',
+  'USERENA': 'Universidad de La Serena',
+  'UTALCA': 'Universidad de Talca',
+  'UTA': 'Universidad de Tarapacá',
+  'UCSC': 'Universidad Católica de la Santísma Concepción',
+  'UDLA': 'Universidad de Las Américas',
+  'UFT': 'Universidad Finis Terrae',
+  'UBB': 'Universidad del Bío-Bío',
+  'UMCE': 'Universidad Metropolitana de Ciencias de la Educación',
+  'UFRO': 'Universidad de La Frontera',
+  'UNAB': 'Universidad Andrés Bello',
+  'UCN': 'Universidad Católica del Norte',
+  'UAH': 'Universidad Alberto Hurtado',
+  'UANDES': 'Universidad de los Andes',
+  'PUCV': 'Pontificia Universidad Católica de Valparaíso',
+  'UCM': 'Universidad Católica del Maule',
+  'UPLA': 'Universidad de Playa Ancha',
+  'UBO': 'Universidad Bernardo O\'Higgins',
+  'UDD': 'Universidad del Desarrollo',
+  'UNAP': 'Universidad Arturo Prat',
+  'UDP': 'Universidad Diego Portales',
+};
+
+const DEGREE_RANK = {
+  "Licenciatura": 1,
+  "Magíster": 2,
+  "Magister": 2,   // por si viene sin tilde
+  "Doctorado": 3,
+};
+
+
 const colsToRemove = [
       "col_0",
       "Adjunte una foto para actualizar tu perfil",
@@ -133,7 +177,7 @@ export async function parseExcel(participantesFile, encuestaFile) {
       if (rows.length < 4) return [];
 
       const header = rows[0];      // encabezado
-      const dataRows = rows.slice(3); // datos desde fila 3
+      const dataRows = rows.slice(2); // datos desde fila 3
 
       return dataRows
         .filter((row) => row.some((cell) => cell !== ""))
@@ -146,33 +190,36 @@ export async function parseExcel(participantesFile, encuestaFile) {
         });
     })();
 
-    // 4) MERGE por ID (LEFT JOIN desde PARTICIPANTES)
-    const encuestaById = new Map(
-      encuesta
-        .filter((e) => e.ID !== "" && e.ID != null)
-        .map((e) => [String(e.ID), e])
+    // 4) MERGE por ID (LEFT JOIN desde ENCUESTA)
+    const participantesById = new Map(
+      participantes
+        .filter((p) => p.ID !== "" && p.ID != null)
+        .map((p) => [String(p.ID), p])
     );
 
-    const merged = participantes.map((p) => {
-      const id = String(p.ID); // aseguramos comparar como string
-      const enc = encuestaById.get(id);
+    const merged = encuesta
+      .filter((e) => e.ID !== "" && e.ID != null) // opcional, si quieres solo IDs válidos
+      .map((e) => {
+        const id = String(e.ID);
+        const p = participantesById.get(id);
 
-      if (!enc) {
+        if (!p) {
+          // No hay fila en participantes para este ID
+          return {
+            ...e,
+            _participante_encontrado: false,
+          };
+        }
+
+        // Evitamos duplicar ID desde participantes
+        const { ID: _id, ...pSinID } = p;
+
         return {
-          ...p,
-          _encuesta_encontrada: false,
+          ...e,              // base: ENCUESTA
+          ...pSinID,         // se agregan columnas de PARTICIPANTES
+          _participante_encontrado: true,
         };
-      }
-
-      // Evitamos duplicar ID
-      const { ID: _id, ...encSinID } = enc;
-
-      return {
-        ...p,
-        ...encSinID,
-        _encuesta_encontrada: true,
-      };
-    });
+      });
     // 5) Agregar columna region_id usando REGION_TO_CODE
     const mergedWithRegion = merged.map((row) => {
       const rawRegion = row["Región"]; // 👈 OJO: usa el nombre exacto de la columna
@@ -190,10 +237,68 @@ export async function parseExcel(participantesFile, encuestaFile) {
     });
 
 
+    const mergedWithUniversity = mergedWithRegion.map((row) => {
+      const rawUniversity = row["Universidad"]; // 👈 OJO: usa el nombre exacto de la columna
+      if (!rawUniversity) {
+        return { ...row, nombre_universidad: null };
+      }
+
+      const universityKey = String(rawUniversity).trim();
+      const universityCode = University[universityKey] ?? null;
+
+      return {
+        ...row,
+        nombre_universidad: universityCode,
+      };
+    });
+
+    function getHighestDegree(raw) {
+      if (!raw) return null;
+
+      const ranking = {
+        "Licenciatura": 1,
+        "Magíster": 2,
+        "Magister": 2, // variante sin tilde
+        "Doctorado": 3,
+      };
+
+      const parts = String(raw)
+        .split(",")
+        .map((d) => d.trim())
+        .filter(Boolean);
+
+      let best = null;
+      let bestRank = -Infinity;
+
+      parts.forEach((d) => {
+        const normalized = d === "Magister" ? "Magíster" : d;
+        const rank = ranking[normalized];
+
+        if (rank && rank > bestRank) {
+          bestRank = rank;
+          best = normalized;
+        }
+      });
+
+      return best ?? null;
+    }
+
+
+    const mergedWithDegree = mergedWithUniversity.map((row) => {
+    const rawDegree = row["Grado académico"]; // ← usa el nombre exacto de tu columna
+    const gradoFinal = getHighestDegree(rawDegree);
+
+    return {
+      ...row,
+      grado_final: gradoFinal,
+    };
+  });
+
+
     // 6) Limpieza de columnas innecesarias
      
 
-    let cleaned = removeColumns(mergedWithRegion, colsToRemove);
+    let cleaned = removeColumns(mergedWithDegree, colsToRemove);
 
     console.log("Merge final:", cleaned.slice(0, 3));
 

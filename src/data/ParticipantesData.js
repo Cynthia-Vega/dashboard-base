@@ -1,5 +1,5 @@
 // src/data/useParticipantesData.js
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { parseExcel } from "../utils/parseExcel";
 
 
@@ -50,8 +50,8 @@ function cumulativeFrequency(data, columnName) {
   });
 }
 
-function categorizeByExperience(rawData, columnName) {
-  if (!Array.isArray(rawData)) return [];
+function categorizeByExperience(data, columnName) {
+  if (!Array.isArray(data)) return [];
 
   const counts = {
     novel: 0,
@@ -59,7 +59,7 @@ function categorizeByExperience(rawData, columnName) {
     experto: 0,
   };
 
-  rawData.forEach((row) => {
+  data.forEach((row) => {
     let years = row[columnName];
 
     if (years === null || years === undefined) return;
@@ -87,6 +87,7 @@ function categorizeByExperience(rawData, columnName) {
 
 
 
+
 export function ParticipantesData() {
   const [rawData, setRawData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -94,7 +95,7 @@ export function ParticipantesData() {
     async function load() {
       try {
         const merged = await parseExcel("/participantes.xlsx", "/encuesta.xlsx");
-        console.log("JSON limpio desde Excel:");
+        console.log("JSON limpio desde Excel:", merged);
         setRawData(merged);
       } catch (err) {
         console.error("Error cargando datos de participantes:", err);
@@ -105,7 +106,10 @@ export function ParticipantesData() {
     load();
   }, []);
 
-  // 🔹 funciones auxiliares QUE USAN rawData ya cargado
+
+
+
+
 
   // ej 1: data para un gráfico de pie según cualquier columna
   const frecuencyData = (columnName) => frecuency(rawData, columnName);

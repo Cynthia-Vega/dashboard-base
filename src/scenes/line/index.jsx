@@ -4,9 +4,9 @@ import LineChart from "../../components/LineChart";
 import { ParticipantesData } from "../../data/ParticipantesData";
 
 const Line = () => {
-  const { loading, frecuencyData } = ParticipantesData();
+  const { loading, cumulativeFrequencyData } = ParticipantesData();
   if (loading) return <div>Cargando datos…</div>;
-  const totalPoranio = frecuencyData("¿En qué año te uniste a RedFID? ");
+  const totalPoranio = cumulativeFrequencyData("¿En qué año te uniste a RedFID? ");
   return (
     <Box m="20px">
       <Header title="Line Chart" subtitle="Wolas, aquí puedes ver el gráfico de líneas" />

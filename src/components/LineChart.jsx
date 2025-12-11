@@ -14,7 +14,6 @@ const LineChart = ({data, isDashboard = false }) => {
       })),
     },
   ];
-  console.log("isDashboard en LineChart:", isDashboard);
   return (
     <ResponsiveLine
       data={formattedData}
@@ -52,7 +51,7 @@ const LineChart = ({data, isDashboard = false }) => {
         },
       }}
       colors={colors.green[200]}
-      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+      margin={{ top: 25, right: 25, bottom: 25, left: 25 }}
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",
@@ -117,10 +116,10 @@ const LineChart = ({data, isDashboard = false }) => {
           ],}] 
         :[
         {
-          anchor: "bottom-right",
+          anchor: "top-left",
           direction: "column",
           justify: false,
-          translateX: 100,
+          translateX: 10,
           translateY: 0,
           itemsSpacing: 0,
           itemDirection: "left-to-right",
