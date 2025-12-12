@@ -21,6 +21,9 @@ import Target from "../../components/Target";
 
 
 
+
+
+
 const Dashboard = () => {
   const colors = tokens();
   const { loading, frecuencyData, cumulativeFrequencyData, experienceLevelsData} = ParticipantesData();
@@ -485,7 +488,7 @@ const Dashboard = () => {
 
         {/* Card: Distribución por región */}
         <Box
-          gridColumn={{ xs: "span 12", sm: "span 12", md: "span 4" }}
+          gridColumn={{ xs: "span 12", sm: "span 12", md: "span 8" }}
           gridRow="span 2"
           backgroundColor={colors.primary[200]}
           p="15px"
@@ -501,11 +504,15 @@ const Dashboard = () => {
             Distribución por región
           </Typography>
 
-          <Box flex="1">
-            <Box height="260px">
-              <GeographyChart isDashboard={true} data={totalPorRegion} />
-            </Box>
-          </Box>
+          <Box flex="1" display="flex" justifyContent="center" alignItems="center">
+  <Box
+    height="260px"
+    width="650px"          // 🔥 CLAVE
+    position="relative"
+  >
+    <GeographyChart isDashboard={true} data={totalPorRegion} />
+  </Box>
+</Box>
         </Box>
       </Box>
     </Box>

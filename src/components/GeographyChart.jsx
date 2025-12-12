@@ -1,4 +1,3 @@
-import { useTheme } from "@mui/material";
 import { ResponsiveChoropleth } from "@nivo/geo";
 import { geoFeatures } from "../data/mockGeoFeatures";
 import { tokens } from "../theme";
@@ -10,9 +9,8 @@ const GeographyChart = ({ isDashboard = false, data }) => {
 
   // tu paleta personalizada (puedes cambiar estos colores)
   const colorScale = [
-    "#f7c4c1ff", // 0 → casi sin datos (muy claro)
-    "#f7c4c1ff", // bajo
-    "#f7c4c1ff", // 🔥 SEGUNDO MÁS FUERTE (tu color base)
+
+
     "#f5a49eff", // alto
     "#fd756b", // máximo (más fuerte que fd756b)
   ];
@@ -27,6 +25,7 @@ const GeographyChart = ({ isDashboard = false, data }) => {
   const maxValue = Math.max(...chartData.map((d) => d.value), 1);
 
   return (
+    <div style={{ width: "100%", height: "100%" }}>
     <ResponsiveChoropleth
       data={chartData}
       features={mappedFeatures}
@@ -37,9 +36,9 @@ const GeographyChart = ({ isDashboard = false, data }) => {
       label="properties.Region"
       valueFormat=".0f"
       projectionType="mercator"
-      projectionScale={isDashboard ? 300 : 850}
-      projectionTranslation={isDashboard ? [2.2, -0.2] : [2, -0.34]}
-      projectionRotation={[0, 0, 0]}
+      projectionScale={isDashboard ? 850 : 850}
+      projectionTranslation={isDashboard ? [1.8, 0.7] : [1.7, 0.4]}
+      projectionRotation={[0, 98,15]}
       borderWidth={1}
       borderColor="#ffffff"
       legends={[
@@ -67,6 +66,7 @@ const GeographyChart = ({ isDashboard = false, data }) => {
               },
             ]}
     />
+    </div>
   );
 };
 export default GeographyChart;
