@@ -17,6 +17,8 @@ import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 
+import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
+
 const Item = ({title, to, icon, selected, setSelected})=> {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -164,6 +166,7 @@ const Sidebar = () => {
                             selected={selected}
                             setSelected={setSelected}
                         />
+                    
                         <Item
                             title="Invoices Balances"
                             to="/invoices"
@@ -171,6 +174,15 @@ const Sidebar = () => {
                             selected={selected}
                             setSelected={setSelected}
                         />
+
+                        <Item
+                            title="Universidades"
+                            to="/universidades"
+                            icon={< AccountBalanceOutlinedIcon />}
+                            selected={selected}
+                            setSelected={setSelected}
+                        />
+                        
 
                         <Typography
                             variant="h6"

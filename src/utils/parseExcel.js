@@ -36,7 +36,7 @@ const University = {
   'USERENA': 'Universidad de La Serena',
   'UTALCA': 'Universidad de Talca',
   'UTA': 'Universidad de Tarapacá',
-  'UCSC': 'Universidad Católica de la Santísma Concepción',
+  'UCSC': 'Universidad Católica de la Santísima Concepción',
   'UDLA': 'Universidad de Las Américas',
   'UFT': 'Universidad Finis Terrae',
   'UBB': 'Universidad del Bío-Bío',

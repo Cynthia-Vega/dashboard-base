@@ -20,6 +20,8 @@ import User from "./scenes/user";
 import Config from "./scenes/config";
 import Geography from "./scenes/geography";
 
+import Universidades from "./scenes/universidades";
+
 
 
 function App() {
@@ -51,6 +53,7 @@ function App() {
                 <Route path="/user" element={<User />} />
                 <Route path="/config" element={<Config  fontScale={fontScale} setFontScale={setFontScale} />} />
                 <Route path="/geography" element={<Geography />} />
+                <Route path="/universidades" element={<Universidades />} />
               </Routes>
             </main>  
           </div>
