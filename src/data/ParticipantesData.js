@@ -26,6 +26,89 @@ function frecuency(data, columnName) {
   }));
 }
 
+function isMarked(v) {
+  if (v === null || v === undefined) return false;
+
+  if (typeof v === "number") return v !== 0 && !Number.isNaN(v);
+  if (typeof v === "boolean") return v;
+
+  const s = String(v).trim().toLowerCase();
+  if (!s) return false;
+
+  // marcas típicas en planillas
+  return ["1", "x", "si", "sí", "true", "ok", "✔"].includes(s);
+}
+
+function getColumns(data) {
+  if (!Array.isArray(data) || data.length === 0) return [];
+  return Object.keys(data[0] || {});
+}
+
+/**
+ * Cuenta eventos por COLUMNA (cada columna = un evento específico)
+ * y también agrega por TIPO (Encuentros, Reuniones, etc.)
+ */
+function eventsFrequencyAll(data, opts = {}) {
+  if (!Array.isArray(data)) return { byEvent: [], byType: [] };
+
+  const {
+    // patrones que definen qué columnas son eventos
+    typeMatchers = [
+      { type: "Encuentros", regex: /encuentro/i },
+      { type: "Reuniones", regex: /^reuni[oó]n/i },
+      { type: "Talleres", regex: /^taller/i },
+      { type: "Lanzamientos", regex: /lanzamiento/i },
+      { type: "Webinars", regex: /webinar/i },
+    ],
+    // cosas que NO quieres contar como evento
+    excludeMatchers = [
+      /^curso\s*-/i,
+      /^compromiso/i,
+      /^consentimiento/i,
+      /^direcci[oó]n de correo/i,
+      /^id$/i,
+    ],
+  } = opts;
+
+  const cols = getColumns(data);
+
+  // columnas candidatas a evento
+  const eventCols = cols.filter((c) => {
+    if (excludeMatchers.some((rx) => rx.test(c))) return false;
+    return typeMatchers.some((m) => m.regex.test(c));
+  });
+
+  // conteo por columna (evento específico)
+  const countsByEvent = {};
+  data.forEach((row) => {
+    eventCols.forEach((col) => {
+      if (isMarked(row[col])) {
+        countsByEvent[col] = (countsByEvent[col] || 0) + 1;
+      }
+    });
+  });
+
+  const byEvent = Object.entries(countsByEvent)
+    .map(([key, count]) => ({ id: key, label: key, value: count }))
+    .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
+
+  // conteo por tipo (suma de columnas del tipo)
+  const typeTotals = {};
+  typeMatchers.forEach((m) => (typeTotals[m.type] = 0));
+
+  byEvent.forEach((ev) => {
+    const match = typeMatchers.find((m) => m.regex.test(ev.id));
+    if (match) typeTotals[match.type] += ev.value;
+  });
+
+  const byType = Object.entries(typeTotals).map(([t, v]) => ({
+    id: t,
+    label: t,
+    value: v,
+  }));
+
+  return { byEvent, byType };
+}
 
 
 function cumulativeFrequency(data, columnName) {
@@ -115,6 +198,8 @@ export function ParticipantesData() {
   const frecuencyData = (columnName) => frecuency(rawData, columnName);
   const cumulativeFrequencyData = (columnName) => cumulativeFrequency(rawData, columnName)
   const experienceLevelsData = (columnName) => categorizeByExperience(rawData, columnName);
+  const eventsData = (opts) => eventsFrequencyAll(rawData, opts);
+
 
   // ej 2: podrías agregar más helpers, por ejemplo:
   // const getBarData = (columnName) => buildNivoBarData(rawData, columnName);
@@ -125,6 +210,7 @@ export function ParticipantesData() {
     rawData,      // por si algún gráfico quiere trabajar directo con la base
     frecuencyData,   // función genérica para pie
     cumulativeFrequencyData,
-    experienceLevelsData
+    experienceLevelsData,
+    eventsData,
   };
 }

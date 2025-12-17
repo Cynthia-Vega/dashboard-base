@@ -21,6 +21,8 @@ import Config from "./scenes/config";
 import Geography from "./scenes/geography";
 
 import Universidades from "./scenes/universidades";
+import Eventos from "./scenes/eventos";
+
 
 
 
@@ -40,7 +42,7 @@ function App() {
               <Topbar />
               <Routes>
                 <Route path="/" element={<Dashboard />} />
-                <Route path="/team" element={<Team />} />
+                <Route path="/participantes" element={<Team />} />
                 <Route path="/invoices" element={<Invoices />} />
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/bar" element={<Bar />} />
@@ -54,6 +56,7 @@ function App() {
                 <Route path="/config" element={<Config  fontScale={fontScale} setFontScale={setFontScale} />} />
                 <Route path="/geography" element={<Geography />} />
                 <Route path="/universidades" element={<Universidades />} />
+                <Route path="/eventos" element={<Eventos />} />
               </Routes>
             </main>  
           </div>

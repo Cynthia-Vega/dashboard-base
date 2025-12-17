@@ -55,12 +55,6 @@ const University = {
   'UDP': 'Universidad Diego Portales',
 };
 
-const DEGREE_RANK = {
-  "Licenciatura": 1,
-  "Magíster": 2,
-  "Magister": 2,   // por si viene sin tilde
-  "Doctorado": 3,
-};
 
 
 const colsToRemove = [
@@ -77,7 +71,6 @@ const colsToRemove = [
       "¿Cuáles son tus temas de interés en investigación? ",
       "¿Qué temas te motivan en tu rol de formador? ",
       "En 5 líneas, comparte una breve descripción de tu trayectoria para que la comunidad RedFID pueda conocerte mejor (por ejemplo: carrera, trayectoria profesional, lugares donde has trabajado, etc) ",
-      "Indique su nombre y apellido",
       "_encuestra_encontrada",
     ];
 

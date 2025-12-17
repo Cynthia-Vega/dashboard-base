@@ -17,6 +17,8 @@ import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 
+
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 
 const Item = ({title, to, icon, selected, setSelected})=> {
@@ -153,27 +155,27 @@ const Sidebar = () => {
                      
                         
                         <Item
-                            title="Manage Team"
-                            to="/team"
+                            title="Participantes"
+                            to="/participantes"
                             icon={<PeopleOutlinedIcon />}
                             selected={selected}
                             setSelected={setSelected}
                         />
-                        <Item
+                        {/* <Item
                             title="Contacts Information"
                             to="/contacts"
                             icon={<ContactsOutlinedIcon />}
                             selected={selected}
                             setSelected={setSelected}
-                        />
+                        /> */}
                     
-                        <Item
+                        {/* <Item
                             title="Invoices Balances"
                             to="/invoices"
                             icon={<ReceiptOutlinedIcon />}
                             selected={selected}
                             setSelected={setSelected}
-                        />
+                        /> */}
 
                         <Item
                             title="Universidades"
@@ -182,9 +184,16 @@ const Sidebar = () => {
                             selected={selected}
                             setSelected={setSelected}
                         />
+                        <Item
+                            title="Eventos"
+                            to="/eventos"
+                            icon={< CalendarMonthOutlinedIcon />}
+                            selected={selected}
+                            setSelected={setSelected}
+                        />
                         
 
-                        <Typography
+                        {/* <Typography
                             variant="h6"
                             color={colors.green[200]}
                             fontWeight="bold"
@@ -215,7 +224,7 @@ const Sidebar = () => {
                             icon={<HelpOutlineOutlinedIcon />}
                             selected={selected}
                             setSelected={setSelected}
-                        />
+                        /> */}
 
                         <Typography
                             variant="h6"
@@ -228,7 +237,7 @@ const Sidebar = () => {
 
                         
 
-                        <Item
+                        {/* <Item
                             title="Bar Chart"
                             to="/bar"
                             icon={<BarChartOutlinedIcon />}
@@ -241,7 +250,7 @@ const Sidebar = () => {
                             icon={<PieChartOutlineOutlinedIcon />}
                             selected={selected}
                             setSelected={setSelected}
-                        />
+                        /> */}
                         <Item
                             title="Line Chart"
                             to="/line"

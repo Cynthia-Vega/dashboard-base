@@ -63,7 +63,7 @@ const Universidades = () => {
   );
 
   return (
-    <Box m="20px">
+    <Box m="20px" pb="100px">
       <Header
         title="UNIVERSIDADES"
         subtitle="Distribución de formadores por universidad"
