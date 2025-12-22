@@ -136,28 +136,20 @@ function cumulativeFrequency(data, columnName) {
 function categorizeByExperience(data, columnName) {
   if (!Array.isArray(data)) return [];
 
-  const counts = {
-    novel: 0,
-    intermedio: 0,
-    experto: 0,
-  };
+  const currentYear = new Date().getFullYear();
+
+  const counts = { novel: 0, intermedio: 0, experto: 0 };
 
   data.forEach((row) => {
-    let years = row[columnName];
+    const startYear = Number(row?.[columnName]);
+    if (!Number.isFinite(startYear)) return;
 
-    if (years === null || years === undefined) return;
+    const years = currentYear - startYear;
+    if (years < 0) return;
 
-    years = Number(years);
-
-    if (isNaN(years)) return;
-
-    if (years >= 0 && years <= 5) {
-      counts.novel += 1;
-    } else if (years >= 6 && years <= 11) {
-      counts.intermedio += 1;
-    } else if (years >= 12) {
-      counts.experto += 1;
-    }
+    if (years <= 5) counts.novel += 1;
+    else if (years <= 11) counts.intermedio += 1;
+    else counts.experto += 1;
   });
 
   return [
@@ -166,6 +158,59 @@ function categorizeByExperience(data, columnName) {
     { id: "experto", label: "experto", value: counts.experto },
   ];
 }
+
+
+
+
+// ✅ Mapa: nombre exacto -> carpeta abreviación + archivo
+const UNI_IMG = {
+  "Pontificia Universidad Católica de Chile": { folder: "PUC", file: "1.png" },
+  "Pontificia Universidad Católica de Valparaíso": { folder: "PUCV", file: "1.png" },
+  "Universidad Alberto Hurtado": { folder: "UAH", file: "1.png" },
+  "Universidad Andrés Bello": { folder: "UNAB", file: "1.png" },
+  "Universidad Arturo Prat": { folder: "UNAP", file: "1.png" },
+  "Universidad Austral de Chile": { folder: "UACH", file: "1.png" },
+  "Universidad Bernardo O'Higgins": { folder: "UBO", file: "1.png" },
+  "Universidad Católica de la Santísima Concepción": { folder: "UCSC", file: "1.png" },
+  "Universidad Católica de Temuco": { folder: "UCT", file: "1.png" },
+  "Universidad Católica del Maule": { folder: "UCM", file: "1.png" },
+  "Universidad Católica del Norte": { folder: "UCN", file: "1.png" },
+  "Universidad Católica Silva Henríquez": { folder: "UCSH", file: "1.png" },
+  "Universidad de Atacama": { folder: "UDA", file: "1.png" },
+  "Universidad de Chile": { folder: "UCH", file: "1.png" },
+  "Universidad de Concepción": { folder: "UDEC", file: "1.png" },
+  "Universidad de La Frontera": { folder: "UFRO", file: "1.png" },
+  "Universidad de La Serena": { folder: "USERENA", file: "1.png" },
+  "Universidad de Las Américas": { folder: "UDLA", file: "1.png" },
+  "Universidad del Bío-Bío": { folder: "UBB", file: "1.png" },
+  "Universidad del Desarrollo": { folder: "UDD", file: "1.png" },
+  "Universidad Diego Portales": { folder: "UDP", file: "1.png" },
+  "Universidad de los Andes": { folder: "UANDES", file: "1.png" },
+  "Universidad de los Lagos": { folder: "ULA", file: "1.png" },
+  "Universidad de Magallanes": { folder: "UMAG", file: "1.png" },
+  "Universidad de O'Higgins": { folder: "UOH", file: "1.png" },
+  "Universidad de Playa Ancha": { folder: "UPLA", file: "1.png" },
+  "Universidad de Santiago de Chile": { folder: "USACH", file: "1.png" },
+  "Universidad de Talca": { folder: "UTALCA", file: "1.png" },
+  "Universidad de Tarapacá": { folder: "UTA", file: "1.png" },
+  "Universidad Finis Terrae": { folder: "UFT", file: "1.png" },
+  "Universidad Metropolitana de Ciencias de la Educación": { folder: "UMCE", file: "1.png" },
+  "Universidad San Sebastián": { folder: "USS", file: "1.png" },
+  "Universidad Santo Tomás": { folder: "UST", file: "1.png" },
+};
+
+function getUniImgSrc(universityName) {
+  const key = String(universityName ?? "").trim().replace(/\s+/g, " ");
+  const ref = UNI_IMG[key];
+  if (!ref) return null;
+  return `/assets/universities/${ref.folder}/${ref.file}`;
+}
+
+
+
+
+
+
 
 
 
@@ -189,21 +234,99 @@ export function ParticipantesData() {
     load();
   }, []);
 
+  // dentro de ParticipantesData(), cuando ya tienes rawData cargado:
+
+const programsCategoryCounts = () => {
+  const counts = {
+    media: 0,
+    basica: 0,
+    parvularia: 0,
+    formacion_pedagogica: 0,
+    postgrado: 0,
+    otras_carreras: 0,
+  };
+
+  (rawData || []).forEach((row) => {
+    const cats = row?.programa_categorias;
+    if (!Array.isArray(cats)) return;
+
+    // ✅ 1 por persona por categoría (tu regla)
+    cats.forEach((c) => {
+      if (counts[c] !== undefined) counts[c] += 1;
+    });
+  });
+
+  return [
+    { id: "media", label: "Media", value: counts.media },
+    { id: "basica", label: "Básica", value: counts.basica },
+    { id: "parvularia", label: "Parvularia", value: counts.parvularia },
+    { id: "formacion_pedagogica", label: "Formación pedagógica", value: counts.formacion_pedagogica },
+    { id: "postgrado", label: "Postgrado", value: counts.postgrado },
+    { id: "otras_carreras", label: "Otras carreras", value: counts.otras_carreras },
+  ];
+};
+
+
+function regionStats() {
+  if (!Array.isArray(rawData)) return {};
+
+  const norm = (v) => String(v ?? "").trim();
+  const low = (v) => norm(v).toLowerCase();
+
+  const by = new Map();
+
+  rawData.forEach((row) => {
+    const rid = norm(row?.region_id);
+    if (!rid) return;
+    if (!by.has(rid)) by.set(rid, []);
+    by.get(rid).push(row);
+  });
+
+  const out = {};
+
+  by.forEach((rows, rid) => {
+    const participantsSet = new Set();
+    const universitiesSet = new Set();
+    const careersSet = new Set();
+    const programsSet = new Set();
+
+    rows.forEach((r) => {
+      const p = low(r?.["Indique su nombre y apellido"]);
+      if (p) participantsSet.add(p);
+
+      const u = low(r?.["Universidad"]);
+      if (u) universitiesSet.add(u);
+
+      const c = low(r?.["Carrera"]);
+      if (c) careersSet.add(c);
+
+      const arr = Array.isArray(r?.programa_categorias) ? r.programa_categorias : [];
+      arr.forEach((x) => {
+        const k = low(x);
+        if (k) programsSet.add(k);
+      });
+    });
+
+    out[String(rid)] = {
+      region_id: String(rid),
+      participantes: participantsSet.size,
+      universidades: universitiesSet.size,
+      carreras: careersSet.size,
+      programas: programsSet.size,
+    };
+  });
+
+  return out; // { "13": { ... }, "5": { ... } }
+}
 
 
 
-
-
-  // ej 1: data para un gráfico de pie según cualquier columna
   const frecuencyData = (columnName) => frecuency(rawData, columnName);
-  const cumulativeFrequencyData = (columnName) => cumulativeFrequency(rawData, columnName)
+  const cumulativeFrequencyData = (columnName) => cumulativeFrequency(rawData, columnName);
   const experienceLevelsData = (columnName) => categorizeByExperience(rawData, columnName);
   const eventsData = (opts) => eventsFrequencyAll(rawData, opts);
+  const universityImage = (universityName) => getUniImgSrc(universityName)
 
-
-  // ej 2: podrías agregar más helpers, por ejemplo:
-  // const getBarData = (columnName) => buildNivoBarData(rawData, columnName);
-  // const getGeoData = () => buildGeoData(rawData, "region_id");
 
   return {
     loading,
@@ -212,5 +335,8 @@ export function ParticipantesData() {
     cumulativeFrequencyData,
     experienceLevelsData,
     eventsData,
+    universityImage,
+    programsCategoryCounts,
+    regionStats
   };
 }

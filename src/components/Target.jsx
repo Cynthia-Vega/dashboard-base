@@ -1,15 +1,20 @@
-import { useEffect, useMemo, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import React, { useEffect, useMemo, useState } from "react";
+import { Box, Typography, Collapse, IconButton, Divider } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { tokens } from "../theme";
 
 const Target = ({
   title = "",
+  subtitle = "",
+
   value = 0,
+  valueLabel = "",
+
   imgSrc,
   icon,
 
-  orientation = "horizontal", // "horizontal" | "vertical"
-  variant = "dash", // "dash" | "hero"
+  orientation = "horizontal",
+  variant = "dash",
   fullWidth = false,
 
   bgColor,
@@ -18,17 +23,34 @@ const Target = ({
   borderColor,
   titleColor,
   valueColor,
+  subtitleColor,
   sx,
 
-  // ✅ NUEVO: control de tamaño y “recorte” de imagen (logos vs fotos)
-  mediaSize = 44, // tamaño del círculo/logo en modo dash (y base para hero si quieres)
-  imgFit = "cover", // "cover" (fotos) | "contain" (logos)
-  imgRound = true, // true = círculo, false = cuadrado redondeado
+  mediaSize = 44,
+  imgFit = "cover",
+  imgRound = true,
 
   duration = 900,
+
+  expandable = false,
+  defaultExpanded = false,
+  onToggle,
+  children,
+
+  expandedDivider = true,
+  expandedPaddingTop = 12,
+
+  /* ✅ NUEVO: compat lista */
+  hideValue = false,            // oculta el número (y label)
+  headerOnly = false,           // solo header (pero permite expandir para mostrar children)
+  titleWrap = false,            // true: permite 2 líneas
+  headerMinHeight,              // fuerza alto del header
+  headerPaddingY,               // override del py
+  expandIconPosition = "br",    // "br" bottom-right (default), "tr" top-right
 }) => {
   const colors = tokens();
   const [displayValue, setDisplayValue] = useState(0);
+  const [open, setOpen] = useState(defaultExpanded);
 
   const formatted = useMemo(
     () => displayValue.toLocaleString("es-CL"),
@@ -36,6 +58,7 @@ const Target = ({
   );
 
   useEffect(() => {
+    // Si está oculto, igual animamos internamente pero no lo mostramos
     let raf;
     const start = performance.now();
     const target = Number(value) || 0;
@@ -50,10 +73,24 @@ const Target = ({
     return () => cancelAnimationFrame(raf);
   }, [value, duration]);
 
-  const resolvedBg = bgColor ?? colors.primary[200]; // blanco
+  useEffect(() => {
+    setOpen(defaultExpanded);
+  }, [defaultExpanded]);
+
+  const toggle = () => {
+    if (!expandable) return;
+    setOpen((prev) => {
+      const next = !prev;
+      onToggle?.(next);
+      return next;
+    });
+  };
+
+  const resolvedBg = bgColor ?? colors.primary[200];
   const resolvedBorder = borderColor ?? "rgba(0,0,0,0.10)";
-  const resolvedTitle = titleColor ?? colors.primary[100]; // negro
-  const resolvedValue = valueColor ?? colors.green[200]; // turquesa
+  const resolvedTitle = titleColor ?? colors.primary[100];
+  const resolvedSubtitle = subtitleColor ?? colors.primary[100];
+  const resolvedValue = valueColor ?? colors.green[200];
 
   const cardSx = {
     backgroundColor: resolvedBg,
@@ -61,6 +98,8 @@ const Target = ({
     borderRadius: `${radius}px`,
     boxShadow: shadow ? "0 10px 22px rgba(0,0,0,0.10)" : "none",
     transition: "transform 140ms ease, box-shadow 140ms ease",
+    cursor: expandable ? "pointer" : "default",
+    overflow: "hidden", // ✅ mantiene bordes correctos
     "&:hover": {
       transform: "translateY(-1px)",
       boxShadow: shadow ? "0 14px 26px rgba(0,0,0,0.14)" : "none",
@@ -105,98 +144,369 @@ const Target = ({
         backgroundColor: "rgba(255,255,255,0.75)",
         overflow: "hidden",
         borderRadius: imgRound ? "50%" : "12px",
-        objectFit: imgFit, // ✅ contain para logos
-        // ayuda a logos con fondo transparente: deja “aire” dentro
+        objectFit: imgFit,
         p: imgFit === "contain" ? 0.6 : 0,
         boxSizing: "border-box",
       }}
     />
   );
 
-  // ✅ HERO (Formadores)
-  if (orientation === "vertical" || variant === "hero") {
-    const size = Math.max(96, mediaSize); // por defecto 96+, puedes pasar mediaSize=120 etc
+  const ValueWithLabel = ({ variant = "h4" }) => (
+    <Typography
+      variant={variant}
+      fontWeight={900}
+      color={resolvedValue}
+      sx={{ lineHeight: 1, mt: variant === "h4" ? 0.2 : 0 }}
+    >
+      {formatted}
+      {!!valueLabel && (
+        <Typography
+          component="span"
+          sx={{
+            ml: 1,
+            fontWeight: 900,
+            color: resolvedValue,
+            opacity: 0.9,
+            fontSize:
+              variant === "h2"
+                ? "0.45em"
+                : variant === "h3"
+                ? "0.5em"
+                : "0.55em",
+          }}
+        >
+          {valueLabel}
+        </Typography>
+      )}
+    </Typography>
+  );
 
-    return (
-      <Box
+  const expandIconSx =
+    expandIconPosition === "tr"
+      ? { right: 10, top: 10 }
+      : { right: 10, bottom: 10 }; // default "br"
+
+  // ✅ Flecha anclada al HEADER
+  const ExpandIcon = () =>
+    expandable ? (
+      <IconButton
+        onClick={(e) => {
+          e.stopPropagation();
+          toggle();
+        }}
         sx={{
-          ...cardSx,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          pt: 3,
-          pb: 3,
-          px: 3,
-          minHeight: 240,
-          gap: 1.2,
+          position: "absolute",
+          ...expandIconSx,
+          color: colors.primary[100],
+          transform: open ? "rotate(180deg)" : "rotate(0deg)",
+          transition: "transform .2s ease",
+          zIndex: 2,
+          width: 36,
+          height: 36,
+          border: `1px solid ${resolvedBorder}`,
+          backgroundColor: "rgba(255,255,255,0.70)",
+          "&:hover": { backgroundColor: "rgba(255,255,255,0.90)" },
         }}
       >
-        {imgSrc ? mediaImage(size) : icon ? mediaCircle(size) : null}
+        <ExpandMoreIcon />
+      </IconButton>
+    ) : null;
 
-        <Typography
-          variant="h2"
-          fontWeight={900}
-          color={resolvedValue}
-          sx={{ lineHeight: 0.9, mt: 0.5 }}
-        >
-          {formatted}
-        </Typography>
+  // ✅ estilos de título (nowrap vs 2 líneas)
+  const titleSx = titleWrap
+    ? {
+        lineHeight: 1.15,
+        display: "-webkit-box",
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: "vertical",
+        overflow: "hidden",
+      }
+    : {
+        lineHeight: 1.05,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+      };
 
-        <Typography
-          variant="h5"
-          fontWeight={900}
-          color={resolvedTitle}
-          sx={{ lineHeight: 1.1, textAlign: "center" }}
+  /* =============================
+     VERTICAL / HERO
+     ============================= */
+  if (orientation === "vertical" || variant === "hero") {
+    const size = Math.max(96, mediaSize);
+
+    return (
+      <Box sx={cardSx} onClick={toggle}>
+        {/* HEADER */}
+        <Box
+          sx={{
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            pt: 3,
+            px: 3,
+            pb: expandable ? 4.5 : 3,
+            minHeight: headerMinHeight ?? 240,
+            gap: 1.0,
+          }}
         >
-          {title}
-        </Typography>
+          <ExpandIcon />
+
+          {imgSrc ? mediaImage(size) : icon ? mediaCircle(size) : null}
+
+          {!hideValue && !headerOnly && (
+            <Box sx={{ textAlign: "center" }}>
+              <ValueWithLabel variant="h2" />
+            </Box>
+          )}
+
+          {!!title && (
+            <Typography
+              variant="h5"
+              fontWeight={900}
+              color={resolvedTitle}
+              sx={{ textAlign: "center", ...titleSx }}
+              title={title}
+            >
+              {title}
+            </Typography>
+          )}
+
+          {!!subtitle && (
+            <Typography
+              variant="body2"
+              fontWeight={700}
+              color={resolvedSubtitle}
+              sx={{ opacity: 0.9, textAlign: "center" }}
+              title={subtitle}
+            >
+              {subtitle}
+            </Typography>
+          )}
+        </Box>
+
+        {/* BODY */}
+        {expandable && (
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            {expandedDivider && (
+              <Divider sx={{ borderColor: colors.primary[300], mx: 2 }} />
+            )}
+            <Box
+              sx={{ px: 2, pb: 2, pt: `${expandedPaddingTop}px` }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {children}
+            </Box>
+          </Collapse>
+        )}
       </Box>
     );
   }
 
-  // ✅ DASH (Niveles/Grado/Universidades): barra compacta
+  /* =============================
+     HORIZONTAL / DASH
+     ============================= */
   const iconSize = mediaSize;
+  const py = headerPaddingY ?? 1.6;
+  const minH =
+    headerMinHeight ??
+    (iconSize >= 64 ? 84 : 74); // ✅ un poco más alto por defecto
 
+  return (
+    <Box sx={cardSx} onClick={toggle}>
+      {/* HEADER */}
+      <Box
+        sx={{
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          gap: 1.6,
+          px: 2,
+          py,
+          minHeight: minH,
+          pr: expandable ? 6 : 2,
+          pb: expandable ? 3 : py,
+        }}
+      >
+        <ExpandIcon />
+
+        {imgSrc ? mediaImage(iconSize) : icon ? mediaCircle(iconSize) : null}
+
+        <Box sx={{ minWidth: 0, flex: 1 }}>
+          {!!title && (
+            <Typography
+              variant="body1"
+              fontWeight={900}
+              color={resolvedTitle}
+              sx={titleSx}
+              title={title}
+            >
+              {title}
+            </Typography>
+          )}
+
+          {!!subtitle && (
+            <Typography
+              variant="caption"
+              fontWeight={700}
+              color={resolvedSubtitle}
+              sx={{
+                opacity: 0.9,
+                display: "block",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                mt: 0.25,
+              }}
+              title={subtitle}
+            >
+              {subtitle}
+            </Typography>
+          )}
+
+          {/* ✅ valor opcional */}
+          {!hideValue && !headerOnly && <ValueWithLabel variant="h4" />}
+        </Box>
+      </Box>
+
+      {/* BODY */}
+      {expandable && (
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          {expandedDivider && (
+            <Divider sx={{ borderColor: colors.primary[300] }} />
+          )}
+          <Box
+            sx={{ px: 2, pb: 2, pt: `${expandedPaddingTop}px` }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {children}
+          </Box>
+        </Collapse>
+      )}
+    </Box>
+  );
+};
+
+/* ---------------------------
+   Subcomponentes de contenido
+   --------------------------- */
+
+Target.BodyList = function TargetBodyList({
+  items = [],
+  renderItem,
+  maxHeight = 260,
+  gap = 10,
+  colors,
+}) {
   return (
     <Box
       sx={{
-        ...cardSx,
+        maxHeight,
+        overflow: "auto",
+        pr: 0.5,
         display: "flex",
-        alignItems: "center",
-        gap: 1.4,
-        px: 2,
-        py: 1.4,
-        minHeight: iconSize >= 64 ? 84 : 66, // si haces el logo grande, sube un poco el alto
+        flexDirection: "column",
+        gap,
       }}
     >
-      {imgSrc ? mediaImage(iconSize) : icon ? mediaCircle(iconSize) : null}
+      {items.map((item, i) => (
+        <Box key={item?.id ?? i}>
+          {renderItem ? (
+            renderItem(item, i)
+          ) : (
+            <Typography color={colors?.primary?.[100] ?? "inherit"}>
+              {String(item)}
+            </Typography>
+          )}
+        </Box>
+      ))}
+    </Box>
+  );
+};
 
-      <Box sx={{ minWidth: 0 }}>
-        <Typography
-          variant="body2"
-          fontWeight={900}
-          color={resolvedTitle}
+Target.BodyDescription = function TargetBodyDescription({
+  text = "",
+  children,
+  colors,
+}) {
+  const line = colors?.primary?.[300] ?? "rgba(0,0,0,0.12)";
+  const fg = colors?.primary?.[100] ?? "inherit";
+
+  if (!text) return <>{children}</>;
+
+  return (
+    <Box sx={{ width: "100%", minWidth: 0 }}>
+      {/* línea suave */}
+      <Box sx={{ height: 1, width: "100%", backgroundColor: line, opacity: 0.7 }} />
+
+      {/* descripción centrada */}
+      <Typography
+        sx={{
+          py: 1.2,
+          px: 2,
+          textAlign: "center",
+          color: fg,
+          fontSize: "13.5px",
+          lineHeight: 1.25,
+          whiteSpace: "normal",
+          overflowWrap: "anywhere",
+          wordBreak: "break-word",
+        }}
+      >
+        {text}
+      </Typography>
+
+      {/* línea suave */}
+      <Box sx={{ height: 1, width: "100%", backgroundColor: line, opacity: 0.7 }} />
+
+      {/* lista / stats debajo (tal como ya te gusta) */}
+      <Box sx={{ width: "100%", minWidth: 0 }}>{children}</Box>
+    </Box>
+  );
+};
+
+
+
+Target.BodyStats = function TargetBodyStats({ stats = [], colors, columns = 2 }) {
+  return (
+    <Box
+      display="grid"
+      gridTemplateColumns={`repeat(${columns}, minmax(0, 1fr))`}
+      gap="10px"
+    >
+      {stats.map((s, i) => (
+        <Box
+          key={`${s.label}-${i}`}
           sx={{
-            lineHeight: 1.05,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
+            backgroundColor: colors?.primary?.[300] ?? "rgba(0,0,0,0.06)",
+            borderRadius: "10px",
+            p: "10px 12px",
+            border: `1px solid ${
+              colors?.primary?.[200] ?? "rgba(0,0,0,0.08)"
+            }`,
           }}
-          title={title}
         >
-          {title}
-        </Typography>
-
-        <Typography
-          variant="h4"
-          fontWeight={900}
-          color={resolvedValue}
-          sx={{ lineHeight: 1, mt: 0.2 }}
-        >
-          {formatted}
-        </Typography>
-      </Box>
+          <Typography
+            variant="caption"
+            fontWeight={900}
+            color={colors?.primary?.[100] ?? "inherit"}
+            sx={{ opacity: 0.9 }}
+          >
+            {s.label}
+          </Typography>
+          <Typography
+            variant="h6"
+            fontWeight={900}
+            color={colors?.green?.[200] ?? "inherit"}
+            sx={{ lineHeight: 1.1 }}
+          >
+            {typeof s.value === "number"
+              ? s.value.toLocaleString("es-CL")
+              : s.value}
+          </Typography>
+        </Box>
+      ))}
     </Box>
   );
 };

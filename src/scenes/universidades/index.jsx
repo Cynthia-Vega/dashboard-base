@@ -1,59 +1,12 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import Target from "../../components/Target";
-import SchoolIcon from "@mui/icons-material/School";
 import { ParticipantesData } from "../../data/ParticipantesData";
-
-// ✅ Mapa: nombre exacto -> carpeta abreviación + archivo
-const UNI_IMG = {
-  "Pontificia Universidad Católica de Chile": { folder: "PUC", file: "1.png" },
-  "Pontificia Universidad Católica de Valparaíso": { folder: "PUCV", file: "1.png" },
-  "Universidad Alberto Hurtado": { folder: "UAH", file: "1.png" },
-  "Universidad Andrés Bello": { folder: "UNAB", file: "1.png" },
-  "Universidad Arturo Prat": { folder: "UNAP", file: "1.png" },
-  "Universidad Austral de Chile": { folder: "UACH", file: "1.png" },
-  "Universidad Bernardo O'Higgins": { folder: "UBO", file: "1.png" },
-  "Universidad Católica de la Santísima Concepción": { folder: "UCSC", file: "1.png" },
-  "Universidad Católica de Temuco": { folder: "UCT", file: "1.png" },
-  "Universidad Católica del Maule": { folder: "UCM", file: "1.png" },
-  "Universidad Católica del Norte": { folder: "UCN", file: "1.png" },
-  "Universidad Católica Silva Henríquez": { folder: "UCSH", file: "1.png" },
-  "Universidad de Atacama": { folder: "UDA", file: "1.png" },
-  "Universidad de Chile": { folder: "UCH", file: "1.png" },
-  "Universidad de Concepción": { folder: "UDEC", file: "1.png" },
-  "Universidad de La Frontera": { folder: "UFRO", file: "1.png" },
-  "Universidad de La Serena": { folder: "USERENA", file: "1.png" },
-  "Universidad de Las Américas": { folder: "UDLA", file: "1.png" },
-  "Universidad del Bío-Bío": { folder: "UBB", file: "1.png" },
-  "Universidad del Desarrollo": { folder: "UDD", file: "1.png" },
-  "Universidad Diego Portales": { folder: "UDP", file: "1.png" },
-  "Universidad de los Andes": { folder: "UANDES", file: "1.png" },
-  "Universidad de los Lagos": { folder: "ULA", file: "1.png" },
-  "Universidad de Magallanes": { folder: "UMAG", file: "1.png" },
-  "Universidad de O'Higgins": { folder: "UOH", file: "1.png" },
-  "Universidad de Playa Ancha": { folder: "UPLA", file: "1.png" },
-  "Universidad de Santiago de Chile": { folder: "USACH", file: "1.png" },
-  "Universidad de Talca": { folder: "UTALCA", file: "1.png" },
-  "Universidad de Tarapacá": { folder: "UTA", file: "1.png" },
-  "Universidad Finis Terrae": { folder: "UFT", file: "1.png" },
-  "Universidad Metropolitana de Ciencias de la Educación": { folder: "UMCE", file: "1.png" },
-  "Universidad San Sebastián": { folder: "USS", file: "1.png" },
-  "Universidad Santo Tomás": { folder: "UST", file: "1.png" },
-};
-
-// ✅ Resolver imagen (Vite-friendly)
-function getUniImgSrc(universityName) {
-  const ref = UNI_IMG[universityName];
-  if (!ref) return null;
-
-  // ✅ como está en /public, se accede directo desde la raíz
-  return `/assets/universities/${ref.folder}/${ref.file}`;
-}
 
 const Universidades = () => {
   const colors = tokens();
-  const { loading, frecuencyData } = ParticipantesData();
+  const { loading, frecuencyData, universityImage, rawData } = ParticipantesData();
   if (loading) return <div>Cargando datos…</div>;
 
   const universidadesData = frecuencyData("nombre_universidad");
@@ -80,8 +33,18 @@ const Universidades = () => {
         mt={2}
       >
         {sorted.map((u) => {
-          const name = u.label || u.id || "Universidad";
-          const imgSrc = getUniImgSrc(name);
+          const name = (u.label || u.id || "Universidad").trim();
+          const imgSrc = universityImage(name);
+
+          const participants = (rawData || []).filter(
+            (row) => String(row?.nombre_universidad ?? "").trim() === name
+          );
+
+          const displayName = (row) =>
+            String(row?.["Indique su nombre y apellido"] ?? "").trim() ||
+            row?.username ||
+            row?.rut ||
+            "Sin nombre";
 
           return (
             <Target
@@ -96,7 +59,64 @@ const Universidades = () => {
               mediaSize={150}
               imgFit="contain"
               imgRound={false}
-            />
+              valueLabel="formadores/as"
+              expandable
+            >
+              <Box
+                sx={{
+                  maxHeight: 260,
+                  overflow: "auto",
+                  pr: 0.5,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
+                {participants.map((p, i) => {
+                  const nameShown = displayName(p);
+
+                  return (
+                    <Box
+                      key={`${name}-${p?.rut ?? p?.username ?? i}`}
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      borderBottom={`1px solid ${colors.primary[300]}`}
+                      pb="8px"
+                    >
+                      <Typography
+                        color={colors.primary[100]}
+                        fontWeight={800}
+                        sx={{
+                          minWidth: 0,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                        title={nameShown}
+                      >
+                        {nameShown}
+                      </Typography>
+
+                      {/* opcional derecha */}
+                      <Typography
+                        color={colors.green[200]}
+                        fontWeight={900}
+                        sx={{ whiteSpace: "nowrap" }}
+                      >
+                        {p?.region ? p.region : ""}
+                      </Typography>
+                    </Box>
+                  );
+                })}
+
+                {!participants.length && (
+                  <Typography color={colors.primary[100]} sx={{ opacity: 0.8 }}>
+                    No hay participantes asociados.
+                  </Typography>
+                )}
+              </Box>
+            </Target>
           );
         })}
       </Box>

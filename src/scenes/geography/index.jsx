@@ -1,139 +1,156 @@
+// src/scenes/geography/index.jsx
+import { useMemo } from "react";
 import { Box, Typography } from "@mui/material";
-import GeographyChart from "../../components/GeographyChart";
-import Header from "../../components/Header";
+
 import { tokens } from "../../theme";
+import Header from "../../components/Header";
+import GeographyChart from "../../components/GeographyChart";
+import Target from "../../components/Target";
 import { ParticipantesData } from "../../data/ParticipantesData";
 import { geoFeatures } from "../../data/mockGeoFeatures";
 
 const Geography = () => {
-  const { loading, frecuencyData } = ParticipantesData();
   const colors = tokens();
 
+  // ✅ ahora pedimos el helper
+  const { loading, frecuencyData, regionStats } = ParticipantesData();
+
+  // ✅ Hooks SIEMPRE arriba
+  const regionNameById = useMemo(() => {
+    return Object.fromEntries(
+      (geoFeatures?.features ?? []).map((f) => [
+        String(f?.properties?.codregion),
+        f?.properties?.Region,
+      ])
+    );
+  }, []);
+
+  // ✅ mapa
+  const mapData = useMemo(() => {
+    const arr = typeof frecuencyData === "function" ? frecuencyData("region_id") : [];
+    return Array.isArray(arr) ? arr : [];
+  }, [frecuencyData]);
+
+  // ✅ stats por región desde ParticipantesData
+  const statsByRegionId = useMemo(() => {
+    return typeof regionStats === "function" ? regionStats() : {};
+  }, [regionStats]);
+
+  // ✅ lista para el panel derecho (ordenada por participantes)
+  const regionesLista = useMemo(() => {
+    const safe = Array.isArray(mapData) ? mapData : [];
+
+    const mapped = safe.map((r) => {
+      const rid = String(r.id ?? "");
+      const name = regionNameById[rid] ?? r.label ?? `Región ${rid}`;
+      const stats = statsByRegionId[rid] ?? {
+        participantes: r.value ?? 0,
+        universidades: 0,
+        carreras: 0,
+        programas: 0,
+      };
+
+      return { id: rid, name, stats };
+    });
+
+    mapped.sort((a, b) => (b.stats.participantes ?? 0) - (a.stats.participantes ?? 0));
+    return mapped;
+  }, [mapData, regionNameById, statsByRegionId]);
+
+  // ✅ return condicional después de hooks
   if (loading) return <div>Cargando datos…</div>;
 
-  const totalPorRegion = frecuencyData("region_id"); // [{id,label,value}]
-  const safe = Array.isArray(totalPorRegion) ? totalPorRegion : [];
-
-  // ✅ mapa id -> nombre región usando geoFeatures
-  const regionNameById = Object.fromEntries(
-    geoFeatures.features.map((f) => [
-      String(f.properties.codregion),
-      f.properties.Region, // ajusta si en tu geojson se llama distinto
-    ])
-  );
-
-  // ✅ lista para el panel derecho
-  const list = [...safe]
-    .map((d) => ({
-      id: String(d.id),
-      name: regionNameById[String(d.id)] ?? d.label ?? `Región ${d.id}`,
-      value: d.value ?? 0,
-    }))
-    .sort((a, b) => b.value - a.value);
-
   return (
-    <Box m="20px" pb="60px">
-      <Header title="Geography" subtitle="Wolas, aquí puedes ver el gráfico geográfico" />
+    <Box m="20px">
+      <Header title="REGIONES" subtitle="Detalle por región con indicadores" />
 
       <Box
-        mt={2}
         display="grid"
-        gridTemplateColumns={{ xs: "1fr", md: "2fr 1fr" }}
+        gridTemplateColumns="repeat(12, 1fr)"
+        gridAutoRows="minmax(180px, auto)"
         gap="20px"
-        alignItems="stretch"
       >
         {/* MAPA */}
         <Box
-          height={{ xs: "70vh", md: "80vh" }}
-          border={`1px solid ${colors.primary[200]}`}
-          borderRadius="18px"
+          gridColumn={{ xs: "span 12", md: "span 6" }}
+          gridRow="span 2"
           backgroundColor={colors.primary[200]}
-          overflow="hidden"
-        >
-          <GeographyChart data={safe} isDashboard={false} height="100%" />
-        </Box>
-
-        {/* PANEL DERECHO (SCROLL) */}
-        <Box
-          border={`1px solid ${colors.primary[200]}`}
-          borderRadius="18px"
-          backgroundColor={colors.primary[200]}
-          p={2}
+          p="15px"
           display="flex"
           flexDirection="column"
-          minHeight={{ xs: "260px", md: "80vh" }}
+          border="1px solid red"
+          sx={{ width: '400px', height: '1450px' }}
         >
           <Typography
-            variant="h4"
-            fontWeight={900}
+            variant="h5"
+            fontWeight="600"
+            sx={{ marginBottom: "15px" }}
             color={colors.primary[100]}
-            sx={{ mb: 1 }}
           >
-            Regiones
+            Distribución por región
           </Typography>
 
-          <Box
-            sx={{
-              overflowY: "auto",
-              pr: 1,
-              flex: 1,
-              // ✅ scrollbar bonita (Chrome/Edge)
-              "&::-webkit-scrollbar": { width: "8px" },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "rgba(0,0,0,0.25)",
-                borderRadius: "8px",
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: "rgba(0,0,0,0.06)",
-                borderRadius: "8px",
-              },
-            }}
-          >
-            {list.map((r) => (
-              <Box
-                key={r.id}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: 2,
-                  p: "10px 12px",
-                  mb: 1,
-                  borderRadius: "14px",
-                  border: "1px solid rgba(0,0,0,0.08)",
-                  backgroundColor: "rgba(0,0,0,0.02)",
-                }}
-              >
-                <Typography
-                  color={colors.primary[100]}
-                  fontWeight={800}
-                  sx={{
-                    fontSize: "14px",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                  title={r.name}
-                >
-                  {r.name}
-                </Typography>
+          <Box flex="1" minHeight="360px">
+            <GeographyChart data={mapData} />
+          </Box>
+        </Box>
 
-                <Box
-                  sx={{
-                    minWidth: 44,
-                    textAlign: "center",
-                    px: 1.2,
-                    py: 0.5,
-                    borderRadius: "999px",
-                    backgroundColor: colors.green[200],
-                    border: "1px solid rgba(0,0,0,0.08)",
-                  }}
-                >
-                  <Typography color={colors.primary[100]} fontWeight={900}>
-                    {r.value}
-                  </Typography>
-                </Box>
-              </Box>
+        {/* SCROLL DERECHA: Targets desplegables */}
+        <Box
+          gridColumn={{ xs: "span 12", md: "span 6" }}
+          gridRow="span 2"
+          backgroundColor={colors.primary[200]}
+          display="flex"
+          flexDirection="column"
+          sx={{ minWidth: 0 }}
+        >
+          <Box p="15px">
+            <Typography variant="h5" fontWeight="600" color={colors.primary[100]}>
+              Regiones
+            </Typography>
+          </Box>
+
+          <Box
+            flex="1"
+            overflow="auto"
+            sx={{
+              px: 2,
+              pb: 2,
+              pr: 3,
+              pt: 0
+            }}
+
+            display="flex"
+            flexDirection="column"
+            gap="14px"
+          >
+            {regionesLista.map((r) => (
+              <Target
+                key={r.id}
+                title={r.name}
+                variant="dash"
+                fullWidth
+                expandable
+                hideValue        // ✅ sin número
+                headerOnly       // ✅ header “tipo lista”
+                titleWrap        // ✅ 2 líneas si es largo
+                headerMinHeight={84}
+                headerPaddingY={2}
+                bgColor={colors.primary[200]}
+                sx={{ borderRadius: "18px" }}
+              >
+                <Target.BodyStats
+                  colors={colors}
+                  columns={2}
+                  stats={[
+                    { label: "Participantes", value: r.stats.participantes },
+                    { label: "Universidades", value: r.stats.universidades },
+                    { label: "Carreras", value: r.stats.carreras },
+                    { label: "Programas", value: r.stats.programas },
+                    
+                  ]}
+                />
+              </Target>
             ))}
           </Box>
         </Box>

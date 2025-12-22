@@ -5,6 +5,11 @@ import SchoolIcon from "@mui/icons-material/School";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import GroupsIcon from "@mui/icons-material/Groups";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import ChildCareIcon from "@mui/icons-material/ChildCare";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import MiscellaneousServicesIcon from "@mui/icons-material/MiscellaneousServices";
+
 
 import Header from "../../components/Header";
 import LineChart from "../../components/LineChart";
@@ -16,14 +21,8 @@ import { ParticipantesData } from "../../data/ParticipantesData";
 
 const Dashboard = () => {
   const colors = tokens();
-  const sectionTitleSx = {
-  m: 0,
-  lineHeight: "48px",
-  fontWeight: 600,
-  color: colors.primary[100],
-};
-  const { loading, frecuencyData, cumulativeFrequencyData, experienceLevelsData } =
-    ParticipantesData();
+  const { loading, frecuencyData, cumulativeFrequencyData, experienceLevelsData, universityImage, programsCategoryCounts } =
+  ParticipantesData();
 
   if (loading) return <div>Cargando datos…</div>;
 
@@ -31,17 +30,17 @@ const Dashboard = () => {
   const totalPorRegion = frecuencyData("region_id");
   const totalPorUniversidad = frecuencyData("Universidad");
   const totalPoranio = cumulativeFrequencyData("¿En qué año te uniste a RedFID? ");
-  const experience = experienceLevelsData("Años de formador ");
+  const experience = experienceLevelsData("Año en que comenzaste a trabajar como formador/a. ");
   const carrera = frecuencyData("Indique su título profesional");
   const universidades = frecuencyData("nombre_universidad");
   const grado = frecuencyData("grado_final");
+  const programas = programsCategoryCounts();
 
-  console.log("data U", universidades)
 
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Header title="DASHBOARD" subtitle="Resumen general de formadores" />
+      <Header title="Panel de datos" subtitle="Resumen general de formadores" />
 
       <Box mt={0} mb={0.1} display="flex" justifyContent="flex-start">
         <Button
@@ -315,7 +314,57 @@ const Dashboard = () => {
               variant="dash"
             />
           </Box>
+
+          {/* ---------- PROGRAMAS DONDE IMPARTEN ---------- */}
+<Box mt={2.5}>
+  <Typography
+    variant="h4"
+    fontWeight="600"
+    color={colors.primary[100]}
+    sx={{ mb: 2 }}
+  >
+    PROGRAMAS DONDE IMPARTEN
+  </Typography>
+
+  <Box
+    display="grid"
+    gridTemplateColumns={{
+      xs: "repeat(1, 1fr)",
+      sm: "repeat(2, 1fr)",
+      md: "repeat(3, 1fr)", // ✅ 6 categorías -> 3x2 en desktop
+    }}
+    gap="20px"
+    alignItems="stretch"
+  >
+    {programas.map((p) => {
+      const icon =
+        p.id === "media" ? <SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+        p.id === "basica" ? <MenuBookIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+        p.id === "parvularia" ? <ChildCareIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+        p.id === "postgrado" ? <WorkspacePremiumIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+        p.id === "otras_carreras" ? <MiscellaneousServicesIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+        /* formacion_pedagogica */ <PsychologyIcon sx={{ color: colors.green[200], fontSize: 55 }} />;
+
+      return (
+        <Target
+          key={p.id}
+          icon={icon}
+          value={p.value ?? 0}
+          title={p.label}
+          duration={1500}
+          fullWidth
+          variant="dash"
+          valueLabel="personas"
+        />
+      );
+    })}
+  </Box>
+</Box>
+
+
         </Box>
+
+        
 
         {/* ==========================
             ROW 4 - TRAYECTORIA Y UNIVERSIDADES
@@ -376,30 +425,74 @@ const Dashboard = () => {
 
           {/* Lista con scroll */}
           <Box flex="1" overflow="auto" p="15px">
-            {universidades.map((uni, i) => (
-              <Box
-                key={`${uni.id}-${i}`}
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                borderBottom={`4px solid ${colors.primary[200]}`}
-                p="16px"
-              >
-                <Typography color={colors.green[200]} variant="h5" fontWeight="600">
-                  {uni.id}
-                </Typography>
+  {universidades.map((uni, i) => {
+    const name = uni.label || uni.id || "Universidad";
+    const imgSrc = universityImage(name);
 
-                <Box
-                  backgroundColor={colors.green[200]}
-                  p="6px 20px"
-                  borderRadius="4px"
-                  whiteSpace="nowrap"
-                >
-                  {uni.value} personas
-                </Box>
-              </Box>
-            ))}
-          </Box>
+    return (
+      <Box
+        key={`${uni.id}-${i}`}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        borderBottom={`4px solid ${colors.primary[200]}`}
+        p="16px"
+        gap="12px"
+      >
+        {/* IZQUIERDA: logo + nombre */}
+        <Box display="flex" alignItems="center" gap="10px" minWidth={0}>
+          {imgSrc ? (
+            <Box
+              component="img"
+              src={imgSrc}
+              alt={name}
+              sx={{
+                width: 26,
+                height: 26,
+                objectFit: "contain",
+                flexShrink: 0,
+              }}
+            />
+          ) : (
+            // fallback: circulito si no hay logo
+            <Box
+              sx={{
+                width: 26,
+                height: 26,
+                borderRadius: "50%",
+                backgroundColor: colors.primary[300],
+                flexShrink: 0,
+              }}
+            />
+          )}
+
+          <Typography
+            color={colors.green[200]}
+            variant="h5"
+            fontWeight="600"
+            noWrap
+            sx={{ minWidth: 0 }}
+            title={name}
+          >
+            {name}
+          </Typography>
+        </Box>
+
+        {/* DERECHA: conteo */}
+        <Box
+          backgroundColor={colors.green[200]}
+          p="6px 20px"
+          borderRadius="4px"
+          whiteSpace="nowrap"
+          flexShrink={0}
+        >
+          {uni.value} personas
+        </Box>
+      </Box>
+    );
+  })}
+</Box>
+
         </Box>
 
         {/* ==========================
@@ -460,7 +553,7 @@ const Dashboard = () => {
               position="relative"
               sx={{
                 maxWidth: "100%",
-                width: { xs: "100%", md: "650px" },
+                width: { xs: "100%", lg: "650px" },
               }}
             >
               <GeographyChart isDashboard={true} data={totalPorRegion} />
