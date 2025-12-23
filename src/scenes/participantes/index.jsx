@@ -64,7 +64,15 @@ const TablaParticipantes = () => {
     return undefined;
   };
 
+  // ✅ NUEVO: si viene número, lo suma como número; si viene marca, suma 1; si no, 0
+  const countCell = (v) => {
+    if (v === null || v === undefined) return 0;
+    if (typeof v === "number" && Number.isFinite(v)) return v;
+    return isMarked(v) ? 1 : 0;
+  };
 
+  // ✅ NUEVO: suma varias columnas (no solo la primera existente)
+  const sumKeys = (row, keys) => keys.reduce((acc, k) => acc + countCell(row?.[k]), 0);
 
   const getProgramasText = (row) => {
     const v = row?.programa_categorias_str;
@@ -97,7 +105,6 @@ const TablaParticipantes = () => {
     return cleaned.join(", ");
   };
 
-
   const renderCheck = ({ value }) => (
     <Typography
       fontWeight={900}
@@ -117,11 +124,18 @@ const TablaParticipantes = () => {
       pick(r, ["CURSO - Finalizaron módulos", "CURSO - Finalizaron modulos"])
     );
 
-    const presentoPoster = isMarked(pick(r, ["Presentó Poster", "Presento Poster"]));
-    const presentoTrabajo = isMarked(
-      pick(r, ["Presentó Trabajo.", "Presentó Trabajo", "Presento Trabajo."])
-    );
-    const siPresenta = presentoPoster || presentoTrabajo;
+    // ✅ AQUÍ ESTÁ LO TUYO: sumamos las 3 variantes de "Presentó Trabajo"
+    const trabajoCount = sumKeys(r, [
+      "Presentó Trabajo.",
+      "Presentó Trabajo",
+      "Presento Trabajo.",
+    ]);
+
+    // (opcional) si también quieres sumar poster en la misma métrica:
+    const posterCount = sumKeys(r, ["Presentó Poster", "Presento Poster"]);
+
+    // ✅ Total “Presentaciones” = trabajo + poster (si solo quieres trabajo, deja trabajoCount)
+    const presentaciones = trabajoCount + posterCount;
 
     const adjudicaFondo = isMarked(
       pick(r, [
@@ -139,7 +153,7 @@ const TablaParticipantes = () => {
     const encuentros = countInCols(encuentroCols);
     const lanzamientos = countInCols(lanzamientoCols);
 
-    // ✅ NUEVO: participación (encuentro o lanzamiento)
+    // ✅ participación (encuentro o lanzamiento)
     const participaciones = (encuentros ?? 0) + (lanzamientos ?? 0);
 
     return {
@@ -154,14 +168,14 @@ const TablaParticipantes = () => {
       // eventos
       talleres,
       reuniones,
-      participaciones, // ✅ fusionado
+      participaciones,
 
       // programas como texto
       programas: getProgramasText(r),
 
       // indicadores
       finalizo_curso: finalizo,
-      si_presenta: siPresenta, // ✅ fusionado poster+trabajo
+      presentaciones, // ✅ ahora es NÚMERO (suma real)
       adjudica_fondo: adjudicaFondo,
       participa_numero_especial: participaNumeroEspecial,
 
@@ -185,15 +199,15 @@ const TablaParticipantes = () => {
     { field: "universidad", headerName: "Universidad", flex: 1.2, minWidth: 280 },
     { field: "carrera", headerName: "Carrera", flex: 1.0, minWidth: 240 },
 
-    // ✅ programas como texto
+    // programas como texto
     {
       field: "programas",
       headerName: "Programas",
       flex: 1.1,
       minWidth: 240,
       sortable: false,
-      headerAlign: "left", // ✅
-      align: "left",       // ✅
+      headerAlign: "left",
+      align: "left",
       renderCell: ({ value }) => (
         <Typography
           fontSize="14px"
@@ -204,7 +218,7 @@ const TablaParticipantes = () => {
             overflow: "hidden",
             textOverflow: "ellipsis",
             width: "100%",
-            textAlign: "left", // ✅ por si acaso
+            textAlign: "left",
           }}
           title={value || ""}
         >
@@ -219,11 +233,9 @@ const TablaParticipantes = () => {
     { field: "talleres", headerName: "Talleres", type: "number", flex: 0.55, minWidth: 110 },
     { field: "reuniones", headerName: "Reuniones", type: "number", flex: 0.5, minWidth: 90 },
 
-    
+    // ✅ ya no es bool: ahora es número real
+    { field: "presentaciones", headerName: "Presentaciones", type: "number", flex: 0.6, minWidth: 140 },
 
-
-    
-    { field: "si_presenta", headerName: "Presentacion", flex: 0.6, minWidth: 120, renderCell: renderCheck },
     { field: "adjudica_fondo", headerName: "Fondo", flex: 0.5, minWidth: 90, renderCell: renderCheck },
     { field: "participa_numero_especial", headerName: "N° Esp.", flex: 0.55, minWidth: 105, renderCell: renderCheck },
 

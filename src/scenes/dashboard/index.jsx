@@ -31,7 +31,7 @@ const Dashboard = () => {
   const totalPorRegion = frecuencyData("region_id");
   const totalPorUniversidad = frecuencyData("Universidad");
   const totalPoranio = cumulativeFrequencyData("¿En qué año te uniste a RedFID? ");
-  const experience = experienceLevelsData("Año en que comenzaste a trabajar como formador/a. ");
+  const experience = frecuencyData("experience");
   const carrera = frecuencyData("Indique su título profesional");
   const universidades = frecuencyData("nombre_universidad");
   const grado = frecuencyData("grado_final");

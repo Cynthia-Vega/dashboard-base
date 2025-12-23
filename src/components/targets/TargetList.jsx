@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Box, Typography, Collapse, IconButton, Divider } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { tokens } from "../../theme"; // ajusta ruta
+import { tokens } from "../../theme";
 
 const TargetList = ({
   title = "",
@@ -50,7 +50,7 @@ const TargetList = ({
   maxHeight = 260,
   gap = 10,
 
-  // ✅ NUEVO: para grids con cards estiradas
+  // ✅ para grids con cards estiradas
   fillExpanded = false,
 }) => {
   const colors = tokens();
@@ -60,7 +60,10 @@ const TargetList = ({
   const [displayValue, setDisplayValue] = useState(0);
   const [open, setOpen] = useState(defaultExpanded);
 
-  const formatted = useMemo(() => displayValue.toLocaleString("es-CL"), [displayValue]);
+  const formatted = useMemo(
+    () => displayValue.toLocaleString("es-CL"),
+    [displayValue]
+  );
 
   useEffect(() => {
     let raf;
@@ -108,7 +111,7 @@ const TargetList = ({
     },
     ...(fullWidth ? { width: "100%" } : {}),
 
-    // ✅ CLAVE para grid stretch:
+    // ✅ grid stretch friendly
     display: "flex",
     flexDirection: "column",
     height: "100%",
@@ -182,7 +185,9 @@ const TargetList = ({
   );
 
   const expandIconSx =
-    expandIconPosition === "tr" ? { right: 10, top: 10 } : { right: 10, bottom: 10 };
+    expandIconPosition === "tr"
+      ? { right: 10, top: 10 }
+      : { right: 10, bottom: 10 };
 
   const ExpandIcon = () => (
     <IconButton
@@ -230,7 +235,6 @@ const TargetList = ({
   const BodyList = () => (
     <Box
       sx={{
-        // ✅ CLAVE: ocupa todo el alto disponible del expanded
         flex: 1,
         minHeight: 0,
         overflow: "auto",
@@ -238,8 +242,6 @@ const TargetList = ({
         display: "flex",
         flexDirection: "column",
         gap: resolvedGap,
-
-        // si NO fillExpanded => acota con maxHeight como antes
         ...(fillExpanded ? {} : { maxHeight }),
       }}
     >
@@ -257,14 +259,107 @@ const TargetList = ({
     </Box>
   );
 
-  // ===== header horizontal (tu caso) =====
+  // =========================
+  // ✅ VERTICAL / HERO
+  // =========================
+  const isHero = variant === "hero" || orientation === "vertical";
+
+  if (isHero) {
+    const iconSize = mediaSize; // en hero tú pasas 150
+    const minH = headerMinHeight ?? 240;
+
+    return (
+      <Box sx={cardSx} onClick={toggle}>
+        {/* HEADER VERTICAL */}
+        <Box
+          sx={{
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            pt: 3,
+            px: 3,
+            pb: 3.5,
+            minHeight: minH,
+            gap: 1.0,
+            flexShrink: 0,
+            textAlign: "center",
+          }}
+        >
+          <ExpandIcon />
+
+          {imgSrc ? mediaImage(iconSize) : icon ? mediaCircle(iconSize) : null}
+
+          <ValueWithLabel variant="h4" />
+
+          {!!title && (
+            <Typography
+              variant="body1"
+              fontWeight={900}
+              color={resolvedTitle}
+              sx={{ ...titleSx, textAlign: "center", whiteSpace: "normal" }}
+              title={title}
+            >
+              {title}
+            </Typography>
+          )}
+
+          {!!subtitle && (
+            <Typography
+              variant="caption"
+              fontWeight={700}
+              color={resolvedSubtitle}
+              sx={{ fontFamily, opacity: 0.9 }}
+              title={subtitle}
+            >
+              {subtitle}
+            </Typography>
+          )}
+        </Box>
+
+        {/* EXPANDED */}
+        <Box
+          sx={{
+            flex: open ? 1 : "0 0 auto",
+            minHeight: 0,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            {expandedDivider && <Divider sx={{ borderColor: colors.primary[300] }} />}
+
+            <Box
+              sx={{
+                px: listPaddingX,
+                pb: listPaddingBottom,
+                pt: `${expandedPaddingTop}px`,
+                flex: 1,
+                minHeight: 0,
+                display: "flex",
+                flexDirection: "column",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <BodyList />
+            </Box>
+          </Collapse>
+        </Box>
+      </Box>
+    );
+  }
+
+  // =========================
+  // HORIZONTAL / DASH
+  // =========================
   const iconSize = mediaSize;
   const py = headerPaddingY ?? 1.6;
   const minH = headerMinHeight ?? (iconSize >= 64 ? 84 : 74);
 
   return (
     <Box sx={cardSx} onClick={toggle}>
-      {/* HEADER */}
+      {/* HEADER HORIZONTAL */}
       <Box
         sx={{
           position: "relative",
@@ -276,7 +371,7 @@ const TargetList = ({
           minHeight: minH,
           pr: 6,
           pb: 3,
-          flexShrink: 0, // ✅ no se estira
+          flexShrink: 0,
         }}
       >
         <ExpandIcon />
@@ -313,7 +408,6 @@ const TargetList = ({
       {/* EXPANDED */}
       <Box
         sx={{
-          // ✅ CLAVE: el área expandida se vuelve “la parte que crece”
           flex: open ? 1 : "0 0 auto",
           minHeight: 0,
           display: "flex",
@@ -328,8 +422,6 @@ const TargetList = ({
               px: listPaddingX,
               pb: listPaddingBottom,
               pt: `${expandedPaddingTop}px`,
-
-              // ✅ CLAVE: la lista ocupa TODO el alto disponible del expanded
               flex: 1,
               minHeight: 0,
               display: "flex",

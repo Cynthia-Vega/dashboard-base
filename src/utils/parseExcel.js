@@ -290,6 +290,20 @@ function detectProgramCategories(cellRaw) {
   return cats;
 }
 
+function experienceFromStartYear(startYear, currentYear = new Date().getFullYear()) {
+  const y = Number(startYear);
+  if (!Number.isFinite(y)) return null;
+
+  const years = currentYear - y;
+  if (years < 0) return null;
+
+  if (years <= 5) return "novel";
+  if (years <= 11) return "intermedio";
+  return "experto";
+}
+
+
+
 /* =========================
    parseExcel
    ========================= */
@@ -466,8 +480,16 @@ export async function parseExcel(participantesFile, encuestaFile) {
       };
     });
 
+
+
+    const mergedWithExperience = mergedWithProgram.map((row) => {
+      const exp = experienceFromStartYear(row?.["Año en que comenzaste a trabajar como formador/a. "]);
+      return { ...row, experience: exp };
+    });
+
+
     // 9) Limpieza
-    const cleaned = removeColumns(mergedWithProgram, colsToRemove);
+    const cleaned = removeColumns(mergedWithExperience, colsToRemove);
 
     console.log("Merge final:", cleaned.slice(0, 3));
     return cleaned;

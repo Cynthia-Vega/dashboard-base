@@ -90,8 +90,8 @@ const Regiones = () => {
           p="15px"
           display="flex"
           flexDirection="column"
-          border="1px solid red"
-          sx={{ width: '400px', height: '1450px' }}
+          // border="1px solid red"
+          sx={{justifySelf:'center', width: '400px', height: '1450px' }}
         >
           <Typography
             variant="h5"

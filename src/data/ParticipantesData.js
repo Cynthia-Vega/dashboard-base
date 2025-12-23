@@ -133,31 +133,6 @@ function cumulativeFrequency(data, columnName) {
   });
 }
 
-function categorizeByExperience(data, columnName) {
-  if (!Array.isArray(data)) return [];
-
-  const currentYear = new Date().getFullYear();
-
-  const counts = { novel: 0, intermedio: 0, experto: 0 };
-
-  data.forEach((row) => {
-    const startYear = Number(row?.[columnName]);
-    if (!Number.isFinite(startYear)) return;
-
-    const years = currentYear - startYear;
-    if (years < 0) return;
-
-    if (years <= 5) counts.novel += 1;
-    else if (years <= 11) counts.intermedio += 1;
-    else counts.experto += 1;
-  });
-
-  return [
-    { id: "novel", label: "novel", value: counts.novel },
-    { id: "intermedio", label: "intermedio", value: counts.intermedio },
-    { id: "experto", label: "experto", value: counts.experto },
-  ];
-}
 
 
 
@@ -323,7 +298,6 @@ function regionStats() {
 
   const frecuencyData = (columnName) => frecuency(rawData, columnName);
   const cumulativeFrequencyData = (columnName) => cumulativeFrequency(rawData, columnName);
-  const experienceLevelsData = (columnName) => categorizeByExperience(rawData, columnName);
   const eventsData = (opts) => eventsFrequencyAll(rawData, opts);
   const universityImage = (universityName) => getUniImgSrc(universityName)
 
@@ -333,7 +307,6 @@ function regionStats() {
     rawData,      // por si algún gráfico quiere trabajar directo con la base
     frecuencyData,   // función genérica para pie
     cumulativeFrequencyData,
-    experienceLevelsData,
     eventsData,
     universityImage,
     programsCategoryCounts,
