@@ -1,4 +1,4 @@
-import { Box, Icon, IconButton, useTheme } from "@mui/material"
+import { Box, IconButton } from "@mui/material"
 
 import { tokens } from "../../theme";
 import InputBase from "@mui/material/InputBase";
@@ -33,7 +33,7 @@ const Topbar = () => {
             <IconButton onClick={() => navigate("/config")}>
                 <SettingsOutlinedIcon/>
             </IconButton>
-            <IconButton onClick={() => navigate("/user")}>
+            <IconButton onClick={() => navigate("/data")}>
                 <PersonOutlinedIcon/>
             </IconButton>
         </Box>

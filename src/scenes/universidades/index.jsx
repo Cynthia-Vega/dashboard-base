@@ -1,8 +1,10 @@
 import { Box, Typography } from "@mui/material";
-import { tokens } from "../../theme";
 import Header from "../../components/Header";
-import Target from "../../components/Target";
+import { tokens } from "../../theme";
 import { ParticipantesData } from "../../data/ParticipantesData";
+
+// ✅ nuevo
+import TargetList from "../../components/targets/TargetList"; // ajusta ruta real
 
 const Universidades = () => {
   const colors = tokens();
@@ -14,6 +16,12 @@ const Universidades = () => {
   const sorted = [...universidadesData].sort(
     (a, b) => (b.value ?? 0) - (a.value ?? 0)
   );
+
+  const displayName = (row) =>
+    String(row?.["Indique su nombre y apellido"] ?? "").trim() ||
+    row?.username ||
+    row?.rut ||
+    "Sin nombre";
 
   return (
     <Box m="20px" pb="100px">
@@ -33,25 +41,19 @@ const Universidades = () => {
         mt={2}
       >
         {sorted.map((u) => {
-          const name = (u.label || u.id || "Universidad").trim();
-          const imgSrc = universityImage(name);
+          const uniName = (u.label || u.id || "Universidad").trim();
+          const imgSrc = universityImage(uniName);
 
           const participants = (rawData || []).filter(
-            (row) => String(row?.nombre_universidad ?? "").trim() === name
+            (row) => String(row?.nombre_universidad ?? "").trim() === uniName
           );
 
-          const displayName = (row) =>
-            String(row?.["Indique su nombre y apellido"] ?? "").trim() ||
-            row?.username ||
-            row?.rut ||
-            "Sin nombre";
-
           return (
-            <Target
+            <TargetList
               key={u.id}
               variant="hero"
               fullWidth
-              title={name}
+              title={uniName}
               value={u.value ?? 0}
               imgSrc={imgSrc}
               bgColor={colors.primary[200]}
@@ -60,63 +62,50 @@ const Universidades = () => {
               imgFit="contain"
               imgRound={false}
               valueLabel="formadores/as"
-              expandable
-            >
-              <Box
-                sx={{
-                  maxHeight: 260,
-                  overflow: "auto",
-                  pr: 0.5,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                }}
-              >
-                {participants.map((p, i) => {
-                  const nameShown = displayName(p);
+              // ✅ expand por defecto ya viene en TargetList (expandable always)
+              items={participants}
+              maxHeight={260}
+              gap={10}
+              renderItem={(p, i) => {
+                const nameShown = displayName(p);
 
-                  return (
-                    <Box
-                      key={`${name}-${p?.rut ?? p?.username ?? i}`}
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      borderBottom={`1px solid ${colors.primary[300]}`}
-                      pb="8px"
+                // mismo key que antes
+                const key = `${uniName}-${p?.rut ?? p?.username ?? i}`;
+
+                return (
+                  <Box
+                    key={key}
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    borderBottom={`1px solid ${colors.primary[300]}`}
+                    pb="8px"
+                  >
+                    <Typography
+                      color={colors.primary[100]}
+                      fontWeight={800}
+                      sx={{
+                        minWidth: 0,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                      title={nameShown}
                     >
-                      <Typography
-                        color={colors.primary[100]}
-                        fontWeight={800}
-                        sx={{
-                          minWidth: 0,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                        title={nameShown}
-                      >
-                        {nameShown}
-                      </Typography>
+                      {nameShown}
+                    </Typography>
 
-                      {/* opcional derecha */}
-                      <Typography
-                        color={colors.green[200]}
-                        fontWeight={900}
-                        sx={{ whiteSpace: "nowrap" }}
-                      >
-                        {p?.region ? p.region : ""}
-                      </Typography>
-                    </Box>
-                  );
-                })}
-
-                {!participants.length && (
-                  <Typography color={colors.primary[100]} sx={{ opacity: 0.8 }}>
-                    No hay participantes asociados.
-                  </Typography>
-                )}
-              </Box>
-            </Target>
+                    <Typography
+                      color={colors.green[200]}
+                      fontWeight={900}
+                      sx={{ whiteSpace: "nowrap" }}
+                    >
+                      {p?.region ? p.region : ""}
+                    </Typography>
+                  </Box>
+                );
+              }}
+            />
           );
         })}
       </Box>

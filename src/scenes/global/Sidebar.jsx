@@ -8,7 +8,7 @@ import { tokens } from "../../theme";
 
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
+import SchoolIcon from "@mui/icons-material/School";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
@@ -170,27 +170,19 @@ const Sidebar = () => {
           onNavigate={() => setOpen(false)}
         />
 
-        <Typography
-          variant="h6"
-          fontWeight="bold"
-          color={colors.green[200]}
-          sx={{ m: "15px 0 5px 20px" }}
-        >
-          Charts
-        </Typography>
-
         <Item
-          title="Line Chart"
-          to="/line"
-          icon={<TimelineOutlinedIcon />}
+          title="Formación"
+          to="/formacion"
+          icon={<SchoolIcon />}
           selected={selected}
           setSelected={setSelected}
           onNavigate={() => setOpen(false)}
         />
 
+
         <Item
-          title="Geography Chart"
-          to="/geography"
+          title="Regiones"
+          to="/regiones"
           icon={<MapOutlinedIcon />}
           selected={selected}
           setSelected={setSelected}
@@ -202,7 +194,7 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* ✅ RAIL fijo (colapsado) */}
+
       <Box
         sx={{
           width: COLLAPSED_W,
@@ -223,7 +215,7 @@ const Sidebar = () => {
         </ProSidebar>
       </Box>
 
-      {/* ✅ OVERLAY (expandido) */}
+
       {open && (
         <Box
           onClick={() => setOpen(false)}

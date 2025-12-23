@@ -1,8 +1,12 @@
 import { Box, Typography } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
-import Target from "../../components/Target";
 import { ParticipantesData } from "../../data/ParticipantesData";
+
+// ✅ nuevos targets separados
+import TargetMin from "../../components/targets/TargetMin";
+import TargetList from "../../components/targets/TargetList";
+import TargetDesc from "../../components/targets/TargetDesc";
 
 import CampaignIcon from "@mui/icons-material/Campaign";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -129,7 +133,7 @@ const Eventos = () => {
       return ta - tb;
     });
 
-  // ===== TALLERES (targets) =====
+  // ===== TALLERES =====
   const talleres = safe.filter((e) => /^taller/i.test(String(e.id)));
 
   const talleres2025 = talleres
@@ -171,34 +175,34 @@ const Eventos = () => {
       {encuentrosPorLocalidad.map((x) => {
         const loc = x.label;
         const names = uniqueNamesForEncuentroLoc(loc);
-
         const desc = encuentroDescByLoc[normKey(loc)] ?? "";
 
-        // si hay descripción => usamos BodyDescription (línea + texto centrado + línea + lista)
-        const body = desc ? (
-          <Target.BodyDescription text={desc} colors={colors}>
-            <Box sx={{ mt: 1.2 }}>
-              <Target.BodyList
-                items={names}
-                colors={colors}
-                maxHeight={260}
-                gap={8}
-                renderItem={(item) => renderName(item)}
-              />
-            </Box>
-          </Target.BodyDescription>
-        ) : (
-          <Target.BodyList
-            items={names}
-            colors={colors}
-            maxHeight={260}
-            gap={8}
-            renderItem={(item) => renderName(item)}
-          />
-        );
+        // 👉 con descripción => TargetDesc
+        if (desc) {
+          return (
+            <TargetDesc
+              key={x.id}
+              variant="dash"
+              fullWidth
+              title={loc}
+              value={x.value ?? 0}
+              valueLabel="participantes"
+              icon={<GroupsIcon sx={{ color: colors.green[200] }} />}
+              bgColor={colors.primary[200]}
+              sx={{ minHeight: 84, borderRadius: "18px" }}
+              description={desc}
+              items={names}
+              maxHeight={260}
+              renderItem={(item) => renderName(item)}
+              expandedDivider={false}      // ✅ evita línea doble (ya hay líneas en la descripción)
+              expandedPaddingTop={0}       // ✅ pegadito como en tu diseño
+            />
+          );
+        }
 
+        // 👉 sin descripción => TargetList
         return (
-          <Target
+          <TargetList
             key={x.id}
             variant="dash"
             fullWidth
@@ -208,13 +212,12 @@ const Eventos = () => {
             icon={<GroupsIcon sx={{ color: colors.green[200] }} />}
             bgColor={colors.primary[200]}
             sx={{ minHeight: 84, borderRadius: "18px" }}
-            expandable
-            // ✅ para descripción evitamos el divider extra (si no, queda doble línea)
-            expandedDivider={!desc}
-            expandedPaddingTop={desc ? 0 : 12}
-          >
-            {body}
-          </Target>
+            items={names}
+            maxHeight={260}
+            renderItem={(item) => renderName(item)}
+            expandedDivider
+            expandedPaddingTop={12}
+          />
         );
       })}
     </Box>
@@ -227,7 +230,7 @@ const Eventos = () => {
         const names = uniqueNamesForColumn(colName);
 
         return (
-          <Target
+          <TargetList
             key={t.id}
             variant="dash"
             fullWidth
@@ -237,18 +240,12 @@ const Eventos = () => {
             icon={<HandymanIcon sx={{ color: colors.green[200] }} />}
             bgColor={colors.primary[200]}
             sx={{ minHeight: 84, borderRadius: "18px" }}
-            expandable
+            items={names}
+            maxHeight={260}
+            renderItem={(item) => renderName(item)}
             expandedDivider
             expandedPaddingTop={12}
-          >
-            <Target.BodyList
-              items={names}
-              colors={colors}
-              maxHeight={260}
-              gap={8}
-              renderItem={(item) => renderName(item)}
-            />
-          </Target>
+          />
         );
       })}
     </Box>
@@ -261,7 +258,7 @@ const Eventos = () => {
       {/* EVENTOS (totales) */}
       {titleSlot("EVENTOS")}
       <Box sx={gridSx}>
-        <Target
+        <TargetMin
           variant="dash"
           fullWidth
           title="Lanzamiento Atacama"
@@ -271,7 +268,7 @@ const Eventos = () => {
           bgColor={colors.primary[200]}
           sx={{ minHeight: 84, borderRadius: "18px" }}
         />
-        <Target
+        <TargetMin
           variant="dash"
           fullWidth
           title="Webinars"
@@ -298,7 +295,7 @@ const Eventos = () => {
             const names = uniqueNamesForColumn(colName);
 
             return (
-              <Target
+              <TargetList
                 key={r.id}
                 variant="dash"
                 fullWidth
@@ -308,18 +305,12 @@ const Eventos = () => {
                 icon={<EventNoteIcon sx={{ color: colors.green[200] }} />}
                 bgColor={colors.primary[200]}
                 sx={{ minHeight: 84, borderRadius: "18px" }}
-                expandable
+                items={names}
+                maxHeight={260}
+                renderItem={(item) => renderName(item)}
                 expandedDivider
                 expandedPaddingTop={12}
-              >
-                <Target.BodyList
-                  items={names}
-                  colors={colors}
-                  maxHeight={260}
-                  gap={8}
-                  renderItem={(item) => renderName(item)}
-                />
-              </Target>
+              />
             );
           })}
         </Box>

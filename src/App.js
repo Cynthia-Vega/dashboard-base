@@ -6,22 +6,15 @@ import { Routes, Route } from "react-router-dom";
 import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import Dashboard from "./scenes/dashboard";
-import Team from "./scenes/team";
-import Invoices from "./scenes/invoices";
-import Contacts from "./scenes/contacts";
-import Bar from "./scenes/bar";
-import Form from "./scenes/form";
-import Line from "./scenes/line";
-import Pie from "./scenes/pie";
-import FAQ from "./scenes/faq";
+import TablaParticipantes from "./scenes/participantes";
 
-import Calendar from "./scenes/calendar";
-import User from "./scenes/user";
+import Data from "./scenes/tabla";
 import Config from "./scenes/config";
-import Geography from "./scenes/geography";
+import Regiones from "./scenes/regiones";
 
 import Universidades from "./scenes/universidades";
 import Eventos from "./scenes/eventos";
+import Formacion from "./scenes/formacion";
 
 
 
@@ -42,21 +35,13 @@ function App() {
               <Topbar />
               <Routes>
                 <Route path="/" element={<Dashboard />} />
-                <Route path="/participantes" element={<Team />} />
-                <Route path="/invoices" element={<Invoices />} />
-                <Route path="/contacts" element={<Contacts />} />
-                <Route path="/bar" element={<Bar />} />
-                <Route path="/form" element={<Form />} />
-                <Route path="/line" element={<Line />} />
-                <Route path="/pie" element={<Pie />} />
-                <Route path="/faq" element={<FAQ />} />
-                
-                <Route path="/calendar" element={<Calendar />} /> 
-                <Route path="/user" element={<User />} />
+                <Route path="/participantes" element={<TablaParticipantes />} />
+                <Route path="/data" element={<Data />} />
                 <Route path="/config" element={<Config  fontScale={fontScale} setFontScale={setFontScale} />} />
-                <Route path="/geography" element={<Geography />} />
+                <Route path="/regiones" element={<Regiones />} />
                 <Route path="/universidades" element={<Universidades />} />
                 <Route path="/eventos" element={<Eventos />} />
+                <Route path="/formacion" element={<Formacion />} />
               </Routes>
             </main>  
           </div>

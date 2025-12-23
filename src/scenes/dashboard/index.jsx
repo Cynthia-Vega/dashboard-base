@@ -16,6 +16,7 @@ import LineChart from "../../components/LineChart";
 import GeographyChart from "../../components/GeographyChart";
 import ProgressCircle from "../../components/ProgressCircle";
 import Target from "../../components/Target";
+import TargetMin from "../../components/targets/TargetMin";
 
 import { ParticipantesData } from "../../data/ParticipantesData";
 
@@ -74,13 +75,13 @@ const Dashboard = () => {
           gridColumn={{ xs: "span 12", sm: "span 12", md: "span 4", lg: "span 3" }}
           gridRow="span 2"
           backgroundColor={colors.primary[200]}
-  p="20px"
-  pt={4}
-  display="grid"
-  gridTemplateRows="48px 1fr"   // ✅ 48px reservados para el título
-  gap={0}
-  sx={{ minWidth: 0 }}
->
+          p="20px"
+          pt={4}
+          display="grid"
+          gridTemplateRows="48px 1fr" 
+          gap={0}
+          sx={{ minWidth: 0 }}
+        >
           <Typography
             variant="h3"
             fontWeight="600"
@@ -90,15 +91,15 @@ const Dashboard = () => {
             FORMADORES
           </Typography>
 
-          {/* 👇 clave: no wrapper con maxWidth fijo (evita overlap) */}
+         
           <Box
-  width="100%"
-  display="flex"
-  justifyContent="flex-start"
-  alignItems="flex-start"
-  sx={{ mt: 0 }}   // por si se te coló margen
->
-            <Target
+            width="100%"
+            display="flex"
+            justifyContent="flex-start"
+            alignItems="flex-start"
+            sx={{ mt: 0 }}
+          >
+            <TargetMin
               icon={<GroupsIcon sx={{ color: colors.green[200] }} />}
               value={totalPoranio.find((c) => c.id === "2025")?.value || 0}
               title="Total"
@@ -111,10 +112,11 @@ const Dashboard = () => {
                 width: "100%",
                 maxWidth: "100%",
                 minHeight: { xs: 240, md: 260, lg: 280 },
-                pt : 3
+                pt: 3,
               }}
             />
           </Box>
+
         </Box>
 
         {/* DERECHA: NIVELES + GRADO */}
@@ -151,37 +153,39 @@ const Dashboard = () => {
               
             >
               {/* NOVEL */}
-              <Target
-                icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
-                value={experience.find((c) => c.id === "novel")?.value || 0}
-                title="Novel"
-                titlePosition="bottom"
-                duration={1500}
-                fullWidth
-                variant="dash"
-              />
+{/* NOVEL */}
+<TargetMin
+  icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
+  value={experience.find((c) => c.id === "novel")?.value || 0}
+  title="Novel"
+  titlePosition="bottom"
+  duration={1500}
+  fullWidth
+  variant="dash"
+/>
 
-              {/* INTERMEDIO */}
-              <Target
-                icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
-                value={experience.find((c) => c.id === "intermedio")?.value || 0}
-                title="Intermedio"
-                titlePosition="bottom"
-                duration={1500}
-                fullWidth
-                variant="dash"
-              />
+{/* INTERMEDIO */}
+<TargetMin
+  icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
+  value={experience.find((c) => c.id === "intermedio")?.value || 0}
+  title="Intermedio"
+  titlePosition="bottom"
+  duration={1500}
+  fullWidth
+  variant="dash"
+/>
 
-              {/* EXPERTO */}
-              <Target
-                icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
-                value={experience.find((c) => c.id === "experto")?.value || 0}
-                title="Experto"
-                titlePosition="bottom"
-                duration={1500}
-                fullWidth
-                variant="dash"
-              />
+{/* EXPERTO */}
+<TargetMin
+  icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
+  value={experience.find((c) => c.id === "experto")?.value || 0}
+  title="Experto"
+  titlePosition="bottom"
+  duration={1500}
+  fullWidth
+  variant="dash"
+/>
+
             </Box>
           </Box>
 
@@ -206,38 +210,39 @@ const Dashboard = () => {
               gap="20px"
               alignItems="stretch"
             >
-              {/* LICENCIATURA */}
-              <Target
-                icon={<HistoryEduIcon sx={{ color: colors.green[200] }} />}
-                value={grado.find((c) => c.id === "Licenciatura")?.value || 0}
-                title="Licenciatura"
-                titlePosition="bottom"
-                duration={1500}
-                fullWidth
-                variant="dash"
-              />
+            {/* LICENCIATURA */}
+            <TargetMin
+              icon={<HistoryEduIcon sx={{ color: colors.green[200] }} />}
+              value={grado.find((c) => c.id === "Licenciatura")?.value || 0}
+              title="Licenciatura"
+              titlePosition="bottom"
+              duration={1500}
+              fullWidth
+              variant="dash"
+            />
 
-              {/* MAGÍSTER */}
-              <Target
-                icon={<HistoryEduIcon sx={{ color: colors.green[200] }} />}
-                value={grado.find((c) => c.id === "Magíster")?.value || 0}
-                title="Magíster"
-                titlePosition="bottom"
-                duration={1500}
-                fullWidth
-                variant="dash"
-              />
+            {/* MAGÍSTER */}
+            <TargetMin
+              icon={<HistoryEduIcon sx={{ color: colors.green[200] }} />}
+              value={grado.find((c) => c.id === "Magíster")?.value || 0}
+              title="Magíster"
+              titlePosition="bottom"
+              duration={1500}
+              fullWidth
+              variant="dash"
+            />
 
-              {/* DOCTORADO */}
-              <Target
-                icon={<HistoryEduIcon sx={{ color: colors.green[200] }} />}
-                value={grado.find((c) => c.id === "Doctorado")?.value || 0}
-                title="Doctorado"
-                titlePosition="bottom"
-                duration={1500}
-                fullWidth
-                variant="dash"
-              />
+            {/* DOCTORADO */}
+            <TargetMin
+              icon={<HistoryEduIcon sx={{ color: colors.green[200] }} />}
+              value={grado.find((c) => c.id === "Doctorado")?.value || 0}
+              title="Doctorado"
+              titlePosition="bottom"
+              duration={1500}
+              fullWidth
+              variant="dash"
+            />
+
             </Box>
           </Box>
         </Box>
@@ -271,7 +276,7 @@ const Dashboard = () => {
             alignItems="stretch"
           >
             {/* Educador/a de Párvulos */}
-            <Target
+            <TargetMin
               icon={<SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} />}
               value={carrera.find((c) => c.id === "Educador/a de Párvulos")?.value || 0}
               title="Educador/a de Párvulos"
@@ -280,24 +285,20 @@ const Dashboard = () => {
               variant="dash"
             />
 
-            {/* Profesor/a Educación Básica */}
-            <Target
+            {/* Profesor/a de Educación Básica */}
+            <TargetMin
               icon={<SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} />}
-              value={
-                carrera.find((c) => c.id === "Profesor/a de Educación Básica")?.value || 0
-              }
+              value={carrera.find((c) => c.id === "Profesor/a de Educación Básica")?.value || 0}
               title="Profesor/a de Educación Básica"
               duration={1500}
               fullWidth
               variant="dash"
             />
 
-            {/* Profesor/a Educación Media */}
-            <Target
+            {/* Profesor/a de Educación Media */}
+            <TargetMin
               icon={<SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} />}
-              value={
-                carrera.find((c) => c.id === "Profesor/a de Educación Media")?.value || 0
-              }
+              value={carrera.find((c) => c.id === "Profesor/a de Educación Media")?.value || 0}
               title="Profesor/a de Educación Media"
               duration={1500}
               fullWidth
@@ -305,7 +306,7 @@ const Dashboard = () => {
             />
 
             {/* Otro */}
-            <Target
+            <TargetMin
               icon={<SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} />}
               value={carrera.find((c) => c.id === "Otro")?.value || 0}
               title="Otro"
@@ -313,6 +314,7 @@ const Dashboard = () => {
               fullWidth
               variant="dash"
             />
+
           </Box>
 
           {/* ---------- PROGRAMAS DONDE IMPARTEN ---------- */}
@@ -336,28 +338,29 @@ const Dashboard = () => {
     gap="20px"
     alignItems="stretch"
   >
-    {programas.map((p) => {
-      const icon =
-        p.id === "media" ? <SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
-        p.id === "basica" ? <MenuBookIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
-        p.id === "parvularia" ? <ChildCareIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
-        p.id === "postgrado" ? <WorkspacePremiumIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
-        p.id === "otras_carreras" ? <MiscellaneousServicesIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
-        /* formacion_pedagogica */ <PsychologyIcon sx={{ color: colors.green[200], fontSize: 55 }} />;
+{programas.map((p) => {
+  const icon =
+    p.id === "media" ? <SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+    p.id === "basica" ? <MenuBookIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+    p.id === "parvularia" ? <ChildCareIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+    p.id === "postgrado" ? <WorkspacePremiumIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+    p.id === "otras_carreras" ? <MiscellaneousServicesIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+    <PsychologyIcon sx={{ color: colors.green[200], fontSize: 55 }} />;
 
-      return (
-        <Target
-          key={p.id}
-          icon={icon}
-          value={p.value ?? 0}
-          title={p.label}
-          duration={1500}
-          fullWidth
-          variant="dash"
-          valueLabel="personas"
-        />
-      );
-    })}
+  return (
+    <TargetMin
+      key={p.id}
+      icon={icon}
+      value={p.value ?? 0}
+      title={p.label}
+      duration={1500}
+      fullWidth
+      variant="dash"
+      valueLabel="personas"
+    />
+  );
+})}
+
   </Box>
 </Box>
 

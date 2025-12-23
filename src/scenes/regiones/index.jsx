@@ -5,11 +5,11 @@ import { Box, Typography } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import GeographyChart from "../../components/GeographyChart";
-import Target from "../../components/Target";
+import TargetMet from "../../components/targets/TargetMet";
 import { ParticipantesData } from "../../data/ParticipantesData";
 import { geoFeatures } from "../../data/mockGeoFeatures";
 
-const Geography = () => {
+const Regiones = () => {
   const colors = tokens();
 
   // ✅ ahora pedimos el helper
@@ -36,26 +36,38 @@ const Geography = () => {
     return typeof regionStats === "function" ? regionStats() : {};
   }, [regionStats]);
 
-  // ✅ lista para el panel derecho (ordenada por participantes)
+
   const regionesLista = useMemo(() => {
+    const REGION_ORDER_N2S = [15, 1, 2, 3, 4, 5, 13, 6, 7, 16, 8, 9, 14, 10, 11, 12];
+    const REGION_RANK = Object.fromEntries(REGION_ORDER_N2S.map((id, i) => [id, i]));
+
     const safe = Array.isArray(mapData) ? mapData : [];
 
     const mapped = safe.map((r) => {
-      const rid = String(r.id ?? "");
-      const name = regionNameById[rid] ?? r.label ?? `Región ${rid}`;
-      const stats = statsByRegionId[rid] ?? {
+      const ridRaw = String(r.id ?? "");
+      const idNum = Number.parseInt(ridRaw, 10); // normaliza "01" -> 1
+
+      const name = regionNameById[ridRaw] ?? r.label ?? `Región ${ridRaw}`;
+
+      const stats = statsByRegionId[ridRaw] ?? {
         participantes: r.value ?? 0,
         universidades: 0,
         carreras: 0,
         programas: 0,
       };
 
-      return { id: rid, name, stats };
+      const rank = Number.isFinite(idNum) && REGION_RANK[idNum] != null ? REGION_RANK[idNum] : 999;
+
+      return { id: ridRaw, idNum, rank, name, stats };
     });
 
-    mapped.sort((a, b) => (b.stats.participantes ?? 0) - (a.stats.participantes ?? 0));
+    // ✅ orden geográfico (norte -> sur); fallback por idNum
+    mapped.sort((a, b) => (a.rank - b.rank) || ((a.idNum ?? 999) - (b.idNum ?? 999)));
+
     return mapped;
   }, [mapData, regionNameById, statsByRegionId]);
+
+
 
   // ✅ return condicional después de hooks
   if (loading) return <div>Cargando datos…</div>;
@@ -125,32 +137,26 @@ const Geography = () => {
             gap="14px"
           >
             {regionesLista.map((r) => (
-              <Target
+              <TargetMet
                 key={r.id}
                 title={r.name}
                 variant="dash"
                 fullWidth
-                expandable
-                hideValue        // ✅ sin número
-                headerOnly       // ✅ header “tipo lista”
-                titleWrap        // ✅ 2 líneas si es largo
-                headerMinHeight={84}
-                headerPaddingY={2}
                 bgColor={colors.primary[200]}
                 sx={{ borderRadius: "18px" }}
-              >
-                <Target.BodyStats
-                  colors={colors}
-                  columns={2}
-                  stats={[
-                    { label: "Participantes", value: r.stats.participantes },
-                    { label: "Universidades", value: r.stats.universidades },
-                    { label: "Carreras", value: r.stats.carreras },
-                    { label: "Programas", value: r.stats.programas },
-                    
-                  ]}
-                />
-              </Target>
+                titleWrap
+                headerMinHeight={84}
+                headerPaddingY={2}
+                stats={[
+                  { label: "Participantes", value: r.stats.participantes },
+                  { label: "Universidades", value: r.stats.universidades },
+                  { label: "Carreras", value: r.stats.carreras },
+                  { label: "Programas", value: r.stats.programas },
+                ]}
+                columns={2}
+              />
+
+
             ))}
           </Box>
         </Box>
@@ -159,4 +165,4 @@ const Geography = () => {
   );
 };
 
-export default Geography;
+export default Regiones;

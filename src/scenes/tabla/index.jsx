@@ -4,7 +4,7 @@ import { parseExcel } from "../../utils/parseExcel";
 
 import Header from "../../components/Header";
 
-const User = () => {
+const Data = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,7 +29,7 @@ const User = () => {
 
   return (
     <Box m="20px">
-      <Header title="Usuario" subtitle="Wolis, aquí puedes ver el usuario(?)" />
+      <Header title="Data" subtitle="Aqui se puede ver la base completa)" />
       <div style={{ overflowX: "auto" }}>
         <table style={{ borderCollapse: "collapse", minWidth: "900px" }}>
           <thead>
@@ -75,5 +75,5 @@ const User = () => {
   );
 };
 
-export default User;
+export default Data;
 
