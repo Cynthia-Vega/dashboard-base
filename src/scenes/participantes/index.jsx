@@ -153,7 +153,7 @@ const TablaParticipantes = () => {
       anio_union: r["Año RedFID"] ?? r.anio_union ?? "",
       ciudad: r["Ciudad"] ?? r.ciudad ?? "",
       universidad: r.nombre_universidad ?? r.Universidad ?? "",
-      carrera: r.Carrera ?? r["Carrera"] ?? "",
+      carrera: r.Carrera ?? r["Título"] ?? "",
 
       // eventos
       talleres,
