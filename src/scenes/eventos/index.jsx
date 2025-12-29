@@ -233,36 +233,6 @@ encuentros.sort((a, b) => {
     <Box m="20px" pb="100px">
       <Header title="EVENTOS" subtitle="Participación por instancia" />
 
-      {/* WEBINARS */}
-      <Box mt={2}>
-        {titleSlot("WEBINARS")}
-        <Box sx={gridSx}>
-          {webinars.map((ev) => {
-            const colName = String(ev.id);
-            const names = uniqueNamesForColumn(colName);
-
-            const meta = WEBINAR_META[colName] ?? {};
-            const title = meta.title ?? String(ev.label ?? ev.id ?? "").trim();
-            const desc = meta.desc ?? "";
-            const subtitle = meta.subtitle ?? "";
-
-            return (
-              <TargetDesc
-                key={colName}
-                {...commonTargetProps}
-                title={title}
-                descriptionTitle={subtitle}
-                value={ev.value ?? 0}
-                valueLabel="participaciones"
-                icon={<VideocamIcon sx={{ color: colors.green[200] }} />}
-                description={desc}
-                items={names}
-              />
-            );
-          })}
-        </Box>
-      </Box>
-
       {/* ENCUENTROS */}
       <Box mt={4}>
         {titleSlot("Encuentros Nacionales de Formadores de Profesores")}
@@ -439,6 +409,35 @@ encuentros.sort((a, b) => {
                 value={ev.value ?? 0}
                 valueLabel="participaciones"
                 icon={<HandymanIcon sx={{ color: colors.green[200] }} />}
+                description={desc}
+                items={names}
+              />
+            );
+          })}
+        </Box>
+      </Box>
+      {/* WEBINARS */}
+      <Box mt={2}>
+        {titleSlot("WEBINARS")}
+        <Box sx={gridSx}>
+          {webinars.map((ev) => {
+            const colName = String(ev.id);
+            const names = uniqueNamesForColumn(colName);
+
+            const meta = WEBINAR_META[colName] ?? {};
+            const title = meta.title ?? String(ev.label ?? ev.id ?? "").trim();
+            const desc = meta.desc ?? "";
+            const subtitle = meta.subtitle ?? "";
+
+            return (
+              <TargetDesc
+                key={colName}
+                {...commonTargetProps}
+                title={title}
+                descriptionTitle={subtitle}
+                value={ev.value ?? 0}
+                valueLabel="participaciones"
+                icon={<VideocamIcon sx={{ color: colors.green[200] }} />}
                 description={desc}
                 items={names}
               />

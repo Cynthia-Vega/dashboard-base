@@ -74,7 +74,7 @@ const Regiones = () => {
 
   return (
     <Box m="20px">
-      <Header title="REGIONES" subtitle="Detalle por región con indicadores" />
+      <Header title="REGIONES" subtitle="Detalle por región" />
 
       <Box
         display="grid"

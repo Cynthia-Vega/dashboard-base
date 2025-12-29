@@ -28,6 +28,7 @@ const ProgressCircle = ({ size = 40, data, totalRegions = 16 }) => {
         borderRadius: "50%",
         width: `${size}px`,
         height: `${size}px`,
+        aspectRatio: "1 / 1",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

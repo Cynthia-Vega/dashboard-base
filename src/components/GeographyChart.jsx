@@ -36,8 +36,8 @@ const GeographyChart = ({ isDashboard = false, data }) => {
       label="properties.Region"
       valueFormat=".0f"
       projectionType="mercator"
-      projectionScale={isDashboard ? 850 : 1600}
-      projectionTranslation={isDashboard ? [1.8, 0.7] : [6.1, -0.35]}
+      projectionScale={isDashboard ? 1410 : 1600}
+      projectionTranslation={isDashboard ? [1.955, 1.1] : [6.1, -0.35]}
       projectionRotation={isDashboard ? [0, 98,15]: [0,0]}
       borderWidth={1}
       borderColor="#ffffff"

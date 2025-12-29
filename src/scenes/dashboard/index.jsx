@@ -15,14 +15,16 @@ import Header from "../../components/Header";
 import LineChart from "../../components/LineChart";
 import GeographyChart from "../../components/GeographyChart";
 import ProgressCircle from "../../components/ProgressCircle";
-import Target from "../../components/Target";
 import TargetMin from "../../components/targets/TargetMin";
 
 import { ParticipantesData } from "../../data/ParticipantesData";
 
+import { Link as RouterLink } from "react-router-dom";
+
+
 const Dashboard = () => {
   const colors = tokens();
-  const { loading, frecuencyData, cumulativeFrequencyData, experienceLevelsData, universityImage, programsCategoryCounts } =
+  const { loading, frecuencyData, cumulativeFrequencyData, universityImage, programsCategoryCounts } =
   ParticipantesData();
 
   if (loading) return <div>Cargando datos…</div>;
@@ -36,6 +38,35 @@ const Dashboard = () => {
   const universidades = frecuencyData("nombre_universidad");
   const grado = frecuencyData("grado_final");
   const programas = programsCategoryCounts();
+
+  const Clickable = ({ to, children, sx }) => (
+    <Box
+      component={RouterLink}
+      to={to}
+      sx={{
+        textDecoration: "none",
+        color: "inherit",
+        display: "block",
+        width: "100%",
+        cursor: "pointer",
+        transition: "transform 120ms ease",
+        "&:hover": { transform: "translateY(-1px)" },
+        ...sx,
+      }}
+    >
+      {children}
+    </Box>
+  );
+
+  const ROUTES = {
+    participantes: "/participantes",
+    formacion_niveles: "/formacion",
+    formacion_grado: "/formacion",
+    formacion_titulo: "/formacion",
+    formacion_programas: "/formacion",
+    universidades: "/universidades",
+    region: "/regiones",
+  };
 
 
   return (
@@ -99,6 +130,7 @@ const Dashboard = () => {
             alignItems="flex-start"
             sx={{ mt: 0 }}
           >
+            <Clickable to={ROUTES.participantes}>
             <TargetMin
               icon={<GroupsIcon sx={{ color: colors.green[200] }} />}
               value={totalPoranio.find((c) => c.id === "2025")?.value || 0}
@@ -115,6 +147,7 @@ const Dashboard = () => {
                 pt: 3,
               }}
             />
+            </Clickable>
           </Box>
 
         </Box>
@@ -152,39 +185,45 @@ const Dashboard = () => {
               alignItems="stretch"
               
             >
-              {/* NOVEL */}
-{/* NOVEL */}
-<TargetMin
-  icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
-  value={experience.find((c) => c.id === "novel")?.value || 0}
-  title="Novel"
-  titlePosition="bottom"
-  duration={1500}
-  fullWidth
-  variant="dash"
-/>
 
-{/* INTERMEDIO */}
-<TargetMin
-  icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
-  value={experience.find((c) => c.id === "intermedio")?.value || 0}
-  title="Intermedio"
-  titlePosition="bottom"
-  duration={1500}
-  fullWidth
-  variant="dash"
-/>
+            {/* NOVEL */}
+            <Clickable to={ROUTES.formacion_niveles}>
+            <TargetMin
+              icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
+              value={experience.find((c) => c.id === "novel")?.value || 0}
+              title="Novel"
+              titlePosition="bottom"
+              duration={1500}
+              fullWidth
+              variant="dash"
+            />
+            </Clickable>
 
-{/* EXPERTO */}
-<TargetMin
-  icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
-  value={experience.find((c) => c.id === "experto")?.value || 0}
-  title="Experto"
-  titlePosition="bottom"
-  duration={1500}
-  fullWidth
-  variant="dash"
-/>
+            {/* INTERMEDIO */}
+            <Clickable to={ROUTES.formacion_niveles}>
+            <TargetMin
+              icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
+              value={experience.find((c) => c.id === "intermedio")?.value || 0}
+              title="Intermedio"
+              titlePosition="bottom"
+              duration={1500}
+              fullWidth
+              variant="dash"
+            />
+            </Clickable>
+
+            {/* EXPERTO */}
+            <Clickable to={ROUTES.formacion_niveles}>
+            <TargetMin
+              icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
+              value={experience.find((c) => c.id === "experto")?.value || 0}
+              title="Experto"
+              titlePosition="bottom"
+              duration={1500}
+              fullWidth
+              variant="dash"
+            />
+            </Clickable>
 
             </Box>
           </Box>
@@ -211,6 +250,7 @@ const Dashboard = () => {
               alignItems="stretch"
             >
             {/* LICENCIATURA */}
+            <Clickable to={ROUTES.formacion_grado}>
             <TargetMin
               icon={<HistoryEduIcon sx={{ color: colors.green[200] }} />}
               value={grado.find((c) => c.id === "Licenciatura")?.value || 0}
@@ -220,8 +260,10 @@ const Dashboard = () => {
               fullWidth
               variant="dash"
             />
+            </Clickable>
 
             {/* MAGÍSTER */}
+            <Clickable to={ROUTES.formacion_grado}>
             <TargetMin
               icon={<HistoryEduIcon sx={{ color: colors.green[200] }} />}
               value={grado.find((c) => c.id === "Magíster")?.value || 0}
@@ -231,8 +273,10 @@ const Dashboard = () => {
               fullWidth
               variant="dash"
             />
+            </Clickable>
 
             {/* DOCTORADO */}
+            <Clickable to={ROUTES.formacion_grado}>
             <TargetMin
               icon={<HistoryEduIcon sx={{ color: colors.green[200] }} />}
               value={grado.find((c) => c.id === "Doctorado")?.value || 0}
@@ -242,6 +286,7 @@ const Dashboard = () => {
               fullWidth
               variant="dash"
             />
+            </Clickable>
 
             </Box>
           </Box>
@@ -276,6 +321,7 @@ const Dashboard = () => {
             alignItems="stretch"
           >
             {/* Educador/a de Párvulos */}
+            <Clickable to={ROUTES.formacion_titulo}>
             <TargetMin
               icon={<SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} />}
               value={carrera.find((c) => c.id === "Educador/a de Párvulos")?.value || 0}
@@ -284,8 +330,10 @@ const Dashboard = () => {
               fullWidth
               variant="dash"
             />
+            </Clickable>
 
             {/* Profesor/a de Educación Básica */}
+            <Clickable to={ROUTES.formacion_titulo}>
             <TargetMin
               icon={<SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} />}
               value={carrera.find((c) => c.id === "Profesor/a de Educación Básica")?.value || 0}
@@ -294,8 +342,10 @@ const Dashboard = () => {
               fullWidth
               variant="dash"
             />
+            </Clickable>
 
             {/* Profesor/a de Educación Media */}
+            <Clickable to={ROUTES.formacion_titulo}>
             <TargetMin
               icon={<SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} />}
               value={carrera.find((c) => c.id === "Profesor/a de Educación Media")?.value || 0}
@@ -304,8 +354,10 @@ const Dashboard = () => {
               fullWidth
               variant="dash"
             />
+            </Clickable>
 
             {/* Otro */}
+            <Clickable to={ROUTES.formacion_titulo}>
             <TargetMin
               icon={<SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} />}
               value={carrera.find((c) => c.id === "Otro")?.value || 0}
@@ -314,55 +366,58 @@ const Dashboard = () => {
               fullWidth
               variant="dash"
             />
+            </Clickable>
 
           </Box>
 
           {/* ---------- PROGRAMAS DONDE IMPARTEN ---------- */}
-<Box mt={2.5}>
-  <Typography
-    variant="h4"
-    fontWeight="600"
-    color={colors.primary[100]}
-    sx={{ mb: 2 }}
-  >
-    PROGRAMAS DONDE IMPARTEN
-  </Typography>
+          <Box mt={2.5}>
+            <Typography
+              variant="h4"
+              fontWeight="600"
+              color={colors.primary[100]}
+              sx={{ mb: 2 }}
+            >
+              PROGRAMAS DONDE IMPARTEN
+            </Typography>
 
-  <Box
-    display="grid"
-    gridTemplateColumns={{
-      xs: "repeat(1, 1fr)",
-      sm: "repeat(2, 1fr)",
-      md: "repeat(3, 1fr)", // ✅ 6 categorías -> 3x2 en desktop
-    }}
-    gap="20px"
-    alignItems="stretch"
-  >
-{programas.map((p) => {
-  const icon =
-    p.id === "media" ? <SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
-    p.id === "basica" ? <MenuBookIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
-    p.id === "parvularia" ? <ChildCareIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
-    p.id === "postgrado" ? <WorkspacePremiumIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
-    p.id === "otras_carreras" ? <MiscellaneousServicesIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
-    <PsychologyIcon sx={{ color: colors.green[200], fontSize: 55 }} />;
+            <Box
+              display="grid"
+              gridTemplateColumns={{
+                xs: "repeat(1, 1fr)",
+                sm: "repeat(2, 1fr)",
+                md: "repeat(3, 1fr)", // ✅ 6 categorías -> 3x2 en desktop
+              }}
+              gap="20px"
+              alignItems="stretch"
+            >
+          {programas.map((p) => {
+            const icon =
+              p.id === "media" ? <SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+              p.id === "basica" ? <MenuBookIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+              p.id === "parvularia" ? <ChildCareIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+              p.id === "postgrado" ? <WorkspacePremiumIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+              p.id === "otras_carreras" ? <MiscellaneousServicesIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+              <PsychologyIcon sx={{ color: colors.green[200], fontSize: 55 }} />;
 
-  return (
-    <TargetMin
-      key={p.id}
-      icon={icon}
-      value={p.value ?? 0}
-      title={p.label}
-      duration={1500}
-      fullWidth
-      variant="dash"
-      valueLabel="personas"
-    />
-  );
-})}
+            return (
+              <Clickable to={ROUTES.formacion_programas}>
+              <TargetMin
+                key={p.id}
+                icon={icon}
+                value={p.value ?? 0}
+                title={p.label}
+                duration={1500}
+                fullWidth
+                variant="dash"
+                valueLabel="personas"
+              />
+              </Clickable>
+            );
+          })}
 
-  </Box>
-</Box>
+            </Box>
+          </Box>
 
 
         </Box>
@@ -433,6 +488,7 @@ const Dashboard = () => {
     const imgSrc = universityImage(name);
 
     return (
+      <Clickable to={ROUTES.universidades}>
       <Box
         key={`${uni.id}-${i}`}
         display="flex"
@@ -492,6 +548,7 @@ const Dashboard = () => {
           {uni.value} personas
         </Box>
       </Box>
+      </Clickable>
     );
   })}
 </Box>
@@ -504,34 +561,63 @@ const Dashboard = () => {
 
         {/* Card: Regiones abarcadas */}
         <Box
-          gridColumn={{ xs: "span 12", sm: "span 6", md: "span 4" }}
+          gridColumn={{ xs: "span 12", sm: "span 6", md: "span 4", lg:"span 3"}}
           gridRow="span 2"
           backgroundColor={colors.primary[200]}
           p="15px"
-          sx={{ minWidth: 0 }}
+          sx={{ minWidth: 0, textAlign: "center"}}
         >
-          <Typography variant="h5" fontWeight="600" color={colors.primary[100]}>
+          <Typography variant="h4" fontWeight="600" color={colors.primary[100]}>
             Regiones abarcadas
           </Typography>
 
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            height="100%"
-            gap={2}
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"          // ✅ centra el donut
+          justifyContent="flex-start"
+          height="100%"
+          sx={{
+            pt: 5,                   // ajusta si lo quieres más arriba/abajo
+            gap: 2,
+          }}
+        >
+
+          <Clickable
+            to={ROUTES.region}
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            <ProgressCircle size={125} data={totalPorRegion} />
-            <Typography variant="h5" color={colors.primary[100]}>
+            <Box
+              sx={{
+                width: 125,
+                height: 125,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ProgressCircle size={150} data={totalPorRegion} />
+            </Box>
+          </Clickable>
+
+
+            {/* Total centrado debajo */}
+            <Typography variant="h5" color={colors.primary[100]} sx={{ textAlign: "center" }}>
               Total regiones: {totalPorRegion?.length || 0}
             </Typography>
           </Box>
+
         </Box>
+
 
         {/* Card: Distribución por región */}
         <Box
-          gridColumn={{ xs: "span 12", sm: "span 12", md: "span 8" }}
+          gridColumn={{ xs: "span 12", sm: "span 12", md: "span 8", lg:"span 9" }}
           gridRow="span 2"
           backgroundColor={colors.primary[200]}
           p="15px"
@@ -539,7 +625,7 @@ const Dashboard = () => {
           flexDirection="column"
           sx={{ minWidth: 0 }}
         >
-          <Typography variant="h5" fontWeight="600" color={colors.primary[100]}>
+          <Typography variant="h4" fontWeight="600" color={colors.primary[100]}>
             Distribución por región
           </Typography>
 
@@ -548,19 +634,27 @@ const Dashboard = () => {
             display="flex"
             alignItems="center"
             justifyContent="center"
-            overflow="hidden"
+            // border="1px solid red"
+            sx={{
+
+      overflowX: { xs: "auto", sm: "auto", md: "hidden" },
+      overflowY: "hidden",
+      minWidth: 0,
+    }}
           >
+            <Clickable to={ROUTES.region}>
             <Box
-              height="260px"
-              width="650px"
-              position="relative"
-              sx={{
-                maxWidth: "100%",
-                width: { xs: "100%", lg: "650px" },
-              }}
-            >
+      sx={{
+        width:  { xs: 520, sm: 650, md: 820, lg: 950 },
+        height: { xs: 220, sm: 240, md: 260, lg: 280 },
+        position: "relative",
+        mx: "auto",
+      }}
+    >
+           
               <GeographyChart isDashboard={true} data={totalPorRegion} />
             </Box>
+            </Clickable>
           </Box>
         </Box>
       </Box>
