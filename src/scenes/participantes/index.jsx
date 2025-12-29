@@ -138,10 +138,10 @@ const TablaParticipantes = () => {
     const talleres = countInCols(tallerCols);
     const reuniones = countInCols(reunionCols);
     const encuentros = countInCols(encuentroCols);
-    const lanzamientos = countInCols(lanzamientoCols);
+  
 
     // ✅ participación (encuentro o lanzamiento)
-    const participaciones = (encuentros ?? 0) + (lanzamientos ?? 0);
+    const participaciones = (encuentros ?? 0);
 
     // ✅ nivel directo desde columna experience (ya viene listo)
     const nivel = String(r?.experience ?? "").trim().toLowerCase() || null;
@@ -212,17 +212,15 @@ const TablaParticipantes = () => {
       ),
     },
 
-    { field: "finalizo_curso", headerName: "Curso", flex: 0.55, minWidth: 105, renderCell: renderCheck },
+    { field: "finalizo_curso", headerName: "Curso", flex: 0.55, minWidth: 80, renderCell: renderCheck },
 
-    { field: "participaciones", headerName: "Encuentros", type: "number", flex: 0.6, minWidth: 110 },
-    { field: "talleres", headerName: "Talleres", type: "number", flex: 0.55, minWidth: 110 },
-    { field: "reuniones", headerName: "Reuniones", type: "number", flex: 0.5, minWidth: 90 },
-
-    // ✅ ya no es bool: ahora es número real
-    { field: "presentaciones", headerName: "Presentaciones", type: "number", flex: 0.6, minWidth: 140 },
+    { field: "participaciones", headerName: "Encuentros", type: "number", flex: 0.6, minWidth: 110,headerAlign: "left", },
+    { field: "presentaciones", headerName: "Presentaciones", type: "number", flex: 0.6, minWidth: 140,headerAlign: "left", },
+    { field: "talleres", headerName: "Talleres", type: "number", flex: 0.55, minWidth: 80, headerAlign: "left", },
+    { field: "reuniones", headerName: "Reuniones", type: "number", flex: 0.5, minWidth: 100,headerAlign: "left", },
 
     { field: "adjudica_fondo", headerName: "Fondo", flex: 0.5, minWidth: 90, renderCell: renderCheck },
-    { field: "participa_numero_especial", headerName: "N° Esp.", flex: 0.55, minWidth: 105, renderCell: renderCheck },
+    // { field: "participa_numero_especial", headerName: "N° Esp.", flex: 0.55, minWidth: 105, renderCell: renderCheck },
 
     {
       field: "nivel",

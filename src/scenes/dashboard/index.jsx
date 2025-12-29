@@ -393,9 +393,9 @@ const Dashboard = () => {
             >
           {programas.map((p) => {
             const icon =
-              p.id === "media" ? <SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
-              p.id === "basica" ? <MenuBookIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
-              p.id === "parvularia" ? <ChildCareIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+              p.id === "educacion_media" ? <SchoolIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+              p.id === "educacion_basica" ? <MenuBookIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
+              p.id === "educacion_parvularia" ? <ChildCareIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
               p.id === "postgrado" ? <WorkspacePremiumIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
               p.id === "otras_carreras" ? <MiscellaneousServicesIcon sx={{ color: colors.green[200], fontSize: 55 }} /> :
               <PsychologyIcon sx={{ color: colors.green[200], fontSize: 55 }} />;

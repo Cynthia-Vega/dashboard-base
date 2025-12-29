@@ -86,9 +86,9 @@ const colsToRemove = [
 ];
 
 const PROGRAM_LABEL = {
-  media: "Media",
-  basica: "Básica",
-  parvularia: "Parvularia",
+  educacion_media: "Educación Media",
+  educacion_basica: "Educación Básica",
+  educacion_parvularia: "Educación Parvularia",
   formacion_pedagogica: "Formación pedagógica",
   postgrado: "Postgrado",
   otras_carreras: "Otras carreras",
@@ -105,6 +105,7 @@ const Columns = {
   "Indique ciudad donde reside": 'Ciudad',
   "¿En qué año te uniste a RedFID?": 'Año RedFID',
   "¿En qué programa(s) impartes clases como formador?": 'Programas',
+  "Taller N° especial Revista 2024": 'Reunión informativa del número especial'
 }
 
 /* =========================
@@ -205,7 +206,7 @@ function detectProgramCategories(cellRaw) {
     /matemat/.test(t) &&
     /(practic|practica|practicas)/.test(t)
   ) {
-    return ["basica"];
+    return ["educacion_basica"];
   }
 
   const parts = splitProgramParts(cellRaw);
@@ -268,7 +269,7 @@ function detectProgramCategories(cellRaw) {
 
     // Parvularia
     if (/(parvular|parvulo|parvulos|educacion de parvulos)/.test(p)) {
-      add("parvularia");
+      add("educacion_parvularia");
       continue;
     }
 
@@ -285,11 +286,11 @@ function detectProgramCategories(cellRaw) {
       (/\bbasica\b/.test(p) && p.includes("mencion") && p.includes("matemat"));
 
     // ✅ si el mismo trozo trae básica, sumarla
-    if (isBasica) add("basica");
+    if (isBasica) add("educacion_basica");
 
     // ✅ si el mismo trozo trae media, sumarla
     if (isMedia) {
-      add("media");
+      add("educacion_media");
       continue;
     }
 

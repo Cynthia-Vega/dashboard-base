@@ -29,9 +29,9 @@ const norm = (x) => String(x ?? "").trim().toLowerCase();
 
 // ✅ Programas fijos (como el dash)
 const PROGRAM_KEYS = [
-  { id: "parvularia", label: "Párvularia" },
-  { id: "basica", label: "Básica" },
-  { id: "media", label: "Media" },
+  { id: "educacion_parvularia", label: "Educación Párvularia" },
+  { id: "educacion_basica", label: "Educación Básica" },
+  { id: "educacion_media", label: "Educación Media" },
   { id: "formacion_pedagogica", label: "Formación pedagógica" },
   { id: "postgrado", label: "Postgrado" },
   { id: "otras_carreras", label: "Otras carreras" },

@@ -36,7 +36,7 @@ const TargetDesc = ({
   defaultExpanded = false,
   onToggle,
 
-  // ✅ importante: en TargetList es true, acá lo dejamos igual
+  //importante: en TargetList es true, acá lo dejamos igual
   expandedDivider = true,
   expandedPaddingTop = 12,
 
@@ -47,7 +47,8 @@ const TargetDesc = ({
 
   // ✅ DESCRIPCIÓN + LISTA
   description = "",
-  descriptionTitle = "", // ✅ NEW: título antes de la descripción
+  descriptionTitle = "", 
+  formadores = "",
   items = [],
   renderItem,
   maxHeight = 260,
@@ -299,6 +300,26 @@ const TargetDesc = ({
                 {descriptionTitle}
               </Typography>
             )}
+
+            {!!formadores && (
+              <Typography
+                sx={{
+                  fontFamily,
+                  fontStyle: "italic",   // ✅ cursiva
+                  fontWeight: 400,       // ✅ NO negrita
+                  fontSize: "13.2px",
+                  lineHeight: 1.2,
+                  mb: 0.55,
+                  opacity: 0.95,
+                  whiteSpace: "normal",
+                  overflowWrap: "anywhere",
+                  wordBreak: "break-word",
+                }}
+              >
+                {Array.isArray(formadores) ? formadores.filter(Boolean).join(", ") : formadores}
+              </Typography>
+            )}
+
 
             <Typography
               sx={{

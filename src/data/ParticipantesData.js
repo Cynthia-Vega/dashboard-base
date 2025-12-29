@@ -255,9 +255,9 @@ export function ParticipantesData() {
 
 const programsCategoryCounts = () => {
   const counts = {
-    media: 0,
-    basica: 0,
-    parvularia: 0,
+    educacion_media: 0,
+    educacion_basica: 0,
+    educacion_parvularia: 0,
     formacion_pedagogica: 0,
     postgrado: 0,
     otras_carreras: 0,
@@ -273,10 +273,11 @@ const programsCategoryCounts = () => {
     });
   });
 
+  console.log(counts)
   return [
-    { id: "media", label: "Media", value: counts.media },
-    { id: "basica", label: "Básica", value: counts.basica },
-    { id: "parvularia", label: "Parvularia", value: counts.parvularia },
+    { id: "educacion_media", label: "Educación Media", value: counts.educacion_media },
+    { id: "educacion_basica", label: "Educación Básica", value: counts.educacion_basica },
+    { id: "educacion_parvularia", label: "Educación Parvularia", value: counts.educacion_parvularia },
     { id: "formacion_pedagogica", label: "Formación pedagógica", value: counts.formacion_pedagogica },
     { id: "postgrado", label: "Postgrado", value: counts.postgrado },
     { id: "otras_carreras", label: "Otras carreras", value: counts.otras_carreras },
