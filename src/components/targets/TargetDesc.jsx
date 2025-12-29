@@ -47,6 +47,7 @@ const TargetDesc = ({
 
   // ✅ DESCRIPCIÓN + LISTA
   description = "",
+  descriptionTitle = "", // ✅ NEW: título antes de la descripción
   items = [],
   renderItem,
   maxHeight = 260,
@@ -160,20 +161,27 @@ const TargetDesc = ({
     >
       {formatted}
       {!!valueLabel && (
-        <Typography
-          component="span"
-          sx={{
-            fontFamily,
-            ml: 1,
-            fontWeight: 900,
-            color: resolvedValue,
-            opacity: 0.9,
-            fontSize:
-              v === "h2" ? "0.45em" : v === "h3" ? "0.5em" : "0.55em",
-          }}
-        >
-          {valueLabel}
-        </Typography>
+    <Typography
+      component="span"
+      sx={{
+        ml: 1,
+        fontWeight: 900,
+        opacity: 0.9,
+
+        // ✅ un poco más grande
+        fontSize: v === "h2" ? "0.60em" : v === "h3" ? "0.65em" : "0.70em",
+
+        // ✅ súbelo para que se vea centrado con el número
+        position: "relative",
+        top: v === "h2" ? "-0.10em" : "-0.08em",
+
+        // ✅ ayuda a que no quede “pegado abajo”
+        verticalAlign: "middle",
+        lineHeight: 1,
+      }}
+    >
+  {valueLabel}
+</Typography>
       )}
     </Typography>
   );
@@ -258,53 +266,72 @@ const TargetDesc = ({
     </Box>
   );
 
-
-
   // ✅ ESTE Expanded deja la LISTA IGUAL al TargetList (mismo Box px/pb/pt)
-const Expanded = () => (
-  <Collapse in={open} timeout="auto" unmountOnExit>
-    {/* ✅ Línea antes de la descripción (igual que TargetList) */}
-    <Divider sx={{ borderColor: colors.primary[300] }} />
+  const Expanded = () => (
+    <Collapse in={open} timeout="auto" unmountOnExit>
+      {/* ✅ Línea antes de la descripción (igual que TargetList) */}
+      <Divider sx={{ borderColor: colors.primary[300] }} />
 
-    {/* ✅ Bloque descripción con líneas suaves visibles */}
-    {!!description && (
-      <Box onClick={(e) => e.stopPropagation()}>
-        <Typography
-          sx={{
-            fontFamily,
-            px: 2,
-            py: 1.1,              // 👈 un pelín menos para que no “empuje” tanto
-            textAlign: "center",
-            color: colors.primary[100],
-            fontSize: "13.5px",
-            lineHeight: 1.25,
-            whiteSpace: "normal",
-            overflowWrap: "anywhere",
-            wordBreak: "break-word",
-          }}
-        >
-          {description}
-        </Typography>
+      {/* ✅ Bloque descripción con título en negrita + descripción */}
+      {!!description && (
+        <Box onClick={(e) => e.stopPropagation()}>
+          <Box
+            sx={{
+              px: 2,
+              py: 1.1,
+              textAlign: "center",
+              color: colors.primary[100],
+            }}
+          >
+            {!!descriptionTitle && (
+              <Typography
+                sx={{
+                  fontFamily,
+                  fontWeight: 900,      // ✅ NEW: negrita
+                  fontSize: "13.8px",
+                  lineHeight: 1.2,
+                  mb: 0.5,              // ✅ NEW: separa título de texto
+                  whiteSpace: "normal",
+                  overflowWrap: "anywhere",
+                  wordBreak: "break-word",
+                }}
+              >
+                {descriptionTitle}
+              </Typography>
+            )}
 
-        {/* ✅ Línea entre descripción y lista */}
-        <Divider sx={{ borderColor: colors.primary[300], opacity: 0.7 }} />
+            <Typography
+              sx={{
+                fontFamily,
+                fontSize: "13.5px",
+                lineHeight: 1.25,
+                whiteSpace: "normal",
+                overflowWrap: "anywhere",
+                wordBreak: "break-word",
+              }}
+            >
+              {description}
+            </Typography>
+          </Box>
+
+          {/* ✅ Línea entre descripción y lista */}
+          <Divider sx={{ borderColor: colors.primary[300], opacity: 0.7 }} />
+        </Box>
+      )}
+
+      {/* ✅ LISTA: EXACTAMENTE como TargetList */}
+      <Box
+        sx={{
+          px: 2,
+          pt: description ? "12px" : `${expandedPaddingTop}px`,
+          pb: 2,
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <BodyList />
       </Box>
-    )}
-
-    {/* ✅ LISTA: EXACTAMENTE como TargetList */}
-    <Box
-      sx={{
-        px: 2,
-        pt: description ? "12px" : `${expandedPaddingTop}px`,
-        pb: 2,                          // 👈 igual que TargetList
-      }}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <BodyList />
-    </Box>
-  </Collapse>
-);
-
+    </Collapse>
+  );
 
   // =============================
   // VERTICAL / HERO
@@ -396,7 +423,7 @@ const Expanded = () => (
               variant="body1"
               fontWeight={900}
               color={resolvedTitle}
-              sx={titleSx}
+              sx={{titleSx, mb:0.6,}}
               title={title}
             >
               {title}

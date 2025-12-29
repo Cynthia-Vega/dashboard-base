@@ -62,8 +62,16 @@ const University = {
 const colsToRemove = [
   "col_0",
   "Adjunte una foto para actualizar tu perfil",
+  "Años de formador ",
   "Columna 25",
   "Inserte ",
+  "CURSO - Iniciaron curso",
+  "CURSO - Documento incremental",
+  "Compromiso (completar)",
+  "Consentimiento (completar)",
+  "Dirección de correo electrónico",
+  "Carrera",
+  "Nombre",
   "¿En qué universidad(es) trabajas? ",
   "¿Tienes otros intereses que te gustaría compartir? ",
   "¿Qué esperas, como formador y usuario, de RedFID este año? ",
@@ -74,6 +82,7 @@ const colsToRemove = [
   "¿Qué temas te motivan en tu rol de formador? ",
   "En 5 líneas, comparte una breve descripción de tu trayectoria para que la comunidad RedFID pueda conocerte mejor (por ejemplo: carrera, trayectoria profesional, lugares donde has trabajado, etc) ",
   "_encuestra_encontrada",
+  "_participante_encontrado"
 ];
 
 const PROGRAM_LABEL = {
@@ -84,6 +93,19 @@ const PROGRAM_LABEL = {
   postgrado: "Postgrado",
   otras_carreras: "Otras carreras",
 };
+
+const Columns = {
+  "Jornada lanzamiento Atacama": "1er Encuentro Atacama",
+  "3er  Encuentro Magallanes": "3er Encuentro Magallanes",
+  "Presentó Poster": 'Presenta Osorno',
+  "Presentó Trabajo": 'Presenta Magallanes',
+  "Indique su nombre y apellido": 'Nombre y apellido',
+  "Indique su título profesional": "Título",
+  "Año en que comenzaste a trabajar como formador/a.": 'Año formador',
+  "Indique ciudad donde reside": 'Ciudad',
+  "¿En qué año te uniste a RedFID?": 'Año RedFID',
+  "¿En qué programa(s) impartes clases como formador?": 'Programas',
+}
 
 /* =========================
    Utilidades generales
@@ -304,6 +326,7 @@ function experienceFromStartYear(startYear, currentYear = new Date().getFullYear
 
 
 
+
 /* =========================
    parseExcel
    ========================= */
@@ -489,10 +512,18 @@ export async function parseExcel(participantesFile, encuestaFile) {
 
 
     // 9) Limpieza
-    const cleaned = removeColumns(mergedWithExperience, colsToRemove);
+    const remove = removeColumns(mergedWithExperience, colsToRemove);
 
-    console.log("Merge final:", cleaned.slice(0, 3));
-    return cleaned;
+    const cleaned = remove.map(o => Object.fromEntries(Object.entries(o).map(([k,v]) => [k.trim(), v])));
+
+    // 10) nombre columnas
+    const renameCols = (rows, map) =>
+      rows.map((o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [map[k] ?? k, v])));
+
+    const newRows = renameCols(cleaned, Columns);
+
+    console.log("Merge final:", newRows.slice(0, 3));
+    return newRows;
   } catch (error) {
     console.error("Error en parseExcel (participantes + encuesta + merge):", error);
     return [];

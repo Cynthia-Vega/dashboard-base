@@ -15,7 +15,6 @@ const TablaParticipantes = () => {
     loading,
     rawData,
     isMarked: isMarkedFromData,
-    getNivel: getNivelFromData,
     detectEventColumns: detectEventColumnsFromData,
   } = ParticipantesData();
 
@@ -29,16 +28,6 @@ const TablaParticipantes = () => {
       const s = String(v).trim().toLowerCase();
       if (!s) return false;
       return ["1", "x", "si", "sí", "true", "ok", "✔"].includes(s);
-    });
-
-  const getNivel =
-    getNivelFromData ??
-    ((years) => {
-      const y = Number(years);
-      if (Number.isNaN(y)) return null;
-      if (y >= 0 && y <= 5) return "novel";
-      if (y >= 6 && y <= 11) return "intermedio";
-      return "experto";
     });
 
   const detectEventColumns =
@@ -126,13 +115,11 @@ const TablaParticipantes = () => {
 
     // ✅ AQUÍ ESTÁ LO TUYO: sumamos las 3 variantes de "Presentó Trabajo"
     const trabajoCount = sumKeys(r, [
-      "Presentó Trabajo.",
-      "Presentó Trabajo",
-      "Presento Trabajo.",
+      "Presenta Osorno",
     ]);
 
     // (opcional) si también quieres sumar poster en la misma métrica:
-    const posterCount = sumKeys(r, ["Presentó Poster", "Presento Poster"]);
+    const posterCount = sumKeys(r, ["Presenta Magallanes"]);
 
     // ✅ Total “Presentaciones” = trabajo + poster (si solo quieres trabajo, deja trabajoCount)
     const presentaciones = trabajoCount + posterCount;
@@ -156,12 +143,15 @@ const TablaParticipantes = () => {
     // ✅ participación (encuentro o lanzamiento)
     const participaciones = (encuentros ?? 0) + (lanzamientos ?? 0);
 
+    // ✅ nivel directo desde columna experience (ya viene listo)
+    const nivel = String(r?.experience ?? "").trim().toLowerCase() || null;
+
     return {
       id: r.ID ?? r.id ?? idx,
-      nombre: r["Indique su nombre y apellido"] ?? "",
+      nombre: r["Nombre y apellido"] ?? "",
       grado: r.grado_final ?? r["Grado académico"] ?? "",
-      anio_union: r["¿En qué año te uniste a RedFID? "] ?? r.anio_union ?? "",
-      ciudad: r["Indique ciudad donde reside "] ?? r.ciudad ?? "",
+      anio_union: r["Año RedFID"] ?? r.anio_union ?? "",
+      ciudad: r["Ciudad"] ?? r.ciudad ?? "",
       universidad: r.nombre_universidad ?? r.Universidad ?? "",
       carrera: r.Carrera ?? r["Carrera"] ?? "",
 
@@ -180,12 +170,7 @@ const TablaParticipantes = () => {
       participa_numero_especial: participaNumeroEspecial,
 
       // nivel experiencia
-      nivel: getNivel(
-        r["Años de formador "] ??
-          r["Años de formador"] ??
-          r.anios_formador ??
-          null
-      ),
+      nivel,
     };
   });
 

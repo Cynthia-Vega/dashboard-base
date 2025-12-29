@@ -133,20 +133,27 @@ const TargetMin = ({
     >
       {formatted}
       {!!valueLabel && (
-        <Typography
-          component="span"
-          sx={{
-            fontFamily,
-            ml: 1,
-            fontWeight: 900,
-            color: resolvedValue,
-            opacity: 0.9,
-            fontSize:
-              v === "h2" ? "0.45em" : v === "h3" ? "0.5em" : "0.55em",
-          }}
-        >
-          {valueLabel}
-        </Typography>
+    <Typography
+      component="span"
+      sx={{
+        ml: 1,
+        fontWeight: 900,
+        opacity: 0.9,
+
+        // ✅ un poco más grande
+        fontSize: v === "h2" ? "0.60em" : v === "h3" ? "0.65em" : "0.70em",
+
+        // ✅ súbelo para que se vea centrado con el número
+        position: "relative",
+        top: v === "h2" ? "-0.10em" : "-0.08em",
+
+        // ✅ ayuda a que no quede “pegado abajo”
+        verticalAlign: "middle",
+        lineHeight: 1,
+      }}
+    >
+  {valueLabel}
+</Typography>
       )}
     </Typography>
   );
@@ -252,7 +259,7 @@ const TargetMin = ({
               variant="body1"
               fontWeight={900}
               color={resolvedTitle}
-              sx={titleSx}
+              sx={{titleSx, mb:0.6}}
               title={title}
             >
               {title}

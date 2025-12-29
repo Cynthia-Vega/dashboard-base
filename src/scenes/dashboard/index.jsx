@@ -27,12 +27,12 @@ const Dashboard = () => {
 
   if (loading) return <div>Cargando datos…</div>;
 
-  const totalPorGenero = frecuencyData("Género");
+
   const totalPorRegion = frecuencyData("region_id");
-  const totalPorUniversidad = frecuencyData("Universidad");
-  const totalPoranio = cumulativeFrequencyData("¿En qué año te uniste a RedFID? ");
+ 
+  const totalPoranio = cumulativeFrequencyData("Año RedFID");
   const experience = frecuencyData("experience");
-  const carrera = frecuencyData("Indique su título profesional");
+  const carrera = frecuencyData("Título");
   const universidades = frecuencyData("nombre_universidad");
   const grado = frecuencyData("grado_final");
   const programas = programsCategoryCounts();
@@ -55,7 +55,7 @@ const Dashboard = () => {
           }}
         >
           <DownloadOutlinedIcon sx={{ mr: "10px" }} />
-          Download Reports
+          Descargar Reporte
         </Button>
       </Box>
 

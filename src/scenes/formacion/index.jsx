@@ -14,7 +14,7 @@ import { ParticipantesData } from "../../data/ParticipantesData";
 const COLS = {
   niveles: "experience",
   grado: "grado_final",
-  titulo: "Indique su título profesional",
+  titulo: "Título",
   programa: "programa_categorias", // ✅ ES ARRAY (ej: ["basica","media",...])
 };
 
@@ -46,7 +46,7 @@ const Formacion = () => {
   const safeRaw = Array.isArray(rawData) ? rawData : [];
 
   const displayName = (row) =>
-    String(row?.["Indique su nombre y apellido"] ?? "").trim() ||
+    String(row?.["Nombre y apellido"] ?? "").trim() ||
     String(row?.username ?? "").trim() ||
     String(row?.rut ?? "").trim() ||
     "Sin nombre";

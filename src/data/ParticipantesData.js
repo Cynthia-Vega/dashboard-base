@@ -134,7 +134,49 @@ function cumulativeFrequency(data, columnName) {
 }
 
 
+function usersBinary(data, binCol, userCol = "username") {
+  if (!Array.isArray(data)) return [];
 
+  return [
+    ...new Set(
+      data
+        .filter((row) => isMarked(row?.[binCol]))
+        .map((row) => row?.[userCol])
+        .filter((u) => u != null && String(u).trim() !== "")
+        .map((u) => String(u).trim())
+    ),
+  ];
+}
+
+function usersByCategory(data, catCol, userCol = "username", opts = {}) {
+  const { normalize = true, includeEmpty = false, emptyLabel = "Sin dato" } = opts;
+  if (!Array.isArray(data)) return {};
+
+  const normCat = (v) => {
+    if (!normalize) return v;
+    const s = String(v ?? "").trim();
+    return s === "" ? emptyLabel : s;
+  };
+
+  const acc = {}; // {cat: Set(users)}
+
+  for (const row of data) {
+    const user = row?.[userCol];
+    if (user == null || String(user).trim() === "") continue;
+    const u = String(user).trim();
+
+    const rawCat = row?.[catCol];
+    if (!includeEmpty && (rawCat == null || String(rawCat).trim() === "")) continue;
+
+    const cat = normCat(rawCat);
+    if (!acc[cat]) acc[cat] = new Set();
+    acc[cat].add(u);
+  }
+
+  return Object.fromEntries(
+    Object.entries(acc).map(([cat, set]) => [cat, [...set]])
+  );
+}
 
 
 // ✅ Mapa: nombre exacto -> carpeta abreviación + archivo
@@ -266,13 +308,13 @@ function regionStats() {
     const programsSet = new Set();
 
     rows.forEach((r) => {
-      const p = low(r?.["Indique su nombre y apellido"]);
+      const p = low(r?.["Nombre y apellido"]);
       if (p) participantsSet.add(p);
 
       const u = low(r?.["Universidad"]);
       if (u) universitiesSet.add(u);
 
-      const c = low(r?.["Carrera"]);
+      const c = low(r?.["Título"]);
       if (c) careersSet.add(c);
 
       const arr = Array.isArray(r?.programa_categorias) ? r.programa_categorias : [];
@@ -300,6 +342,11 @@ function regionStats() {
   const cumulativeFrequencyData = (columnName) => cumulativeFrequency(rawData, columnName);
   const eventsData = (opts) => eventsFrequencyAll(rawData, opts);
   const universityImage = (universityName) => getUniImgSrc(universityName)
+  const usersEvents = (binCol, userCol = "username") =>
+  usersBinary(rawData, binCol, userCol);
+
+  const usersCat = (catCol, userCol = "username", opts = {}) =>
+  usersByCategory(rawData, catCol, userCol, opts);
 
 
   return {
@@ -310,6 +357,8 @@ function regionStats() {
     eventsData,
     universityImage,
     programsCategoryCounts,
-    regionStats
+    regionStats,
+    usersEvents,
+    usersCat
   };
 }

@@ -18,7 +18,7 @@ const Universidades = () => {
   );
 
   const displayName = (row) =>
-    String(row?.["Indique su nombre y apellido"] ?? "").trim() ||
+    String(row?.["Nombre y apellido"] ?? "").trim() ||
     row?.username ||
     row?.rut ||
     "Sin nombre";
