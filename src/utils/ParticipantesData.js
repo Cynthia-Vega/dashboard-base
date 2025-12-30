@@ -274,6 +274,13 @@ function regionStats() {
   const norm = (v) => String(v ?? "").trim();
   const low = (v) => norm(v).toLowerCase();
 
+  const titleCase = (s) =>
+    String(s ?? "")
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .trim()
+      .replace(/(^|\s|[-(])([a-záéíóúñ])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+
   const by = new Map();
 
   rawData.forEach((row) => {
@@ -292,33 +299,67 @@ function regionStats() {
     const programsSet = new Set();
 
     rows.forEach((r) => {
-      const p = low(r?.["Nombre y apellido"]);
-      if (p) participantsSet.add(p);
+      // Participantes
+      const pRaw = norm(r?.["Nombre y apellido"]);
+      if (pRaw) participantsSet.add(pRaw);
 
-      const u = low(r?.["Universidad"]);
-      if (u) universitiesSet.add(u);
+      // Universidades (según tu columna)
+      const uRaw = norm(r?.["nombre_universidad"]);
+      if (uRaw) universitiesSet.add(uRaw);
 
-      const c = low(r?.["Título"]);
-      if (c) careersSet.add(c);
+      // Carreras
+      const cRaw = norm(r?.["Título"]);
+      if (cRaw) careersSet.add(cRaw);
 
-      const arr = Array.isArray(r?.programa_categorias) ? r.programa_categorias : [];
+      // Programas (string o array)
+      const rawProg = r?.programa_categorias_str;
+
+      const arr = Array.isArray(rawProg)
+        ? rawProg
+        : typeof rawProg === "string"
+          ? rawProg.split(/[,;|]/)
+          : [];
+
       arr.forEach((x) => {
-        const k = low(x);
-        if (k) programsSet.add(k);
+        const kRaw = norm(x).replace(/^"+|"+$/g, ""); // quita comillas si vienen
+        if (kRaw) programsSet.add(kRaw);
       });
     });
 
+    const participantes_items = Array.from(participantsSet)
+      .map(titleCase)
+      .sort((a, b) => a.localeCompare(b, "es"));
+
+    const universidades_items = Array.from(universitiesSet)
+      .map(titleCase)
+      .sort((a, b) => a.localeCompare(b, "es"));
+
+    const carreras_items = Array.from(careersSet)
+      .map(titleCase)
+      .sort((a, b) => a.localeCompare(b, "es"));
+
+    const programas_items = Array.from(programsSet)
+      .map(titleCase)
+      .sort((a, b) => a.localeCompare(b, "es"));
+
     out[String(rid)] = {
       region_id: String(rid),
-      participantes: participantsSet.size,
-      universidades: universitiesSet.size,
-      carreras: careersSet.size,
-      programas: programsSet.size,
+
+      participantes: participantes_items.length,
+      universidades: universidades_items.length,
+      carreras: carreras_items.length,
+      programas: programas_items.length,
+
+      participantes_items,
+      universidades_items,
+      carreras_items,
+      programas_items,
     };
   });
 
-  return out; 
+  return out;
 }
+
 
 
 

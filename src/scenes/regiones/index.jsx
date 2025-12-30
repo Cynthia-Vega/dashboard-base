@@ -90,7 +90,7 @@ const Regiones = () => {
           sx={{justifySelf:'center', width: '400px', height: '1450px' }}
         >
           <Typography
-            variant="h5"
+            variant="h4"
             fontWeight="600"
             sx={{ marginBottom: "15px" }}
             color={colors.primary[100]}
@@ -113,7 +113,7 @@ const Regiones = () => {
           sx={{ minWidth: 0 }}
         >
           <Box p="15px">
-            <Typography variant="h5" fontWeight="600" color={colors.primary[100]}>
+            <Typography variant="h4" fontWeight="600" color={colors.primary[100]}>
               Regiones
             </Typography>
           </Box>
@@ -141,14 +141,33 @@ const Regiones = () => {
                 bgColor={colors.primary[200]}
                 sx={{ borderRadius: "18px" }}
                 titleWrap
-                headerMinHeight={84}
-                headerPaddingY={2}
                 stats={[
-                  { label: "Participantes", value: r.stats.participantes },
-                  { label: "Universidades", value: r.stats.universidades },
-                  { label: "Carreras", value: r.stats.carreras },
-                  { label: "Programas", value: r.stats.programas },
-                ]}
+  {
+    key: "participantes",
+    label: "Participantes",
+    value: r.stats.participantes,
+    items: r.stats.participantes_items,
+  },
+  {
+    key: "universidades",
+    label: "Universidades",
+    value: r.stats.universidades,
+    items: r.stats.universidades_items,
+  },
+  {
+    key: "carreras",
+    label: "Carreras",
+    value: r.stats.carreras,
+    items: r.stats.carreras_items,
+  },
+  {
+    key: "programas",
+    label: "Programas",
+    value: r.stats.programas,
+    items: r.stats.programas_items,
+  },
+]}
+
                 columns={2}
               />
 
