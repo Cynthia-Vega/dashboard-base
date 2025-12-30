@@ -272,7 +272,6 @@ function regionStats() {
   if (!Array.isArray(rawData)) return {};
 
   const norm = (v) => String(v ?? "").trim();
-  const low = (v) => norm(v).toLowerCase();
 
   const titleCase = (s) =>
     String(s ?? "")
@@ -321,7 +320,7 @@ function regionStats() {
           : [];
 
       arr.forEach((x) => {
-        const kRaw = norm(x).replace(/^"+|"+$/g, ""); // quita comillas si vienen
+        const kRaw = norm(x).replace(/^"+|"+$/g, "");
         if (kRaw) programsSet.add(kRaw);
       });
     });

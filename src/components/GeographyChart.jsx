@@ -31,23 +31,23 @@ const GeographyChart = ({ isDashboard = false, data }) => {
       features={mappedFeatures}
       margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
       domain={[0, maxValue]}     
-      colors={colorScale}        
+      colors={colorScale}     
       unknownColor="#666666"
       label="properties.Region"
       valueFormat=".0f"
       projectionType="mercator"
       projectionScale={isDashboard ? 1410 : 1600}
-      projectionTranslation={isDashboard ? [1.955, 1.1] : [6.1, -0.35]}
+      projectionTranslation={isDashboard ? [1.955, 1.1] : [5.5, -0.34]}
       projectionRotation={isDashboard ? [0, 98,15]: [0,0]}
       borderWidth={1}
       borderColor="#ffffff"
       legends={[
               {
-                anchor: "bottom-left",
+                anchor: "topp-left",
                 direction: "column",
                 justify: false,
-                translateX: 20,
-                translateY: -60,
+                translateX: 15,
+                translateY: 15,
                 itemsSpacing: 6,
                 itemWidth: 120,
                 itemHeight: 18,

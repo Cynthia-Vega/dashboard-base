@@ -80,14 +80,15 @@ const Regiones = () => {
       >
         {/* MAPA */}
         <Box
-          gridColumn={{ xs: "span 12", md: "span 6" }}
+          gridColumn={{ xs: "span 12", md: "span 3" }}
           gridRow="span 2"
           backgroundColor={colors.primary[200]}
-          p="15px"
+          pb="15px"
+          pt="15px"
           display="flex"
           flexDirection="column"
-          // border="1px solid red"
-          sx={{justifySelf:'center', width: '400px', height: '1450px' }}
+         
+          sx={{justifySelf:'start', width: '400px', height: '1500px' }}
         >
           <Typography
             variant="h4"
@@ -98,21 +99,22 @@ const Regiones = () => {
             Distribución por región
           </Typography>
 
-          <Box flex="1" minHeight="360px">
+          <Box flex="1" minHeight="370px"
+           border="1px solid red">
             <GeographyChart data={mapData} />
           </Box>
         </Box>
 
         {/* DETALLE */}
         <Box
-          gridColumn={{ xs: "span 12", md: "span 6" }}
+          gridColumn={{ xs: "span 12", md: "span 9" }}
           gridRow="span 2"
           backgroundColor={colors.primary[200]}
           display="flex"
           flexDirection="column"
           sx={{ minWidth: 0 }}
         >
-          <Box p="15px">
+          <Box pt="15px" pb="15px" pl="15px">
             <Typography variant="h4" fontWeight="600" color={colors.primary[100]}>
               Regiones
             </Typography>
