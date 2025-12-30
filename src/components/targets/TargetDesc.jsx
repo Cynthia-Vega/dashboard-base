@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, Typography, Collapse, IconButton, Divider } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { tokens } from "../../theme"; // ajusta ruta
+import { tokens } from "../../theme"; 
 
 const TargetDesc = ({
   title = "",
@@ -36,8 +36,7 @@ const TargetDesc = ({
   defaultExpanded = false,
   onToggle,
 
-  //importante: en TargetList es true, acá lo dejamos igual
-  expandedDivider = true,
+
   expandedPaddingTop = 12,
 
   titleWrap = false,
@@ -45,7 +44,6 @@ const TargetDesc = ({
   headerPaddingY,
   expandIconPosition = "br",
 
-  // ✅ DESCRIPCIÓN + LISTA
   description = "",
   descriptionTitle = "", 
   formadores = "",
@@ -53,6 +51,7 @@ const TargetDesc = ({
   renderItem,
   maxHeight = 260,
   gap = 10,
+
 }) => {
   const colors = tokens();
   const theme = useTheme();
@@ -168,15 +167,9 @@ const TargetDesc = ({
         ml: 1,
         fontWeight: 900,
         opacity: 0.9,
-
-        // ✅ un poco más grande
         fontSize: v === "h2" ? "0.60em" : v === "h3" ? "0.65em" : "0.70em",
-
-        // ✅ súbelo para que se vea centrado con el número
         position: "relative",
         top: v === "h2" ? "-0.10em" : "-0.08em",
-
-        // ✅ ayuda a que no quede “pegado abajo”
         verticalAlign: "middle",
         lineHeight: 1,
       }}
@@ -233,7 +226,7 @@ const TargetDesc = ({
         textOverflow: "ellipsis",
       };
 
-  // gap: number => px (para evitar spacing units)
+
   const resolvedGap = typeof gap === "number" ? `${gap}px` : gap;
 
   const BodyList = () => (
@@ -267,13 +260,11 @@ const TargetDesc = ({
     </Box>
   );
 
-  // ✅ ESTE Expanded deja la LISTA IGUAL al TargetList (mismo Box px/pb/pt)
+
   const Expanded = () => (
     <Collapse in={open} timeout="auto" unmountOnExit>
-      {/* ✅ Línea antes de la descripción (igual que TargetList) */}
       <Divider sx={{ borderColor: colors.primary[300] }} />
 
-      {/* ✅ Bloque descripción con título en negrita + descripción */}
       {!!description && (
         <Box onClick={(e) => e.stopPropagation()}>
           <Box
@@ -288,10 +279,10 @@ const TargetDesc = ({
               <Typography
                 sx={{
                   fontFamily,
-                  fontWeight: 900,      // ✅ NEW: negrita
+                  fontWeight: 900,      
                   fontSize: "13.8px",
                   lineHeight: 1.2,
-                  mb: 0.5,              // ✅ NEW: separa título de texto
+                  mb: 0.5,              
                   whiteSpace: "normal",
                   overflowWrap: "anywhere",
                   wordBreak: "break-word",
@@ -305,8 +296,8 @@ const TargetDesc = ({
               <Typography
                 sx={{
                   fontFamily,
-                  fontStyle: "italic",   // ✅ cursiva
-                  fontWeight: 400,       // ✅ NO negrita
+                  fontStyle: "italic",   
+                  fontWeight: 400,       
                   fontSize: "13.2px",
                   lineHeight: 1.2,
                   mb: 0.55,
@@ -335,12 +326,12 @@ const TargetDesc = ({
             </Typography>
           </Box>
 
-          {/* ✅ Línea entre descripción y lista */}
+
           <Divider sx={{ borderColor: colors.primary[300], opacity: 0.7 }} />
         </Box>
       )}
 
-      {/* ✅ LISTA: EXACTAMENTE como TargetList */}
+
       <Box
         sx={{
           px: 2,

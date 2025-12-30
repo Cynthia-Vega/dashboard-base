@@ -1,10 +1,8 @@
 import { Box, Typography } from "@mui/material";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
-import { ParticipantesData } from "../../data/ParticipantesData";
-
-// ✅ nuevo
-import TargetList from "../../components/targets/TargetList"; // ajusta ruta real
+import { ParticipantesData } from "../../utils/ParticipantesData";
+import TargetList from "../../components/targets/TargetList"; 
 
 const Universidades = () => {
   const colors = tokens();
@@ -62,14 +60,12 @@ const Universidades = () => {
               imgFit="contain"
               imgRound={false}
               valueLabel="formadores/as"
-              // ✅ expand por defecto ya viene en TargetList (expandable always)
               items={participants}
               maxHeight={260}
               gap={10}
               renderItem={(p, i) => {
                 const nameShown = displayName(p);
 
-                // mismo key que antes
                 const key = `${uniName}-${p?.rut ?? p?.username ?? i}`;
 
                 return (

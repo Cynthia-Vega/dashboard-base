@@ -156,7 +156,7 @@ function shouldIgnoreProgramText(t) {
   return false;
 }
 
-// ✅ Split robusto: NO rompe "matemática y computación" ni "mención ... y ciencias"
+
 function splitProgramParts(cellRaw) {
   const t = norm(cellRaw);
   if (shouldIgnoreProgramText(t)) return [];
@@ -194,13 +194,12 @@ function splitProgramParts(cellRaw) {
   return out;
 }
 
-// ✅ DEVUELVE ARRAY (con repetidos)
+
 function detectProgramCategories(cellRaw) {
   const t = norm(cellRaw);
   if (shouldIgnoreProgramText(t)) return [];
 
-  // ✅ HARD RULE (global): "pregrado" + "matemat" + "practic(a/s)" => SOLO BÁSICA
-  // Incluye el caso: "Pregrado en la línea de matemática y práctica, Formación continua"
+
   if (
     /\bpregrado\b/.test(t) &&
     /matemat/.test(t) &&
@@ -218,35 +217,31 @@ function detectProgramCategories(cellRaw) {
     if (!p) continue;
     if (p === "universidad san sebastian") continue;
 
-    // ✅ ignora formación continua (no es categoría)
+
     if (p.includes("formacion continua")) continue;
 
-    // ✅ Licenciatura SIEMPRE a otras carreras (lo pediste explícito)
+
     if (/\blicenciatura\b/.test(p)) {
       add("otras_carreras");
       continue;
     }
 
-    // ✅ Si aparece "especial" (ej: "... y Especial") -> otras carreras
+
     if (/\bespecial\b/.test(p)) {
       add("otras_carreras");
-      // ojo: puede coexistir con básica en otro trozo, así que no hacemos return global
       continue;
     }
 
-    // (A) Postítulo -> SOLO postgrado
     if (p.includes("postitulo")) {
       add("postgrado");
       continue;
     }
 
-    // (B) Postgrados
     if (/(magister|master|maestr|doctorad|postdoc|postdoctor|postgrado)/.test(p)) {
       add("postgrado");
       continue;
     }
 
-    // (C) Programa Educación Media para Licenciados y Titulados -> formación pedagógica
     if (
       p.includes("programa de educacion media para licenciados") ||
       p.includes("programa de educacion media para licenciados y titulados")
@@ -255,7 +250,6 @@ function detectProgramCategories(cellRaw) {
       continue;
     }
 
-    // (D) Formación pedagógica / PEMMF / PFP
     if (
       p.includes("formacion pedagogic") ||
       p.includes("programa de formacion pedagogic") ||
@@ -267,17 +261,14 @@ function detectProgramCategories(cellRaw) {
       continue;
     }
 
-    // Parvularia
     if (/(parvular|parvulo|parvulos|educacion de parvulos)/.test(p)) {
       add("educacion_parvularia");
       continue;
     }
 
-    // Básica (general)
     const isBasica =
       /(educacion basica|educacion general basica|general basica|\bbasica\b|pedagogia en educacion basica)/.test(p);
 
-    // Media (amplia)
     const isMedia =
       /(pedagogia\s+media|ensenanza\s+media|educacion\s+media|media\s+en\s+matemat)/.test(p) ||
       /\bpedagogia\b.*\bmatemat/.test(p) ||
@@ -285,29 +276,24 @@ function detectProgramCategories(cellRaw) {
       /(pedagogia\s+en\s+fisica\s+y\s+matemat|fisica y matemat|matematicas y fisica)/.test(p) ||
       (/\bbasica\b/.test(p) && p.includes("mencion") && p.includes("matemat"));
 
-    // ✅ si el mismo trozo trae básica, sumarla
     if (isBasica) add("educacion_basica");
 
-    // ✅ si el mismo trozo trae media, sumarla
     if (isMedia) {
       add("educacion_media");
       continue;
     }
 
-    // Otras carreras (ingenierías, inglés, biología, diferencial, etc.)
     if (/(ingenieria|minas|mecanica|civil|modelamiento|ingles|biologia|diferencial)/.test(p)) {
       add("otras_carreras");
       continue;
     }
 
-    // extras sueltos
     if (/(ciencias|computacion)/.test(p)) {
       add("otras_carreras");
       continue;
     }
   }
 
-  // fallback: si había texto válido y no detectó nada
   if (cats.length === 0 && !shouldIgnoreProgramText(t)) cats.push("otras_carreras");
 
   return cats;
@@ -348,7 +334,7 @@ export async function parseExcel(participantesFile, encuestaFile) {
       respEnc.arrayBuffer(),
     ]);
 
-    // 2) Parsear PARTICIPANTES (encabezado anidado)
+    // Parsear PARTICIPANTES (encabezado anidado)
     const participantes = (() => {
       const workbook = XLSX.read(bufferPart, { type: "array" });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -386,7 +372,7 @@ export async function parseExcel(participantesFile, encuestaFile) {
         });
     })();
 
-    // 3) Parsear ENCUESTA
+    // Parsear ENCUESTA
     const encuesta = (() => {
       const workbook = XLSX.read(bufferEnc, { type: "array" });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -408,7 +394,7 @@ export async function parseExcel(participantesFile, encuestaFile) {
         });
     })();
 
-    // 4) MERGE por ID (LEFT JOIN desde ENCUESTA)
+    // MERGE por ID (LEFT JOIN desde ENCUESTA)
     const participantesById = new Map(
       participantes
         .filter((p) => p.ID !== "" && p.ID != null)
@@ -427,7 +413,7 @@ export async function parseExcel(participantesFile, encuestaFile) {
         return { ...e, ...pSinID, _participante_encontrado: true };
       });
 
-    // 5) region_id
+    // region_id
     const mergedWithRegion = merged.map((row) => {
       const rawRegion = row["Región"];
       if (!rawRegion) return { ...row, region_id: null };
@@ -438,7 +424,7 @@ export async function parseExcel(participantesFile, encuestaFile) {
       return { ...row, region_id: regionCode };
     });
 
-    // 6) nombre_universidad
+    //  nombre_universidad
     const mergedWithUniversity = mergedWithRegion.map((row) => {
       const rawUniversity = row["Universidad"];
       if (!rawUniversity) return { ...row, nombre_universidad: null };
@@ -449,7 +435,7 @@ export async function parseExcel(participantesFile, encuestaFile) {
       return { ...row, nombre_universidad: universityName };
     });
 
-    // 7) grado_final
+    //  grado_final
     function getHighestDegree(raw) {
       if (!raw) return null;
 
@@ -487,7 +473,7 @@ export async function parseExcel(participantesFile, encuestaFile) {
       return { ...row, grado_final: gradoFinal };
     });
 
-    // 8) programa_categorias + str (con repetidos)
+    // programa_categorias + str
     const mergedWithProgram = mergedWithDegree.map((row) => {
       const programCol = Object.keys(row).find((k) => {
         const kk = norm(k);
@@ -505,19 +491,19 @@ export async function parseExcel(participantesFile, encuestaFile) {
     });
 
 
-
+    // nivel experiecia
     const mergedWithExperience = mergedWithProgram.map((row) => {
       const exp = experienceFromStartYear(row?.["Año en que comenzaste a trabajar como formador/a. "]);
       return { ...row, experience: exp };
     });
 
 
-    // 9) Limpieza
+    // limpieza
     const remove = removeColumns(mergedWithExperience, colsToRemove);
 
     const cleaned = remove.map(o => Object.fromEntries(Object.entries(o).map(([k,v]) => [k.trim(), v])));
 
-    // 10) nombre columnas
+    // renombre columnas
     const renameCols = (rows, map) =>
       rows.map((o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [map[k] ?? k, v])));
 

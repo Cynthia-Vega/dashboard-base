@@ -30,14 +30,6 @@ const Header = ({ title, subtitle }) => {
       </Typography>
     </Box>
 
-    
-    {/* <img
-      alt="logo"
-      src="/assets/logo.png"
-      width="120"
-      height="120"
-      style={{marginRight: "50px"}}
-    /> */}
   </Box>
 
   <hr />

@@ -14,8 +14,8 @@ import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AccountBalanceOutlinedIcon from "@mui/icons-material/AccountBalanceOutlined";
 
-const COLLAPSED_W = 80;   // ancho del rail fijo
-const EXPANDED_W = 280;   // ancho del sidebar overlay
+const COLLAPSED_W = 80;   
+const EXPANDED_W = 280;   
 
 const Item = ({ title, to, icon, selected, setSelected, onNavigate }) => {
   const colors = tokens();
@@ -38,7 +38,7 @@ const Item = ({ title, to, icon, selected, setSelected, onNavigate }) => {
 
 const Sidebar = () => {
   const colors = tokens();
-  const [open, setOpen] = useState(false); // controla overlay expandido
+  const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState("Panel de datos");
 
   const commonSx = {
@@ -61,18 +61,16 @@ const Sidebar = () => {
 
   const MenuContent = ({ collapsed }) => (
     <Menu iconShape="square">
-      {/* TOP: botón menú */}
+
       <MenuItem
-        // En colapsado: abre overlay. En expandido: también puede cerrar si clickeas el header
         onClick={() => setOpen((v) => !v)}
-        // ✅ SOLO mostrar icono izquierdo cuando está colapsado (para evitar doble botón)
         icon={collapsed ? <MenuOutlinedIcon /> : null}
         style={{
           margin: "10px 0 20px 0",
           color: colors.green[200],
         }}
       >
-        {/* ✅ En expandido mostramos "ADMIN" + botón a la derecha */}
+
         {!collapsed && (
           <Box
             display="flex"
@@ -87,7 +85,7 @@ const Sidebar = () => {
 
             <IconButton
               onClick={(e) => {
-                e.stopPropagation(); // evita doble toggle
+                e.stopPropagation(); 
                 setOpen(false);
               }}
             >
@@ -97,7 +95,7 @@ const Sidebar = () => {
         )}
       </MenuItem>
 
-      {/* LOGO SOLO EN EXPANDIDO */}
+
       {!collapsed && (
         <Box mb="25px">
           <Box display="flex" justifyContent="center" alignItems="center">
@@ -130,7 +128,6 @@ const Sidebar = () => {
           }
           selected={selected}
           setSelected={setSelected}
-          // cuando navegas desde overlay, cerrarlo
           onNavigate={() => setOpen(false)}
         />
 

@@ -1,21 +1,14 @@
 import { Box, Typography } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
-import { ParticipantesData } from "../../data/ParticipantesData";
-
-// ✅ targets
+import { ParticipantesData } from "../../utils/ParticipantesData";
 import TargetDesc from "../../components/targets/TargetDesc";
-
 import GroupsIcon from "@mui/icons-material/Groups";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import HandymanIcon from "@mui/icons-material/Handyman";
 
-/**
- * ✅ Aquí defines TÍTULOS y DESCRIPCIONES por columna exacta (id exacto de byEvent)
- * Ejemplo:
- * WEBINAR_META["Webinar 1 - 2025"] = { title: "Webinar 1: ...", desc: "..." }
- */
+
 const WEBINAR_META = {
   Webinar: {
     title: "Webinar - 2023",
@@ -49,7 +42,6 @@ const REUNION_META = {
     relatores: 'Elizabeth Suazo-Flores, Helena Montenegro, Leslie Gauna',
     subtitle:'Reunión informativa sobre convocatoria de publicación en número especial',
     desc: "En este video se comparten las fechas e hitos importantes asociados al proceso de acompañamiento para escribir un manuscrito para el numero especial; y la propuesta de una metodología de trabajo para escribir ese artículo." },
-  // "Nombre exacto columna": { title: "Título bonito", desc: "Descripción..." },
 };
 
 const TALLER_META = {
@@ -147,7 +139,7 @@ const Eventos = () => {
   if (loading) return <div>Cargando datos…</div>;
   if (!eventsData) return <div>Falta eventsData() en ParticipantesData().</div>;
 
-  // ===== helpers mínimos =====
+
   const uniqueNamesForColumn = (colName) => {
     if (!colName) return [];
     const arr = typeof usersEvents === "function" ? usersEvents(colName, "Nombre y apellido") : [];
@@ -192,11 +184,11 @@ const Eventos = () => {
     expandedPaddingTop: 0,
   };
 
-  // ===== data =====
+
   const { byEvent } = eventsData();
   const safe = Array.isArray(byEvent) ? byEvent : [];
 
-  // ✅ SIN LANZAMIENTOS
+
   const webinars = safe.filter((e) => /webinar/i.test(String(e.id)));
   const encuentros = safe.filter((e) => /encuentro/i.test(String(e.id)));
   const reuniones = safe.filter((e) => /^reuni[oó]n/i.test(String(e.id)));
@@ -204,14 +196,14 @@ const Eventos = () => {
 
 
 
-// ✅ orden fijo (por id exacto de columna)
+
 const ENCUENTRO_ORDER = [
   "1er Encuentro Atacama",
   "2do Encuentro Osorno",
   "3er Encuentro Magallanes",
 ];
 
-// ✅ si alguno no está en la lista, queda al final
+
 encuentros.sort((a, b) => {
   const ia = ENCUENTRO_ORDER.indexOf(String(a.id));
   const ib = ENCUENTRO_ORDER.indexOf(String(b.id));
@@ -221,7 +213,7 @@ encuentros.sort((a, b) => {
 });
 
 
-  // ordenar reuniones por fecha si tienen dd/mm/yyyy
+
   reuniones.sort((a, b) => {
     const ma = String(a.id).match(/(\d{2})\/(\d{2})\/(\d{4})/);
     const mb = String(b.id).match(/(\d{2})\/(\d{2})\/(\d{4})/);
@@ -242,7 +234,7 @@ encuentros.sort((a, b) => {
     .filter((e) => /2023/.test(String(e.id)))
     .sort((a, b) => String(a.id).localeCompare(String(b.id), "es"));
 
-  // ===== PRESENTACIONES (3 columnas directas) =====
+
   const namesPresentaOsorno = uniqueNamesForColumn("Presenta Osorno");
   const namesPresentaMagallanes = uniqueNamesForColumn("Presenta Magallanes");
 
@@ -281,7 +273,7 @@ encuentros.sort((a, b) => {
         </Box>
       </Box>
 
-      {/* ✅ PRESENTACIONES */}
+      {/*  PRESENTACIONES */}
       <Box mt={4}>
         {titleSlot("PRESENTACIONES")}
         <Box sx={gridSx}>

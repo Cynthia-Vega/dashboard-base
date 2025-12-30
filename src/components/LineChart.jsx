@@ -1,5 +1,4 @@
 import { ResponsiveLine } from "@nivo/line";
-import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
 
 
@@ -69,17 +68,17 @@ const LineChart = ({data, isDashboard = false }) => {
         tickSize: 0,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "Año", // added
+        legend: isDashboard ? undefined : "Año", 
         legendOffset: 36,
         legendPosition: "middle",
       }}
       axisLeft={{
         orient: "left",
-        tickValues: 5, // added
+        tickValues: 5, 
         tickSize: 3,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "cantidad", // added
+        legend: isDashboard ? undefined : "cantidad", 
         legendOffset: -40,
         legendPosition: "middle",
       }}

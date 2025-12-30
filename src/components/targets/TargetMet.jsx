@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Box, Typography, Collapse, IconButton, Divider } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -28,7 +28,7 @@ const TargetMet = ({
   headerPaddingY,
   expandIconPosition = "br",
 
-  // ✅ MÉTRICAS
+  //  MÉTRICAS
   stats = [],
   columns = 2,
 }) => {
@@ -51,7 +51,7 @@ const TargetMet = ({
   const resolvedTitle = titleColor ?? colors.primary[100];
 
   const cardSx = {
-    fontFamily, // ✅ FIX fuente
+    fontFamily, 
     backgroundColor: resolvedBg,
     border: `1px solid ${resolvedBorder}`,
     borderRadius: `${radius}px`,
@@ -149,6 +149,7 @@ const TargetMet = ({
       ))}
     </Box>
   );
+  console.log("stats", stats)
 
   /* =============================
      VERTICAL / HERO

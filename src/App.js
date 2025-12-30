@@ -8,8 +8,7 @@ import Sidebar from "./scenes/global/Sidebar";
 import Dashboard from "./scenes/dashboard";
 import TablaParticipantes from "./scenes/participantes";
 
-import Data from "./scenes/tabla";
-import Config from "./scenes/config";
+
 import Regiones from "./scenes/regiones";
 
 import Universidades from "./scenes/universidades";
@@ -20,9 +19,8 @@ import Formacion from "./scenes/formacion";
 
 
 function App() {
-  const [fontScale, setFontScale] = useState(1); 
+  const [fontScale] = useState(1); 
   const [theme] = useMode(fontScale); 
-  console.log("APP fontScale:", fontScale);
 
   return (
     <ColorModeContext.Provider >
@@ -36,8 +34,6 @@ function App() {
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/participantes" element={<TablaParticipantes />} />
-                <Route path="/data" element={<Data />} />
-                <Route path="/config" element={<Config  fontScale={fontScale} setFontScale={setFontScale} />} />
                 <Route path="/regiones" element={<Regiones />} />
                 <Route path="/universidades" element={<Universidades />} />
                 <Route path="/eventos" element={<Eventos />} />

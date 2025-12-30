@@ -6,19 +6,17 @@ import Header from "../../components/Header";
 import TargetList from "../../components/targets/TargetList";
 import TargetDesc from "../../components/targets/TargetDesc";
 
-import { ParticipantesData } from "../../data/ParticipantesData";
+import { ParticipantesData } from "../../utils/ParticipantesData";
 
-// =========================
-// Columnas
-// =========================
+
 const COLS = {
   niveles: "experience",
   grado: "grado_final",
   titulo: "Título",
-  programa: "programa_categorias", // ✅ ES ARRAY (ej: ["basica","media",...])
+  programa: "programa_categorias", 
 };
 
-// Mini descripciones para niveles
+
 const nivelDescById = {
   novel: "Formadores que tienen hasta 5 años de experiencia en el rol.",
   intermedio: "Formadores que tienen hasta 11 años de experiencia en el rol.",
@@ -27,7 +25,7 @@ const nivelDescById = {
 
 const norm = (x) => String(x ?? "").trim().toLowerCase();
 
-// ✅ Programas fijos (como el dash)
+
 const PROGRAM_KEYS = [
   { id: "educacion_parvularia", label: "Educación Párvularia" },
   { id: "educacion_basica", label: "Educación Básica" },
@@ -51,13 +49,13 @@ const Formacion = () => {
     String(row?.rut ?? "").trim() ||
     "Sin nombre";
 
-  // ✅ clave persona única (para no duplicar por filas)
+
   const personKey = (row) =>
     String(row?.rut ?? "").trim() ||
     String(row?.username ?? "").trim() ||
     String(displayName(row)).trim();
 
-  // ✅ Nombres únicos cuando la columna es string (nivel/grado/titulo)
+
   const uniqueNamesByValue = (columnName, valueToMatch) => {
     const target = norm(valueToMatch);
     const seen = new Set();
@@ -104,9 +102,7 @@ const Formacion = () => {
     </Box>
   );
 
-  // =========================
-  // Frecuencias (sin useMemo)
-  // =========================
+
   const safeFreq = (col) => {
     const arr = typeof frecuencyData === "function" ? frecuencyData(col) : [];
     return Array.isArray(arr) ? arr : [];
@@ -116,17 +112,15 @@ const Formacion = () => {
   const grado = safeFreq(COLS.grado);
   const titulo = safeFreq(COLS.titulo);
 
-  // Orden niveles novel/intermedio/experto
+
   const nivelOrder = { novel: 0, intermedio: 1, experto: 2 };
   niveles.sort((a, b) => (nivelOrder[a.id] ?? 999) - (nivelOrder[b.id] ?? 999));
 
-  // =========================
-  // PROGRAMAS: columna ARRAY (con duplicados) -> Set por persona
-  // =========================
+
   const getProgramSet = (row) => {
     const arr = row?.[COLS.programa];
     if (!Array.isArray(arr)) return new Set();
-    return new Set(arr.map((x) => String(x ?? "").trim()).filter(Boolean)); // ✅ dedup
+    return new Set(arr.map((x) => String(x ?? "").trim()).filter(Boolean)); 
   };
 
   const programasCards = PROGRAM_KEYS.map((p) => {
@@ -152,14 +146,12 @@ const Formacion = () => {
     return {
       id: p.id,
       label: p.label,
-      value: seen.size, // ✅ personas únicas por categoría
+      value: seen.size, 
       names: uniqueSorted,
     };
   });
 
-  // =========================
-  // UI
-  // =========================
+
   const gridSx = {
     display: "grid",
     gridTemplateColumns: { xs: "repeat(1, 1fr)", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" },
@@ -167,7 +159,7 @@ const Formacion = () => {
     alignItems: "stretch",
   };
 
-  // ✅ título profesional: 4 por fila
+
   const gridTituloSx = {
     display: "grid",
     gridTemplateColumns: { xs: "repeat(1, 1fr)", sm: "repeat(2, 1fr)", md: "repeat(4, 1fr)" },
@@ -191,7 +183,7 @@ const Formacion = () => {
       <Header title="FORMACIÓN" subtitle="Detalle por niveles, grado, título y programas" />
 
       {/* =========================
-          NIVELES (con mini descripción)
+          NIVELES
          ========================= */}
       <Box mt={2}>
         <Typography variant="h4" fontWeight={600} color={colors.primary[100]} sx={{ mb: 2 }}>
@@ -229,7 +221,7 @@ const Formacion = () => {
       </Box>
 
       {/* =========================
-          GRADO (solo lista)
+          GRADO 
          ========================= */}
       <Box mt={4}>
         <Typography variant="h4" fontWeight={600} color={colors.primary[100]} sx={{ mb: 2 }}>
@@ -256,7 +248,7 @@ const Formacion = () => {
       </Box>
 
       {/* =========================
-          TÍTULO (solo lista) - 4 por fila
+          TÍTULO 
          ========================= */}
       <Box mt={4}>
         <Typography variant="h4" fontWeight={600} color={colors.primary[100]} sx={{ mb: 2 }}>
@@ -283,7 +275,7 @@ const Formacion = () => {
       </Box>
 
       {/* =========================
-          PROGRAMAS (fijos; columna ARRAY)
+          PROGRAMAS
          ========================= */}
       <Box mt={4}>
         <Typography variant="h4" fontWeight={600} color={colors.primary[100]} sx={{ mb: 2 }}>

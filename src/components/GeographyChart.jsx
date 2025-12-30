@@ -7,12 +7,12 @@ import { tokens } from "../theme";
 const GeographyChart = ({ isDashboard = false, data }) => {
   const colors = tokens();
 
-  // tu paleta personalizada (puedes cambiar estos colores)
+  //paleta personalizada
   const colorScale = [
 
 
-    "#f5a49eff", // alto
-    "#fd756b", // máximo (más fuerte que fd756b)
+    "#f5a49eff", 
+    "#fd756b", // máximo
   ];
 
   const mappedFeatures = geoFeatures.features.map((f) => ({
@@ -30,8 +30,8 @@ const GeographyChart = ({ isDashboard = false, data }) => {
       data={chartData}
       features={mappedFeatures}
       margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-      domain={[0, maxValue]}     // aquí puedes fijar [0, 44] si quieres
-      colors={colorScale}        // 👈 tu degradado
+      domain={[0, maxValue]}     
+      colors={colorScale}        
       unknownColor="#666666"
       label="properties.Region"
       valueFormat=".0f"

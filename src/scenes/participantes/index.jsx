@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
-import { ParticipantesData } from "../../data/ParticipantesData";
+import { ParticipantesData } from "../../utils/ParticipantesData";
 
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
@@ -18,7 +18,7 @@ const TablaParticipantes = () => {
     detectEventColumns: detectEventColumnsFromData,
   } = ParticipantesData();
 
-  // ---------- fallbacks ----------
+
   const isMarked =
     isMarkedFromData ??
     ((v) => {
@@ -42,10 +42,10 @@ const TablaParticipantes = () => {
   if (loading) return <div>Cargando datos…</div>;
 
   const cols = rawData?.length ? Object.keys(rawData[0]) : [];
-  const { tallerCols, reunionCols, encuentroCols, lanzamientoCols } =
+  const { tallerCols, reunionCols, encuentroCols } =
     detectEventColumns(cols);
 
-  // ---------- helpers locales ----------
+
   const pick = (row, keys) => {
     for (const k of keys) {
       if (row?.[k] !== undefined) return row[k];
@@ -53,14 +53,14 @@ const TablaParticipantes = () => {
     return undefined;
   };
 
-  // ✅ NUEVO: si viene número, lo suma como número; si viene marca, suma 1; si no, 0
+
   const countCell = (v) => {
     if (v === null || v === undefined) return 0;
     if (typeof v === "number" && Number.isFinite(v)) return v;
     return isMarked(v) ? 1 : 0;
   };
 
-  // ✅ NUEVO: suma varias columnas (no solo la primera existente)
+
   const sumKeys = (row, keys) => keys.reduce((acc, k) => acc + countCell(row?.[k]), 0);
 
   const getProgramasText = (row) => {
@@ -72,7 +72,7 @@ const TablaParticipantes = () => {
       ? []
       : String(v).split(/[;,|]/g).map((x) => x.trim());
 
-    // unique + limpio
+   
     const seen = new Set();
     let cleaned = arr
       .map((x) => String(x ?? "").trim())
@@ -84,7 +84,7 @@ const TablaParticipantes = () => {
         return true;
       });
 
-    // ✅ mover "Otras carreras" al final (si existe)
+
     const idx = cleaned.findIndex((x) => x.toLowerCase() === "otras carreras");
     if (idx !== -1) {
       const [oc] = cleaned.splice(idx, 1);
@@ -104,7 +104,7 @@ const TablaParticipantes = () => {
     </Typography>
   );
 
-  // ---------- rows ----------
+
   const rows = (rawData ?? []).map((r, idx) => {
     const countInCols = (arr) =>
       arr.reduce((acc, c) => acc + (isMarked(r[c]) ? 1 : 0), 0);
@@ -113,15 +113,14 @@ const TablaParticipantes = () => {
       pick(r, ["CURSO - Finalizaron módulos", "CURSO - Finalizaron modulos"])
     );
 
-    // ✅ AQUÍ ESTÁ LO TUYO: sumamos las 3 variantes de "Presentó Trabajo"
+
     const trabajoCount = sumKeys(r, [
       "Presenta Osorno",
     ]);
 
-    // (opcional) si también quieres sumar poster en la misma métrica:
     const posterCount = sumKeys(r, ["Presenta Magallanes"]);
 
-    // ✅ Total “Presentaciones” = trabajo + poster (si solo quieres trabajo, deja trabajoCount)
+
     const presentaciones = trabajoCount + posterCount;
 
     const adjudicaFondo = isMarked(
@@ -140,10 +139,10 @@ const TablaParticipantes = () => {
     const encuentros = countInCols(encuentroCols);
   
 
-    // ✅ participación (encuentro o lanzamiento)
+
     const participaciones = (encuentros ?? 0);
 
-    // ✅ nivel directo desde columna experience (ya viene listo)
+
     const nivel = String(r?.experience ?? "").trim().toLowerCase() || null;
 
     return {
@@ -154,22 +153,14 @@ const TablaParticipantes = () => {
       ciudad: r["Ciudad"] ?? r.ciudad ?? "",
       universidad: r.nombre_universidad ?? r.Universidad ?? "",
       carrera: r.Carrera ?? r["Título"] ?? "",
-
-      // eventos
       talleres,
       reuniones,
       participaciones,
-
-      // programas como texto
       programas: getProgramasText(r),
-
-      // indicadores
       finalizo_curso: finalizo,
-      presentaciones, // ✅ ahora es NÚMERO (suma real)
+      presentaciones, 
       adjudica_fondo: adjudicaFondo,
       participa_numero_especial: participaNumeroEspecial,
-
-      // nivel experiencia
       nivel,
     };
   });
@@ -184,7 +175,7 @@ const TablaParticipantes = () => {
     { field: "universidad", headerName: "Universidad", flex: 1.2, minWidth: 280 },
     { field: "carrera", headerName: "Carrera", flex: 1.0, minWidth: 240 },
 
-    // programas como texto
+
     {
       field: "programas",
       headerName: "Programas",

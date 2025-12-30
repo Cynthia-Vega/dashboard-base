@@ -17,27 +17,26 @@ import GeographyChart from "../../components/GeographyChart";
 import ProgressCircle from "../../components/ProgressCircle";
 import TargetMin from "../../components/targets/TargetMin";
 
-import { ParticipantesData } from "../../data/ParticipantesData";
+import { ParticipantesData } from "../../utils/ParticipantesData";
 
 import { Link as RouterLink } from "react-router-dom";
 
 
 const Dashboard = () => {
   const colors = tokens();
-  const { loading, frecuencyData, cumulativeFrequencyData, universityImage, programsCategoryCounts } =
-  ParticipantesData();
+  const { loading, frecuencyData, cumulativeFrequencyData, universityImage, programsCategoryCounts } = ParticipantesData();
 
   if (loading) return <div>Cargando datos…</div>;
 
 
   const totalPorRegion = frecuencyData("region_id");
- 
   const totalPoranio = cumulativeFrequencyData("Año RedFID");
   const experience = frecuencyData("experience");
   const carrera = frecuencyData("Título");
   const universidades = frecuencyData("nombre_universidad");
   const grado = frecuencyData("grado_final");
   const programas = programsCategoryCounts();
+
 
   const Clickable = ({ to, children, sx }) => (
     <Box
@@ -97,11 +96,10 @@ const Dashboard = () => {
         gridAutoRows="minmax(180px, auto)"
         gap="20px"
       >
-        {/* ==========================
-            BLOQUE FORMADORES + NIVELES + GRADO
-           ========================== */}
 
-        {/* FORMADORES: ocupa 2 filas */}
+        {/* ==========================
+            FORMADORES
+           ========================== */}
         <Box
           gridColumn={{ xs: "span 12", sm: "span 12", md: "span 4", lg: "span 3" }}
           gridRow="span 2"
@@ -152,7 +150,7 @@ const Dashboard = () => {
 
         </Box>
 
-        {/* DERECHA: NIVELES + GRADO */}
+        {/*NIVELES + GRADO */}
         <Box
           gridColumn={{ xs: "span 12", sm: "span 12", md: "span 8", lg: "span 9" }}
           gridRow="span 2"
@@ -163,13 +161,15 @@ const Dashboard = () => {
           pt={2.9}
           sx={{ minWidth: 0 }}
         >
-          {/* BLOQUE NIVELES */}
+          {/* ==========================
+            NIVELES
+           ========================== */}
           <Box>
             <Typography
               variant="h4"
               fontWeight="600"
               color={colors.primary[100]}
-              sx={{ m: 0, lineHeight: "48px" }}   // ✅ mismo alto reservado
+              sx={{ m: 0, lineHeight: "48px" }} 
             >
               NIVELES
             </Typography>
@@ -228,7 +228,9 @@ const Dashboard = () => {
             </Box>
           </Box>
 
-          {/* BLOQUE GRADO */}
+          {/* ==========================
+            GRADO
+           ========================== */}
           <Box>
             <Typography
               variant="h4"
@@ -370,7 +372,9 @@ const Dashboard = () => {
 
           </Box>
 
-          {/* ---------- PROGRAMAS DONDE IMPARTEN ---------- */}
+          {/* ==========================
+            PROGRAMA DONDE IMPARTEN
+           ========================== */}
           <Box mt={2.5}>
             <Typography
               variant="h4"
@@ -386,7 +390,7 @@ const Dashboard = () => {
               gridTemplateColumns={{
                 xs: "repeat(1, 1fr)",
                 sm: "repeat(2, 1fr)",
-                md: "repeat(3, 1fr)", // ✅ 6 categorías -> 3x2 en desktop
+                md: "repeat(3, 1fr)", 
               }}
               gap="20px"
               alignItems="stretch"
@@ -425,10 +429,8 @@ const Dashboard = () => {
         
 
         {/* ==========================
-            ROW 4 - TRAYECTORIA Y UNIVERSIDADES
+            TRAYECTORIA
            ========================== */}
-
-        {/* CARD IZQUIERDA: TRAYECTORIA */}
         <Box
           gridColumn={{ xs: "span 12", sm: "span 12", md: "span 7" }}
           gridRow="span 2"
@@ -458,7 +460,9 @@ const Dashboard = () => {
           </Box>
         </Box>
 
-        {/* CARD DERECHA: UNIVERSIDADES */}
+        {/* ==========================
+            UNIVERSIDADES
+           ========================== */}
         <Box
           gridColumn={{ xs: "span 12", sm: "span 12", md: "span 5" }}
           gridRow="span 2"
@@ -481,7 +485,7 @@ const Dashboard = () => {
             </Typography>
           </Box>
 
-          {/* Lista con scroll */}
+          {/* scroll */}
           <Box flex="1" overflow="auto" p="15px">
   {universidades.map((uni, i) => {
     const name = uni.label || uni.id || "Universidad";
@@ -498,7 +502,6 @@ const Dashboard = () => {
         p="16px"
         gap="12px"
       >
-        {/* IZQUIERDA: logo + nombre */}
         <Box display="flex" alignItems="center" gap="10px" minWidth={0}>
           {imgSrc ? (
             <Box
@@ -513,7 +516,6 @@ const Dashboard = () => {
               }}
             />
           ) : (
-            // fallback: circulito si no hay logo
             <Box
               sx={{
                 width: 26,
@@ -537,7 +539,6 @@ const Dashboard = () => {
           </Typography>
         </Box>
 
-        {/* DERECHA: conteo */}
         <Box
           backgroundColor={colors.green[200]}
           p="6px 20px"
@@ -556,10 +557,8 @@ const Dashboard = () => {
         </Box>
 
         {/* ==========================
-            ROW 5 - DONUT MAPA
+            REGIONES
            ========================== */}
-
-        {/* Card: Regiones abarcadas */}
         <Box
           gridColumn={{ xs: "span 12", sm: "span 6", md: "span 4", lg:"span 3"}}
           gridRow="span 2"
@@ -574,11 +573,11 @@ const Dashboard = () => {
         <Box
           display="flex"
           flexDirection="column"
-          alignItems="center"          // ✅ centra el donut
+          alignItems="center"          
           justifyContent="flex-start"
           height="100%"
           sx={{
-            pt: 5,                   // ajusta si lo quieres más arriba/abajo
+            pt: 5,                   
             gap: 2,
           }}
         >
@@ -606,7 +605,7 @@ const Dashboard = () => {
           </Clickable>
 
 
-            {/* Total centrado debajo */}
+            
             <Typography variant="h5" color={colors.primary[100]} sx={{ textAlign: "center" }}>
               Total regiones: {totalPorRegion?.length || 0}
             </Typography>
@@ -615,7 +614,9 @@ const Dashboard = () => {
         </Box>
 
 
-        {/* Card: Distribución por región */}
+        {/* ==========================
+            MAPA
+           ========================== */}
         <Box
           gridColumn={{ xs: "span 12", sm: "span 12", md: "span 8", lg:"span 9" }}
           gridRow="span 2"

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { tokens } from "../../theme";
@@ -31,7 +31,6 @@ const TargetMin = ({
 
   duration = 900,
 
-  // compat
   titleWrap = false,
   headerMinHeight,
   headerPaddingY,
@@ -69,7 +68,7 @@ const TargetMin = ({
   const resolvedValue = valueColor ?? colors.green[200];
 
   const cardSx = {
-    fontFamily, // ✅ FIX fuente
+    fontFamily,
     backgroundColor: resolvedBg,
     border: `1px solid ${resolvedBorder}`,
     borderRadius: `${radius}px`,
@@ -139,15 +138,9 @@ const TargetMin = ({
         ml: 1,
         fontWeight: 900,
         opacity: 0.9,
-
-        // ✅ un poco más grande
         fontSize: v === "h2" ? "0.60em" : v === "h3" ? "0.65em" : "0.70em",
-
-        // ✅ súbelo para que se vea centrado con el número
         position: "relative",
         top: v === "h2" ? "-0.10em" : "-0.08em",
-
-        // ✅ ayuda a que no quede “pegado abajo”
         verticalAlign: "middle",
         lineHeight: 1,
       }}

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, Typography, Collapse, IconButton, Divider } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -50,7 +50,7 @@ const TargetList = ({
   maxHeight = 260,
   gap = 10,
 
-  // ✅ para grids con cards estiradas
+
   fillExpanded = false,
 }) => {
   const colors = tokens();
@@ -111,7 +111,6 @@ const TargetList = ({
     },
     ...(fullWidth ? { width: "100%" } : {}),
 
-    // ✅ grid stretch friendly
     display: "flex",
     flexDirection: "column",
     height: "100%",
@@ -173,15 +172,9 @@ const TargetList = ({
         ml: 1,
         fontWeight: 900,
         opacity: 0.9,
-
-        // ✅ un poco más grande
         fontSize: v === "h2" ? "0.60em" : v === "h3" ? "0.65em" : "0.70em",
-
-        // ✅ súbelo para que se vea centrado con el número
         position: "relative",
         top: v === "h2" ? "-0.10em" : "-0.08em",
-
-        // ✅ ayuda a que no quede “pegado abajo”
         verticalAlign: "middle",
         lineHeight: 1,
       }}
@@ -273,7 +266,7 @@ const TargetList = ({
   const isHero = variant === "hero" || orientation === "vertical";
 
   if (isHero) {
-    const iconSize = mediaSize; // en hero tú pasas 150
+    const iconSize = mediaSize; 
     const minH = headerMinHeight ?? 240;
 
     return (

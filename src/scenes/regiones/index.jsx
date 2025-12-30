@@ -6,16 +6,14 @@ import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import GeographyChart from "../../components/GeographyChart";
 import TargetMet from "../../components/targets/TargetMet";
-import { ParticipantesData } from "../../data/ParticipantesData";
+import { ParticipantesData } from "../../utils/ParticipantesData";
 import { geoFeatures } from "../../data/mockGeoFeatures";
 
 const Regiones = () => {
   const colors = tokens();
 
-  // ✅ ahora pedimos el helper
   const { loading, frecuencyData, regionStats } = ParticipantesData();
 
-  // ✅ Hooks SIEMPRE arriba
   const regionNameById = useMemo(() => {
     return Object.fromEntries(
       (geoFeatures?.features ?? []).map((f) => [
@@ -25,13 +23,12 @@ const Regiones = () => {
     );
   }, []);
 
-  // ✅ mapa
+ 
   const mapData = useMemo(() => {
     const arr = typeof frecuencyData === "function" ? frecuencyData("region_id") : [];
     return Array.isArray(arr) ? arr : [];
   }, [frecuencyData]);
 
-  // ✅ stats por región desde ParticipantesData
   const statsByRegionId = useMemo(() => {
     return typeof regionStats === "function" ? regionStats() : {};
   }, [regionStats]);
@@ -45,7 +42,7 @@ const Regiones = () => {
 
     const mapped = safe.map((r) => {
       const ridRaw = String(r.id ?? "");
-      const idNum = Number.parseInt(ridRaw, 10); // normaliza "01" -> 1
+      const idNum = Number.parseInt(ridRaw, 10);
 
       const name = regionNameById[ridRaw] ?? r.label ?? `Región ${ridRaw}`;
 
@@ -61,7 +58,7 @@ const Regiones = () => {
       return { id: ridRaw, idNum, rank, name, stats };
     });
 
-    // ✅ orden geográfico (norte -> sur); fallback por idNum
+    // orden geográfico
     mapped.sort((a, b) => (a.rank - b.rank) || ((a.idNum ?? 999) - (b.idNum ?? 999)));
 
     return mapped;
@@ -69,7 +66,6 @@ const Regiones = () => {
 
 
 
-  // ✅ return condicional después de hooks
   if (loading) return <div>Cargando datos…</div>;
 
   return (
@@ -107,7 +103,7 @@ const Regiones = () => {
           </Box>
         </Box>
 
-        {/* SCROLL DERECHA: Targets desplegables */}
+        {/* DETALLE */}
         <Box
           gridColumn={{ xs: "span 12", md: "span 6" }}
           gridRow="span 2"

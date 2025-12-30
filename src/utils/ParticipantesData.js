@@ -1,6 +1,5 @@
-// src/data/useParticipantesData.js
 import { useEffect, useState } from "react";
-import { parseExcel } from "../utils/parseExcel";
+import { parseExcel } from "./parseExcel";
 
 
 
@@ -35,7 +34,6 @@ function isMarked(v) {
   const s = String(v).trim().toLowerCase();
   if (!s) return false;
 
-  // marcas típicas en planillas
   return ["1", "x", "si", "sí", "true", "ok", "✔"].includes(s);
 }
 
@@ -44,15 +42,11 @@ function getColumns(data) {
   return Object.keys(data[0] || {});
 }
 
-/**
- * Cuenta eventos por COLUMNA (cada columna = un evento específico)
- * y también agrega por TIPO (Encuentros, Reuniones, etc.)
- */
+
 function eventsFrequencyAll(data, opts = {}) {
   if (!Array.isArray(data)) return { byEvent: [], byType: [] };
 
   const {
-    // patrones que definen qué columnas son eventos
     typeMatchers = [
       { type: "Encuentros", regex: /encuentro/i },
       { type: "Reuniones", regex: /^reuni[oó]n/i },
@@ -60,7 +54,7 @@ function eventsFrequencyAll(data, opts = {}) {
       { type: "Lanzamientos", regex: /lanzamiento/i },
       { type: "Webinars", regex: /webinar/i },
     ],
-    // cosas que NO quieres contar como evento
+
     excludeMatchers = [
       /^curso\s*-/i,
       /^compromiso/i,
@@ -72,13 +66,13 @@ function eventsFrequencyAll(data, opts = {}) {
 
   const cols = getColumns(data);
 
-  // columnas candidatas a evento
+
   const eventCols = cols.filter((c) => {
     if (excludeMatchers.some((rx) => rx.test(c))) return false;
     return typeMatchers.some((m) => m.regex.test(c));
   });
 
-  // conteo por columna (evento específico)
+
   const countsByEvent = {};
   data.forEach((row) => {
     eventCols.forEach((col) => {
@@ -92,7 +86,7 @@ function eventsFrequencyAll(data, opts = {}) {
     .map(([key, count]) => ({ id: key, label: key, value: count }))
     .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
-  // conteo por tipo (suma de columnas del tipo)
+
   const typeTotals = {};
   typeMatchers.forEach((m) => (typeTotals[m.type] = 0));
 
@@ -114,13 +108,10 @@ function eventsFrequencyAll(data, opts = {}) {
 function cumulativeFrequency(data, columnName) {
   if (!Array.isArray(data)) return [];
 
-  // usar frecuency normal
   const base = frecuency(data, columnName);
 
-  // ordenar por id (año)
   const sorted = [...base].sort((a, b) => Number(a.id) - Number(b.id));
 
-  // calcular acumulado
   let acc = 0;
   
   return sorted.map((item) => {
@@ -158,7 +149,7 @@ function usersByCategory(data, catCol, userCol = "username", opts = {}) {
     return s === "" ? emptyLabel : s;
   };
 
-  const acc = {}; // {cat: Set(users)}
+  const acc = {};
 
   for (const row of data) {
     const user = row?.[userCol];
@@ -179,7 +170,7 @@ function usersByCategory(data, catCol, userCol = "username", opts = {}) {
 }
 
 
-// ✅ Mapa: nombre exacto -> carpeta abreviación + archivo
+
 const UNI_IMG = {
   "Pontificia Universidad Católica de Chile": { folder: "PUC", file: "1.png" },
   "Pontificia Universidad Católica de Valparaíso": { folder: "PUCV", file: "1.png" },
@@ -225,14 +216,6 @@ function getUniImgSrc(universityName) {
 
 
 
-
-
-
-
-
-
-
-
 export function ParticipantesData() {
   const [rawData, setRawData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -251,7 +234,7 @@ export function ParticipantesData() {
     load();
   }, []);
 
-  // dentro de ParticipantesData(), cuando ya tienes rawData cargado:
+
 
 const programsCategoryCounts = () => {
   const counts = {
@@ -267,7 +250,7 @@ const programsCategoryCounts = () => {
     const cats = row?.programa_categorias;
     if (!Array.isArray(cats)) return;
 
-    // ✅ 1 por persona por categoría (tu regla)
+
     cats.forEach((c) => {
       if (counts[c] !== undefined) counts[c] += 1;
     });
@@ -334,7 +317,7 @@ function regionStats() {
     };
   });
 
-  return out; // { "13": { ... }, "5": { ... } }
+  return out; 
 }
 
 
@@ -352,8 +335,8 @@ function regionStats() {
 
   return {
     loading,
-    rawData,      // por si algún gráfico quiere trabajar directo con la base
-    frecuencyData,   // función genérica para pie
+    rawData,     
+    frecuencyData,   
     cumulativeFrequencyData,
     eventsData,
     universityImage,
