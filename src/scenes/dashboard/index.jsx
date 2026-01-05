@@ -104,7 +104,7 @@ const Dashboard = () => {
           gridColumn={{ xs: "span 12", sm: "span 12", md: "span 4", lg: "span 3" }}
           gridRow="span 2"
           backgroundColor={colors.primary[200]}
-          p="20px"
+          pb="15px"
           pt={4}
           display="grid"
           gridTemplateRows="48px 1fr" 
@@ -301,7 +301,7 @@ const Dashboard = () => {
           gridColumn={{ xs: "span 12", sm: "span 12", md: "span 12" }}
           gridRow="span 1"
           backgroundColor={colors.primary[200]}
-          p="20px"
+          pb="15px"
           pt={0}
           display="flex"
           flexDirection="column"
@@ -446,7 +446,7 @@ const Dashboard = () => {
             justifyContent="space-between"
             alignItems="center"
             borderBottom={`4px solid ${colors.primary[200]}`}
-            p="15px"
+            pb="15px"
           >
             <Typography variant="h4" fontWeight="600" color={colors.primary[100]}>
               TRAYECTORIA RedFID
@@ -478,7 +478,7 @@ const Dashboard = () => {
             justifyContent="space-between"
             alignItems="center"
             borderBottom={`4px solid ${colors.primary[200]}`}
-            p="15px"
+            pb="15px"
           >
             <Typography variant="h4" fontWeight="600" color={colors.primary[100]}>
               UNIVERSIDADES
@@ -486,73 +486,74 @@ const Dashboard = () => {
           </Box>
 
           {/* scroll */}
-          <Box flex="1" overflow="auto" p="15px">
-  {universidades.map((uni, i) => {
-    const name = uni.label || uni.id || "Universidad";
-    const imgSrc = universityImage(name);
+          <Box flex="1" overflow="auto" p="0px">
+          {universidades.map((uni, i) => {
+            const name = uni.label || uni.id || "Universidad";
+            const imgSrc = universityImage(name);
 
-    return (
-      <Clickable to={ROUTES.universidades}>
-      <Box
-        key={`${uni.id}-${i}`}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        borderBottom={`4px solid ${colors.primary[200]}`}
-        p="16px"
-        gap="12px"
-      >
-        <Box display="flex" alignItems="center" gap="10px" minWidth={0}>
-          {imgSrc ? (
-            <Box
-              component="img"
-              src={imgSrc}
-              alt={name}
-              sx={{
-                width: 26,
-                height: 26,
-                objectFit: "contain",
-                flexShrink: 0,
-              }}
-            />
-          ) : (
-            <Box
-              sx={{
-                width: 26,
-                height: 26,
-                borderRadius: "50%",
-                backgroundColor: colors.primary[300],
-                flexShrink: 0,
-              }}
-            />
-          )}
+            return (
+              <Clickable to={ROUTES.universidades}>
+              <Box
+                key={`${uni.id}-${i}`}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                borderBottom={`4px solid ${colors.primary[200]}`}
+                p="15px"
+                pl="0px"
+                gap="12px"
+              >
+                <Box display="flex" alignItems="center" gap="10px" minWidth={0}>
+                  {imgSrc ? (
+                    <Box
+                      component="img"
+                      src={imgSrc}
+                      alt={name}
+                      sx={{
+                        width: 26,
+                        height: 26,
+                        objectFit: "contain",
+                        flexShrink: 0,
+                      }}
+                    />
+                  ) : (
+                    <Box
+                      sx={{
+                        width: 26,
+                        height: 26,
+                        borderRadius: "50%",
+                        backgroundColor: colors.primary[300],
+                        flexShrink: 0,
+                      }}
+                    />
+                  )}
 
-          <Typography
-            color={colors.green[200]}
-            variant="h5"
-            fontWeight="600"
-            noWrap
-            sx={{ minWidth: 0 }}
-            title={name}
-          >
-            {name}
-          </Typography>
+                  <Typography
+                    color={colors.green[200]}
+                    variant="h5"
+                    fontWeight="600"
+                    noWrap
+                    sx={{ minWidth: 0 }}
+                    title={name}
+                  >
+                    {name}
+                  </Typography>
+                </Box>
+
+                <Box
+                  backgroundColor={colors.green[200]}
+                  p="6px 20px"
+                  borderRadius="4px"
+                  whiteSpace="nowrap"
+                  flexShrink={0}
+                >
+                  {uni.value} personas
+                </Box>
+              </Box>
+              </Clickable>
+            );
+          })}
         </Box>
-
-        <Box
-          backgroundColor={colors.green[200]}
-          p="6px 20px"
-          borderRadius="4px"
-          whiteSpace="nowrap"
-          flexShrink={0}
-        >
-          {uni.value} personas
-        </Box>
-      </Box>
-      </Clickable>
-    );
-  })}
-</Box>
 
         </Box>
 
@@ -635,7 +636,7 @@ const Dashboard = () => {
             display="flex"
             alignItems="center"
             justifyContent="center"
-            // border="1px solid red"
+            border="1px solid red"
             sx={{
 
       overflowX: { xs: "auto", sm: "auto", md: "hidden" },

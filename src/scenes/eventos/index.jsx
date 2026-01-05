@@ -57,7 +57,6 @@ const commonTargetProps = (colors) => ({
   maxHeight: 260,
   renderItem: renderName(colors),
   expandedDivider: false,
-  expandedPaddingTop: 0,
 });
 
 

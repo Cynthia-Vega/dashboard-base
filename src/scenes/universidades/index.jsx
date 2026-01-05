@@ -62,7 +62,7 @@ const Universidades = () => {
               valueLabel="formadores/as"
               items={participants}
               maxHeight={260}
-              gap={10}
+              gap={0}
               renderItem={(p, i) => {
                 const nameShown = displayName(p);
 

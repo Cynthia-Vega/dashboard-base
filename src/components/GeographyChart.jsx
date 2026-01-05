@@ -43,7 +43,7 @@ const GeographyChart = ({ isDashboard = false, data }) => {
       borderColor="#ffffff"
       legends={[
               {
-                anchor: "topp-left",
+                anchor: "top-left",
                 direction: "column",
                 justify: false,
                 translateX: 15,
