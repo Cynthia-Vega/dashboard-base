@@ -214,6 +214,28 @@ function getUniImgSrc(universityName) {
   return `/assets/universities/${ref.folder}/${ref.file}`;
 }
 
+// ✅ Reutilizable: listado único + ordenado de participantes para una columna binaria (evento)
+export const getParticipantsList = (
+  usersEventsFn,
+  colName,
+  nameField = "Nombre y apellido",
+  locale = "es"
+) => {
+  if (!colName || typeof usersEventsFn !== "function") return [];
+
+  const raw = usersEventsFn(colName, nameField); // <- usa tu usersEvents(binCol, userCol)
+  const arr = Array.isArray(raw) ? raw : [];
+
+  // limpia + dedup
+  const cleaned = arr
+    .map((x) => String(x ?? "").trim())
+    .filter(Boolean);
+
+  const unique = Array.from(new Set(cleaned));
+
+  return unique.sort((a, b) => a.localeCompare(b, locale));
+};
+
 
 
 export function ParticipantesData() {

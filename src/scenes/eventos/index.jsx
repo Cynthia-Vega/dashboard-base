@@ -1,465 +1,161 @@
 import { Box, Typography } from "@mui/material";
-import { tokens } from "../../theme";
 import Header from "../../components/Header";
-import { ParticipantesData } from "../../utils/ParticipantesData";
 import TargetDesc from "../../components/targets/TargetDesc";
+import { tokens } from "../../theme";
+
 import GroupsIcon from "@mui/icons-material/Groups";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import HandymanIcon from "@mui/icons-material/Handyman";
 
+import { ParticipantesData, getParticipantsList } from "../../utils/ParticipantesData";
+import {
+  ENCUENTROS_CONFIG,
+  PRESENTACIONES_CONFIG,
+  REUNIONES_CONFIG,
+  TALLERES_2025_CONFIG,
+  TALLERES_2024_CONFIG,
+  TALLERES_2023_CONFIG,
+  WEBINARS_CONFIG,
+} from "../../data/EventsData";
 
-const WEBINAR_META = {
-  Webinar: {
-    title: "Webinar - 2023",
-    subtitle: "Preocupaciones de los estudiantes a lo largo de su formación profesional: implicancias para la formación inicial del profesorado.",
-    relatores: 'Helena Montenegro',
-    desc:'En este Webinar se comparten los resultados de un estudio orientado a identificar las preocupaciones sobre la enseñanza y el aprendizaje que poseen estudiantes a lo largo de su formación inicial.'
-  },
+
+const iconByKey = (key, colors) => {
+  const sx = { color: colors.green[200] };
+  if (key === "videocam") return <VideocamIcon sx={sx} />;
+  if (key === "eventNote") return <EventNoteIcon sx={sx} />;
+  if (key === "handyman") return <HandymanIcon sx={sx} />;
+  return <GroupsIcon sx={sx} />;
 };
 
-const ENCUENTRO_META = {
-  "1er Encuentro Atacama": {
-    title: "1er Encuentro - Atacama",
-    subtitle: 'Universidad de Atacama, Copiapó',
-    desc: "Primer Encuentro Nacional de Formadores de Profesores de Matemáticas: Abriendo espacios para la colaboración y la innovación en la Formación Inicial Docente ",
-  },
-  "2do Encuentro Osorno": {
-    title: "2do Encuentro - Osorno",
-    subtitle: 'Universidad de los Lagos, Osorno',
-    desc: "Segundo encuentro nacional de formadores en Matemática RedFID: Innovar en Comunidad: Construyendo Redes para Transformar",
-  },
-  "3er Encuentro Magallanes": {
-    title: "3er Encuentro - Magallanes",
-    subtitle: 'Universidad de Magallanes, Punta Arenas',
-    desc: "Tercer Encuentro Nacional de Formadores de Profesores en Matemáticas: Consolidando una red de formadores y formadoras para la innovación en la formación docente en matemáticas",
-  },
+const gridSx = {
+  display: "grid",
+  gridTemplateColumns: { xs: "repeat(1, 1fr)", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" },
+  gap: "20px",
+  mt: 1.5,
 };
 
-const REUNION_META = {
-    'Reunión informativa del número especial': { 
-    title: "Reunión informativa",
-    relatores: 'Elizabeth Suazo-Flores, Helena Montenegro, Leslie Gauna',
-    subtitle:'Reunión informativa sobre convocatoria de publicación en número especial',
-    desc: "En este video se comparten las fechas e hitos importantes asociados al proceso de acompañamiento para escribir un manuscrito para el numero especial; y la propuesta de una metodología de trabajo para escribir ese artículo." },
-};
+const titleSlot = (colors, text) => (
+  <Box sx={{ height: 48, display: "flex", alignItems: "center" }}>
+    <Typography variant="h4" fontWeight={600} color={colors.primary[100]} sx={{ m: 0 }}>
+      {text}
+    </Typography>
+  </Box>
+);
 
-const TALLER_META = {
-  "Taller n°1 2023": {
-    title: "Taller N° 1",
-    subtitle: 'Orientaciones para realizar revisiones de pares',
-    relatores: 'Helena Montenegro y Fernando Murillo',
-    desc: "En este taller se comparten diversas estrategias clave en la revisión de proyectos y artículos.",
-  },
-  "Taller n°2 2023": {
-    title: "Taller N° 2",
-    subtitle: 'Orientaciones para el trabajo en comunidades RedFID',
-    relatores: 'Daniela Rojas y Flavio Guíñez',
-    desc: "En este taller se comparten las principales funcionalidades de la plataforma RedFID que potencian el trabajo colaborativo entre las personas.",
-  },
-  "Taller n°3 2023": {
-    title: "Taller N° 3",
-    subtitle: 'Taller de amistad crítica comunidad RedFID',
-    relatores: 'Leslie Gauna y Gayle Curtis',
-    desc: "En este taller se comparten estrategias concretas y recomendaciones para desarrollar la amistad crítica en el contexto de un trabajo colaborativo.",
-  },
-  "Taller n°4 2023": {
-    title: "Taller N° 4",
-    subtitle: 'Ideas para investigar nuestras prácticas como educadores matemáticos',
-    relatores: 'Elizabeth Suazo',
-    desc: "En este taller se compartirán ejemplos de formadores de matemáticas que han investigado su práctica docente.",
-  },
-  "Taller n°5 2023": {
-    title: "Taller N° 5",
-    subtitle: '¿Como hacer investigación a partir de actividades de aprendizaje matemático para futuros profesores?',
-    relatores: 'Francisco Rojas',
-    desc: "En este taller se comparte un ejemplo de cómo utilizar actividades de aprendizaje que los formadores diseñan para realizar investigación sobre el conocimiento matemático de los profesores en formación.",
-  },
-  "Taller n°6 2023": {
-    title: "Taller N° 6",
-    subtitle: 'Recolectando evidencia de mi trabajo en el aula',
-    relatores: 'Andrea Flanagan-Bórque',
-    desc: "En este taller se discuten algunos aspectos claves de tener en cuenta al recolectar evidencias en contextos educativos y en la formación de profesores.",
-  },
-  "Taller n°7 2023": { 
-    title: "Taller N° 7",
-    subtitle:'Título...',
-    relatores: '',
-    desc: "Descripción..." },
+const renderName = (colors) => (name) => (
+  <Typography sx={{ fontWeight: 900, fontSize: "13.5px", color: colors.primary[100] }}>
+    {name}
+  </Typography>
+);
 
-  "Taller N° 1 2024": { 
-    title: "Taller N° 8",
-    subtitle:'De las matemáticas de los juegos, al juego de las matemáticas',
-    relatores: 'Dr. Jordi Deulofeu Piquet',
-     desc: "En este taller se discute cómo el contexto lúdico que aportan los juegos de mesa, de estrategia, de azar y de recreaciones matemáticas es un poderoso recurso para generar situaciones de aprendizaje matemático." },
-  "Taller N° 2  2024": { 
-    title: "Taller N° 9",
-    subtitle:'¿Qué necesitamos como formadores y formadoras para formar al profesorado de matemáticas?',
-    relatores: 'Ejecutivo RedFID',
-    desc: "En este taller formadores pertenecientes a RedFID discuten sobre los principales desafíos que enfrentan a nivel institucional académico e investigativo cuando forman a futuros profesores de matemática." },
-  "Taller N° 3 2024": { 
-    title: "Taller N° 10",
-    subtitle:'Cómo investigar la propia práctica favorece el aprendizaje de los profesores en formación: cuatro experiencias para analizar',
-    relatores: 'Marco Catalán, Valentina Giaconi, Francisca Ubilla, Marcia Villena, Francisco Álvarez y Loreto Alvarado',
-    desc: "En este taller se comparten los resultados de cuatro proyectos de indagación que abordan el rol y la mirada del formador en su enseñanza y la forma en que el estudio de la propia práctica contribuye al aprendizaje de los profesores en formación." },
-  "Taller N° 4 2024": { 
-    title: "Taller N° 11",
-    subtitle:'Trabajo colaborativo entre formadores en matemáticas: potencialidades y restricciones',
-    relatores: 'Dra. Daniela Pagés',
-    desc: "En este taller se comparten investigaciones y experiencias prácticas sobre el trabajo colaborativo que se puede desarrollar entre formadores en matemática." },
+const commonTargetProps = (colors) => ({
+  variant: "dash",
+  fullWidth: true,
+  bgColor: colors.primary[200],
+  sx: { minHeight: 84, borderRadius: "18px" },
+  maxHeight: 260,
+  renderItem: renderName(colors),
+  expandedDivider: false,
+  expandedPaddingTop: 0,
+});
 
-  "Taller N° 1 2025": {
-    title: "Taller N° 12",
-    subtitle:'Matcon: matemáticas conectadas con los desafíos educativos de los docentes',
-    relatores: 'Ricardo Fredes',
-    desc: "En este taller se comparte MatCon, una plataforma de recursos educativos interactivos e innovadores que permite gestionar una enseñanza de la matemática orientada a las motivaciones y preocupaciones de niños y jóvenes, ayudándoles a dar sentido a problemas relevantes de su entorno y a involucrarse en sus soluciones.",
-  },
-  "Taller N° 2 2025": {
-    title: "Taller N° 13",
-    subtitle:'Modelar el enseñar a enseñar: Prácticas de modelización en la formación de docentes de matemática',
-    relatores: 'Helen Alfaro-Víquez',
-    desc: "En este taller se invita a reflexionar sobre la modelización como estrategia para vincular teoría y práctica en la enseñanza de la matemática. A partir de casos reales, se analizan formas de modelización y su aporte al conocimiento didáctico del formador, así como su potencial para enriquecer la formación de futuros docentes.",
-  },
-  "Taller N° 3 2025": { 
-    title: "Taller N° 14",
-    subtitle:'Matemática y formación ciudadana: cuentos para la sala de clases',
-    relatores: 'Noemí Pizarro',
-    desc: "En este taller se comparte el cuento como recurso de enseñanza, utilizando las matemáticas como herramienta para comprender el mundo en que vivimos desde una mirada crítica. " },
-  "Taller N° 4 2025": { 
-    title: "Taller N° 15",
-    subtitle:'De la postulación a la adjudicación: Experiencias y aprendizajes en la postulación a un Fondecyt de Iniciación',
-    relatores: 'Leidy Bautista, Francisca Ubilla, Juan Luis Prieto-González y Alicia Zamorano Vargas',
-    desc: "En este taller, cuatro miembros de nuestra comunidad comparten, a partir de su propia experiencia, los principales desafíos y aprendizajes que enfrentaron al postular un proyecto Fondecyt de Iniciación. Esta instancia busca que los futuros formadores y formadoras conozcan mejor estos procesos, comprendan sus implicancias y consideren los aspectos clave para una postulación exitosa." },
-};
 
-const Eventos = () => {
+function EventsSection({ section, byEvent, usersEvents, colors }) {
+
+  if (Array.isArray(section.cards)) {
+    return (
+      <Box mt={4}>
+        {titleSlot(colors, section.title)}
+        <Box sx={gridSx}>
+          {section.cards.map((c) => {
+            const names = getParticipantsList(usersEvents, c.col);
+            return (
+              <TargetDesc
+                key={c.col}
+                {...commonTargetProps(colors)}
+                title={c.title}
+                value={names.length}
+                valueLabel={section.valueLabel}
+                icon={iconByKey(section.iconKey, colors)}
+                description=""
+                items={names}
+              />
+            );
+          })}
+        </Box>
+      </Box>
+    );
+  }
+
+
+  const list = (byEvent || []).filter((e) => (section.filter ? section.filter(e.id) : true));
+  if (section.sort) list.sort(section.sort);
+
+  return (
+    <Box mt={4}>
+      {titleSlot(colors, section.title)}
+      <Box sx={gridSx}>
+        {list.map((ev) => {
+          const id = String(ev.id);
+          const meta = section.meta?.[id] || {};
+          const names = getParticipantsList(usersEvents, id);
+
+          return (
+            <TargetDesc
+              key={id}
+              {...commonTargetProps(colors)}
+              title={meta.title ?? String(ev.label ?? ev.id ?? "")}
+              descriptionTitle={meta.subtitle ?? ""}
+              formadores={meta.relatores ?? ""}
+              value={ev.value ?? 0}
+              valueLabel={section.valueLabel}
+              icon={iconByKey(section.iconKey, colors)}
+              description={meta.desc ?? ""}
+              items={names}
+            />
+          );
+        })}
+      </Box>
+    </Box>
+  );
+}
+
+
+
+export default function Eventos() {
   const colors = tokens();
   const { loading, eventsData, usersEvents } = ParticipantesData();
 
   if (loading) return <div>Cargando datos…</div>;
-  if (!eventsData) return <div>Falta eventsData() en ParticipantesData().</div>;
-
-
-  const uniqueNamesForColumn = (colName) => {
-    if (!colName) return [];
-    const arr = typeof usersEvents === "function" ? usersEvents(colName, "Nombre y apellido") : [];
-    return (Array.isArray(arr) ? arr : []).sort((a, b) => a.localeCompare(b, "es"));
-  };
-
-  const renderName = (name) => (
-    <Typography
-      sx={{
-        fontWeight: 900,
-        fontSize: "13.5px",
-        color: colors.primary[100],
-      }}
-    >
-      {name}
-    </Typography>
-  );
-
-  const titleSlot = (text) => (
-    <Box sx={{ height: 48, display: "flex", alignItems: "center" }}>
-      <Typography variant="h4" fontWeight={600} color={colors.primary[100]} sx={{ m: 0 }}>
-        {text}
-      </Typography>
-    </Box>
-  );
-
-  const gridSx = {
-    display: "grid",
-    gridTemplateColumns: { xs: "repeat(1, 1fr)", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" },
-    gap: "20px",
-    mt: 1.5,
-  };
-
-  const commonTargetProps = {
-    variant: "dash",
-    fullWidth: true,
-    bgColor: colors.primary[200],
-    sx: { minHeight: 84, borderRadius: "18px" },
-    maxHeight: 260,
-    renderItem: (item) => renderName(item),
-    expandedDivider: false,
-    expandedPaddingTop: 0,
-  };
-
+  if (!eventsData) return <div>Falta eventsData().</div>;
 
   const { byEvent } = eventsData();
-  const safe = Array.isArray(byEvent) ? byEvent : [];
 
 
-  const webinars = safe.filter((e) => /webinar/i.test(String(e.id)));
-  const encuentros = safe.filter((e) => /encuentro/i.test(String(e.id)));
-  const reuniones = safe.filter((e) => /^reuni[oó]n/i.test(String(e.id)));
-  const talleres = safe.filter((e) => /^taller/i.test(String(e.id)));
-
-
-
-
-const ENCUENTRO_ORDER = [
-  "1er Encuentro Atacama",
-  "2do Encuentro Osorno",
-  "3er Encuentro Magallanes",
-];
-
-
-encuentros.sort((a, b) => {
-  const ia = ENCUENTRO_ORDER.indexOf(String(a.id));
-  const ib = ENCUENTRO_ORDER.indexOf(String(b.id));
-  const ra = ia === -1 ? 999 : ia;
-  const rb = ib === -1 ? 999 : ib;
-  return ra - rb;
-});
-
-
-
-  reuniones.sort((a, b) => {
-    const ma = String(a.id).match(/(\d{2})\/(\d{2})\/(\d{4})/);
-    const mb = String(b.id).match(/(\d{2})\/(\d{2})\/(\d{4})/);
-    const ta = ma ? new Date(+ma[3], +ma[2] - 1, +ma[1]).getTime() : 0;
-    const tb = mb ? new Date(+mb[3], +mb[2] - 1, +mb[1]).getTime() : 0;
-    return ta - tb;
-  });
-
-  const talleres2025 = talleres
-    .filter((e) => /2025/.test(String(e.id)))
-    .sort((a, b) => String(a.id).localeCompare(String(b.id), "es"));
-
-  const talleres2024 = talleres
-    .filter((e) => /2024/.test(String(e.id)))
-    .sort((a, b) => String(a.id).localeCompare(String(b.id), "es"));
-
-  const talleres2023 = talleres
-    .filter((e) => /2023/.test(String(e.id)))
-    .sort((a, b) => String(a.id).localeCompare(String(b.id), "es"));
-
-
-  const namesPresentaOsorno = uniqueNamesForColumn("Presenta Osorno");
-  const namesPresentaMagallanes = uniqueNamesForColumn("Presenta Magallanes");
-
+  const PRESENTACIONES_SECTION = {
+    title: "PRESENTACIONES",
+    iconKey: "groups",
+    valueLabel: "personas",
+    cards: PRESENTACIONES_CONFIG,
+  };
 
   return (
     <Box m="20px" pb="100px">
       <Header title="EVENTOS" subtitle="Participación por instancia" />
 
-      {/* ENCUENTROS */}
-      <Box mt={4}>
-        {titleSlot("Encuentros Nacionales de Formadores de Profesores")}
-        <Box sx={gridSx}>
-          {encuentros.map((ev) => {
-            const colName = String(ev.id);
-            const names = uniqueNamesForColumn(colName);
 
-            const meta = ENCUENTRO_META[colName] ?? {};
-            const title = meta.title ?? String(ev.label ?? ev.id ?? "").trim();
-            const desc = meta.desc ?? "";
-            const subtitle = meta.subtitle ?? "";
+      <EventsSection section={ENCUENTROS_CONFIG} byEvent={byEvent} usersEvents={usersEvents} colors={colors} />
 
-            return (
-              <TargetDesc
-                key={colName}
-                {...commonTargetProps}
-                title={title}
-                descriptionTitle={subtitle}
-                value={ev.value ?? 0}
-                valueLabel="participaciones"
-                icon={<GroupsIcon sx={{ color: colors.green[200] }} />}
-                description={desc}
-                items={names}
-              />
-            );
-          })}
-        </Box>
-      </Box>
+      <EventsSection section={PRESENTACIONES_SECTION} byEvent={byEvent} usersEvents={usersEvents} colors={colors} />
 
-      {/*  PRESENTACIONES */}
-      <Box mt={4}>
-        {titleSlot("PRESENTACIONES")}
-        <Box sx={gridSx}>
-          <TargetDesc
-            {...commonTargetProps}
-            title="Encuentro - Osorno"
-            value={namesPresentaOsorno.length}
-            valueLabel="personas"
-            icon={<GroupsIcon sx={{ color: colors.green[200] }} />}
-            description=""
-            items={namesPresentaOsorno}
-          />
+      <EventsSection section={REUNIONES_CONFIG} byEvent={byEvent} usersEvents={usersEvents} colors={colors} />
 
-          <TargetDesc
-            {...commonTargetProps}
-            title="Encuentro - Magallanes"
-            value={namesPresentaMagallanes.length}
-            valueLabel="personas"
-            icon={<GroupsIcon sx={{ color: colors.green[200] }} />}
-            description=""
-            items={namesPresentaMagallanes}
-          />
+      <EventsSection section={TALLERES_2025_CONFIG} byEvent={byEvent} usersEvents={usersEvents} colors={colors} />
+      <EventsSection section={TALLERES_2024_CONFIG} byEvent={byEvent} usersEvents={usersEvents} colors={colors} />
+      <EventsSection section={TALLERES_2023_CONFIG} byEvent={byEvent} usersEvents={usersEvents} colors={colors} />
 
-        </Box>
-      </Box>
-
-      {/* REUNIONES */}
-      <Box mt={4}>
-        {titleSlot("REUNIONES")}
-        <Box sx={gridSx}>
-          {reuniones.map((ev) => {
-            const colName = String(ev.id);
-            const names = uniqueNamesForColumn(colName);
-
-            const meta = REUNION_META[colName] ?? {};
-            const title = meta.title ?? String(ev.label ?? ev.id ?? "").trim();
-            const desc = meta.desc ?? "";
-            const subtitle = meta.subtitle ?? "";
-            const relatores=meta.relatores ?? "";
-
-            return (
-              <TargetDesc
-                key={colName}
-                {...commonTargetProps}
-                title={title}
-                descriptionTitle={subtitle}
-                formadores={relatores}
-                value={ev.value ?? 0}
-                valueLabel="participaciones"
-                icon={<EventNoteIcon sx={{ color: colors.green[200] }} />}
-                description={desc}
-                items={names}
-              />
-            );
-          })}
-        </Box>
-      </Box>
-
-      {/* TALLERES 2025 */}
-      <Box mt={4}>
-        {titleSlot("TALLERES 2025")}
-        <Box sx={gridSx}>
-          {talleres2025.map((ev) => {
-            const colName = String(ev.id);
-            const names = uniqueNamesForColumn(colName);
-
-            const meta = TALLER_META[colName] ?? {};
-            const title = meta.title ?? String(ev.label ?? ev.id ?? "").trim();
-            const desc = meta.desc ?? "";
-            const subtitle = meta.subtitle ?? "";
-            const relatores=meta.relatores ?? "";
-
-            return (
-              <TargetDesc
-                key={colName}
-                {...commonTargetProps}
-                title={title}
-                descriptionTitle={subtitle}
-                formadores={relatores}
-                value={ev.value ?? 0}
-                valueLabel="participaciones"
-                icon={<HandymanIcon sx={{ color: colors.green[200] }} />}
-                description={desc}
-                items={names}
-              />
-            );
-          })}
-        </Box>
-      </Box>
-
-      {/* TALLERES 2024 */}
-      <Box mt={4}>
-        {titleSlot("TALLERES 2024")}
-        <Box sx={gridSx}>
-          {talleres2024.map((ev) => {
-            const colName = String(ev.id);
-            const names = uniqueNamesForColumn(colName);
-
-            const meta = TALLER_META[colName] ?? {};
-            const title = meta.title ?? String(ev.label ?? ev.id ?? "").trim();
-            const desc = meta.desc ?? "";
-            const subtitle = meta.subtitle ?? "";
-            const relatores=meta.relatores ?? "";
-
-            return (
-              <TargetDesc
-                key={colName}
-                {...commonTargetProps}
-                title={title}
-                descriptionTitle={subtitle}
-                formadores={relatores}
-                value={ev.value ?? 0}
-                valueLabel="participaciones"
-                icon={<HandymanIcon sx={{ color: colors.green[200] }} />}
-                description={desc}
-                items={names}
-              />
-            );
-          })}
-        </Box>
-      </Box>
-
-      {/* TALLERES 2023 */}
-      <Box mt={4}>
-        {titleSlot("TALLERES 2023")}
-        <Box sx={gridSx}>
-          {talleres2023.map((ev) => {
-            const colName = String(ev.id);
-            const names = uniqueNamesForColumn(colName);
-
-            const meta = TALLER_META[colName] ?? {};
-            const title = meta.title ?? String(ev.label ?? ev.id ?? "").trim();
-            const desc = meta.desc ?? "";
-            const subtitle = meta.subtitle ?? "";
-            const relatores=meta.relatores ?? "";
-
-            return (
-              <TargetDesc
-                key={colName}
-                {...commonTargetProps}
-                title={title}
-                descriptionTitle={subtitle}
-                formadores={relatores}
-                value={ev.value ?? 0}
-                valueLabel="participaciones"
-                icon={<HandymanIcon sx={{ color: colors.green[200] }} />}
-                description={desc}
-                items={names}
-              />
-            );
-          })}
-        </Box>
-      </Box>
-      {/* WEBINARS */}
-      <Box mt={2}>
-        {titleSlot("WEBINARS")}
-        <Box sx={gridSx}>
-          {webinars.map((ev) => {
-            const colName = String(ev.id);
-            const names = uniqueNamesForColumn(colName);
-
-            const meta = WEBINAR_META[colName] ?? {};
-            const title = meta.title ?? String(ev.label ?? ev.id ?? "").trim();
-            const desc = meta.desc ?? "";
-            const subtitle = meta.subtitle ?? "";
-            const relatores=meta.relatores ?? "";
-
-            return (
-              <TargetDesc
-                key={colName}
-                {...commonTargetProps}
-                title={title}
-                descriptionTitle={subtitle}
-                formadores={relatores}
-                value={ev.value ?? 0}
-                valueLabel="participaciones"
-                icon={<VideocamIcon sx={{ color: colors.green[200] }} />}
-                description={desc}
-                items={names}
-              />
-            );
-          })}
-        </Box>
-      </Box>
+      <EventsSection section={WEBINARS_CONFIG} byEvent={byEvent} usersEvents={usersEvents} colors={colors} />
     </Box>
   );
-};
-
-export default Eventos;
+}
