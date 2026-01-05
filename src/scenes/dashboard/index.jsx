@@ -647,8 +647,10 @@ const Dashboard = () => {
             <Clickable to={ROUTES.region}>
             <Box
       sx={{
-        width:  { xs: 520, sm: 650, md: 820, lg: 950 },
-        height: { xs: 220, sm: 240, md: 260, lg: 280 },
+        // width:  { xs: 520, sm: 650, md: 820, lg: 950 },
+        // height: { xs: 220, sm: 240, md: 260, lg: 280 },
+        width: "100%", 
+        height: { xs: 1000, sm: 820, md: 260, lg: 280 },
         position: "relative",
         mx: "auto",
       }}
