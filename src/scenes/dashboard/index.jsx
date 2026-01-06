@@ -63,7 +63,7 @@ const Dashboard = () => {
   );
 
   return (
-    <Box m="20px" sx={{ minHeight: "100vh" }}>
+    <Box m="20px" sx={{ minHeight: "100vh" }} pb="100px">
       <Header title="Panel de datos" subtitle="Resumen general de formadores" />
 
       <Box display="flex" justifyContent="flex-start" >
