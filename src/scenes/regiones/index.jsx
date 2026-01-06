@@ -69,7 +69,7 @@ const Regiones = () => {
   if (loading) return <div>Cargando datos…</div>;
 
   return (
-    <Box m="20px">
+    <Box m="20px" pb="100px">
       <Header title="REGIONES" subtitle="Detalle por región" />
 
       <Box
