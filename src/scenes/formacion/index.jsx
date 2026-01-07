@@ -192,31 +192,38 @@ const Formacion = () => {
 
         <Box sx={gridSx}>
           {niveles.map((n) => {
-            const label = String(n.label ?? n.id ?? "Nivel").trim();
-            const desc = nivelDescById[n.id] ?? "";
-            const names = uniqueNamesByValue(COLS.niveles, n.id ?? label);
+  const label = String(n.label ?? n.id ?? "Nivel").trim();
 
-            return desc ? (
-              <TargetDesc
-                key={n.id}
-                {...commonTargetProps}
-                title={label}
-                value={n.value ?? 0}
-                valueLabel="personas"
-                description={desc}
-                items={names}
-              />
-            ) : (
-              <TargetList
-                key={n.id}
-                {...commonTargetProps}
-                title={label}
-                value={n.value ?? 0}
-                valueLabel="personas"
-                items={names}
-              />
-            );
-          })}
+  // ✅ clave normalizada para que siempre calce con nivelDescById
+  const nivelKey = norm(n.id ?? label);
+
+  const desc = nivelDescById[nivelKey] ?? "";
+
+  // ✅ para filtrar nombres, conviene usar la misma key si tus datos vienen como "Intermedio"
+  const names = uniqueNamesByValue(COLS.niveles, nivelKey);
+
+  return desc ? (
+    <TargetDesc
+      key={n.id ?? label}
+      {...commonTargetProps}
+      title={label}
+      value={n.value ?? 0}
+      valueLabel="personas"
+      description={desc}
+      items={names}
+    />
+  ) : (
+    <TargetList
+      key={n.id ?? label}
+      {...commonTargetProps}
+      title={label}
+      value={n.value ?? 0}
+      valueLabel="personas"
+      items={names}
+    />
+  );
+})}
+
         </Box>
       </Box>
 
