@@ -179,7 +179,7 @@ const Formacion = () => {
   };
 
   return (
-    <Box m="20px" pb="100px">
+    <Box m="20px" ml="5px" pb="100px">
       <Header title="FORMACIÓN" subtitle="Detalle por niveles, grado, título y programas" />
 
       {/* =========================

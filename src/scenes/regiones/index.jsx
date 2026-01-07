@@ -69,7 +69,7 @@ const Regiones = () => {
   if (loading) return <div>Cargando datos…</div>;
 
   return (
-    <Box m="20px" pb="100px">
+    <Box m="20px" ml="5px" pb="100px">
       <Header title="REGIONES" subtitle="Detalle por región" />
 
       <Box
@@ -84,11 +84,11 @@ const Regiones = () => {
           gridRow="span 2"
           backgroundColor={colors.primary[200]}
           pb="15px"
-          pt="15px"
+          
           display="flex"
           flexDirection="column"
          
-          sx={{justifySelf:'start', width: '400px', height: '1500px' }}
+          sx={{justifySelf:'start', width: '400px', height: '1617px' }}
         >
           <Typography
             variant="h4"
@@ -100,7 +100,8 @@ const Regiones = () => {
           </Typography>
 
           <Box flex="1" minHeight="370px"
-           border="1px solid red">
+          //  border="1px solid red"
+           >
             <GeographyChart data={mapData} />
           </Box>
         </Box>
@@ -114,19 +115,18 @@ const Regiones = () => {
           flexDirection="column"
           sx={{ minWidth: 0 }}
         >
-          <Box pt="15px" pb="15px" pl="15px">
+          <Box  pb="15px" >
             <Typography variant="h4" fontWeight="600" color={colors.primary[100]}>
               Regiones
             </Typography>
           </Box>
 
           <Box
-            flex="1"
-            overflow="auto"
+
             sx={{
-              px: 2,
-              pb: 2,
-              pr: 3,
+              px: 0,
+              pb: 6,
+              pr: 0,
               pt: 0
             }}
 

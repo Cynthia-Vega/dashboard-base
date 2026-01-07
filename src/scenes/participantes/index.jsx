@@ -266,7 +266,7 @@ const TablaParticipantes = () => {
   ];
 
   return (
-    <Box m="20px" pb="60px">
+    <Box m="20px" ml="5px" pb="100px">
       <Header title="PARTICIPANTES" subtitle="Resumen por persona" />
 
       <Box

@@ -22,7 +22,7 @@ const Universidades = () => {
     "Sin nombre";
 
   return (
-    <Box m="20px" pb="100px">
+    <Box m="20px" ml="5px" pb="100px">
       <Header
         title="UNIVERSIDADES"
         subtitle="Distribución de formadores por universidad"

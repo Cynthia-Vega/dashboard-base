@@ -101,13 +101,13 @@ const TargetList = ({
     backgroundColor: resolvedBg,
     border: `1px solid ${resolvedBorder}`,
     borderRadius: `${radius}px`,
-    boxShadow: shadow ? "0 10px 22px rgba(0,0,0,0.10)" : "none",
+    boxShadow: shadow ? "10px 10px 22px rgba(0,0,0,0.10)" : "none",
     transition: "transform 140ms ease, box-shadow 140ms ease",
     cursor: "pointer",
     overflow: "hidden",
     "&:hover": {
       transform: "translateY(-1px)",
-      boxShadow: shadow ? "0 14px 26px rgba(0,0,0,0.14)" : "none",
+      boxShadow: shadow ? "10px 14px 26px rgba(0,0,0,0.14)" : "none",
     },
     ...(fullWidth ? { width: "100%" } : {}),
 
@@ -380,7 +380,7 @@ const TargetList = ({
 
         <Box sx={{ minWidth: 0, flex: 1 }}>
           {!!title && (
-            <Typography variant="body1" fontWeight={900} color={resolvedTitle} sx={{titleSx, mb: 0.6}}>
+            <Typography variant="body1" fontWeight={900} color={resolvedTitle} sx={{...titleSx, mb: 0.6}}>
               {title}
             </Typography>
           )}

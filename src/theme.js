@@ -27,7 +27,7 @@ export const tokens = () => ({
 
 
 
-export const themeSettings = (fontScale =1) => {
+export const themeSettings = () => {
     const colors = tokens();
 
     return {
@@ -44,30 +44,55 @@ export const themeSettings = (fontScale =1) => {
                     },
         typography:{
             fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-            fontSize: 12*fontScale,
+            fontSize: 12,
+            body1: {
+                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
+                fontSize: 13,
+                lineHeight: 1.25,
+            },
+            body2: {
+                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
+                fontSize: 12,
+                lineHeight: 1.25,
+            },
+            caption: {
+                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
+                fontSize: 11,
+                lineHeight: 1.2,
+            },
+            subtitle1: {
+                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
+                fontSize: 13,
+                lineHeight: 1.25,
+            },
+            subtitle2: {
+                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
+                fontSize: 12,
+                lineHeight: 1.2,
+            },
             h1:{
                 fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 40 * fontScale,
+                fontSize: 40,
             },
             h2:{
                 fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 32 * fontScale,
+                fontSize: 32,
             },
             h3:{
                 fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 24 * fontScale,
+                fontSize: 24,
             },    
             h4:{
                 fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 20 * fontScale,
+                fontSize: 20,
             },    
             h5:{
                 fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 16 * fontScale,
+                fontSize: 16,
             },    
             h6:{
                 fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 14 * fontScale,
+                fontSize: 14,
             },                    
         },
         tooltip: {
@@ -84,58 +109,14 @@ export const ColorModeContext = createContext({
 })
 
 
-export const useMode =(fontScale = 1) => {
+export const useMode =() => {
     
     const theme = useMemo(
-        () => createTheme(themeSettings(fontScale)),
-        [fontScale]
+        () => createTheme(themeSettings()),
+        []
     );
 
   return [theme];
 };
 
 
-
-/* 
-blueAccent: {
-                    100: "#e1e2fe",
-                    200: "#c3c6fd",
-                    300: "#a4a9fc",
-                    400: "#868dfb",
-                    500: "#6870fa",
-                    600: "#535ac8",
-                    700: "#3e4396",
-                    800: "#2a2d64",
-                    900: "#151632"grey: {
-
-                greenAccent: {
-                    100: "#0f2922",
-                    200: "#1e5245",
-                    300: "#2e7c67",
-                    400: "#3da58a",
-                    500: "#4cceac",
-                    600: "#70d8bd",
-                    700: "#94e2cd",
-                    800: "#b7ebde",
-                    900: "#dbf5ee",
-                100: "#e0e0e0",
-                200: "#c2c2c2",
-                300: "#a3a3a3",
-                400: "#858585",
-                500: "#666666",
-                600: "#525252",
-                700: "#3d3d3d",
-                800: "#292929",
-                900: "#141414"
-                }, 
-primary: {
-                100: "#d0d1d5",
-                200: "#a1a4ab",
-                300: "#727681",
-                400: "#1F2A40",
-                500: "#141b2d",
-                600: "#101624",
-                700: "#0c101b",
-                800: "#080b12",
-                900: "#040509"
-                },*/

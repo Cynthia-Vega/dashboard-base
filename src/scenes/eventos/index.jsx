@@ -32,11 +32,10 @@ const gridSx = {
   display: "grid",
   gridTemplateColumns: { xs: "repeat(1, 1fr)", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" },
   gap: "20px",
-  mt: 1.5,
 };
 
 const titleSlot = (colors, text) => (
-  <Box sx={{ height: 48, display: "flex", alignItems: "center" }}>
+  <Box sx={{  display: "flex", alignItems: "center", pb: 2 }}>
     <Typography variant="h4" fontWeight={600} color={colors.primary[100]} sx={{ m: 0 }}>
       {text}
     </Typography>
@@ -121,7 +120,6 @@ function EventsSection({ section, byEvent, usersEvents, colors }) {
 }
 
 
-
 export default function Eventos() {
   const colors = tokens();
   const { loading, eventsData, usersEvents } = ParticipantesData();
@@ -140,7 +138,7 @@ export default function Eventos() {
   };
 
   return (
-    <Box m="20px" pb="100px">
+    <Box m="20px" ml="5px" pb="100px">
       <Header title="EVENTOS" subtitle="Participación por instancia" />
 
 

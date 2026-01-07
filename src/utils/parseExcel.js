@@ -306,9 +306,9 @@ function experienceFromStartYear(startYear, currentYear = new Date().getFullYear
   const years = currentYear - y;
   if (years < 0) return null;
 
-  if (years <= 5) return "novel";
-  if (years <= 11) return "intermedio";
-  return "experto";
+  if (years <= 5) return "Novel";
+  if (years <= 11) return "Intermedio";
+  return "Experto";
 }
 
 
