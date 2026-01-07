@@ -42,59 +42,29 @@ export const themeSettings = () => {
                             default: "#ffffffff",   
                         }
                     },
-        typography:{
-            fontFamily: ["Avenir Regular", "sans-serif"].join(","),
+        typography: {
+            fontFamily: ["Avenir", "Avenir Regular", "sans-serif"].join(","),
             fontSize: 12,
-            body1: {
-                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 13,
-                lineHeight: 1.25,
-            },
-            body2: {
-                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 12,
-                lineHeight: 1.25,
-            },
-            caption: {
-                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 11,
-                lineHeight: 1.2,
-            },
-            subtitle1: {
-                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 13,
-                lineHeight: 1.25,
-            },
-            subtitle2: {
-                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 12,
-                lineHeight: 1.2,
-            },
-            h1:{
-                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 40,
-            },
-            h2:{
-                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 32,
-            },
-            h3:{
-                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 24,
-            },    
-            h4:{
-                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 20,
-            },    
-            h5:{
-                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 16,
-            },    
-            h6:{
-                fontFamily: ["Avenir Regular", "sans-serif"].join(","),
-                fontSize: 14,
-            },                    
+
+            fontWeightLight: 300,
+            fontWeightRegular: 400,
+            fontWeightMedium: 600,
+            fontWeightBold: 700,
+
+            body1: { fontSize: 13, lineHeight: 1.25, fontWeight: 400 },
+            body2: { fontSize: 12, lineHeight: 1.25, fontWeight: 400 },
+            caption: { fontSize: 11, lineHeight: 1.2, fontWeight: 400 },
+            subtitle1: { fontSize: 13, lineHeight: 1.25, fontWeight: 600 },
+            subtitle2: { fontSize: 12, lineHeight: 1.2, fontWeight: 600 },
+
+            h1: { fontSize: 40, fontWeight: 700 },
+            h2: { fontSize: 32, fontWeight: 700 },
+            h3: { fontSize: 24, fontWeight: 700 },
+            h4: { fontSize: 20, fontWeight: 700 },
+            h5: { fontSize: 16, fontWeight: 700 },
+            h6: { fontSize: 14, fontWeight: 700 },
         },
+
         tooltip: {
             color: "#626262"
         }

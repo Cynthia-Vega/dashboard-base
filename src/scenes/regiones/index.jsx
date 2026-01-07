@@ -96,7 +96,7 @@ const Regiones = () => {
             sx={{ marginBottom: "15px" }}
             color={colors.primary[100]}
           >
-            Distribución por región
+            DISTRIBUCIÓN GEOGRÁFICA DE PARTICIPANTES
           </Typography>
 
           <Box flex="1" minHeight="370px"
@@ -117,7 +117,7 @@ const Regiones = () => {
         >
           <Box  pb="15px" >
             <Typography variant="h4" fontWeight="600" color={colors.primary[100]}>
-              Regiones
+              REGIONES
             </Typography>
           </Box>
 

@@ -50,18 +50,21 @@ const TargetList = ({
   maxHeight = 260,
   gap = 10,
 
-
   fillExpanded = false,
 }) => {
   const colors = tokens();
   const theme = useTheme();
-  const fontFamily = theme.typography?.fontFamily;
+
+  const fontFamily = theme.typography?.fontFamily || "inherit";
+  const FW_LIST = 600; 
+  const FW_BOLD = theme.typography?.fontWeightBold ?? 700;
+  const FW_MED = theme.typography?.fontWeightMedium ?? 600;
 
   const [displayValue, setDisplayValue] = useState(0);
   const [open, setOpen] = useState(defaultExpanded);
 
   const formatted = useMemo(
-    () => displayValue.toLocaleString("es-CL"),
+    () => (Number(displayValue) || 0).toLocaleString("es-CL"),
     [displayValue]
   );
 
@@ -110,11 +113,9 @@ const TargetList = ({
       boxShadow: shadow ? "10px 14px 26px rgba(0,0,0,0.14)" : "none",
     },
     ...(fullWidth ? { width: "100%" } : {}),
-
     display: "flex",
     flexDirection: "column",
     height: "100%",
-
     ...sx,
   };
 
@@ -160,27 +161,28 @@ const TargetList = ({
   const ValueWithLabel = ({ variant: v = "h4" }) => (
     <Typography
       variant={v}
-      fontWeight={900}
+      fontWeight={FW_BOLD}
       color={resolvedValue}
       sx={{ fontFamily, lineHeight: 1, mt: v === "h4" ? 0.2 : 0 }}
     >
       {formatted}
       {!!valueLabel && (
-    <Typography
-      component="span"
-      sx={{
-        ml: 1,
-        fontWeight: 900,
-        opacity: 0.9,
-        fontSize: v === "h2" ? "0.60em" : v === "h3" ? "0.65em" : "0.70em",
-        position: "relative",
-        top: v === "h2" ? "-0.10em" : "-0.08em",
-        verticalAlign: "middle",
-        lineHeight: 1,
-      }}
-    >
-  {valueLabel}
-</Typography>
+        <Typography
+          component="span"
+          sx={{
+            fontFamily,
+            ml: 1,
+            fontWeight: FW_BOLD,
+            opacity: 0.9,
+            fontSize: v === "h2" ? "0.60em" : v === "h3" ? "0.65em" : "0.70em",
+            position: "relative",
+            top: v === "h2" ? "-0.10em" : "-0.08em",
+            verticalAlign: "middle",
+            lineHeight: 1,
+          }}
+        >
+          {valueLabel}
+        </Typography>
       )}
     </Typography>
   );
@@ -233,6 +235,15 @@ const TargetList = ({
 
   const resolvedGap = typeof gap === "number" ? `${gap}px` : gap;
 
+  const listItemWrapperSx = {
+    fontFamily,
+    "&, & *": { fontFamily },
+    "& .MuiTypography-root": {
+      fontFamily,
+      fontWeight: `${FW_LIST} !important`,
+    },
+  };
+
   const BodyList = () => (
     <Box
       sx={{
@@ -244,14 +255,19 @@ const TargetList = ({
         flexDirection: "column",
         gap: resolvedGap,
         ...(fillExpanded ? {} : { maxHeight }),
+        fontFamily,
       }}
     >
       {items.map((item, i) => (
-        <Box key={item?.id ?? i}>
+        <Box key={item?.id ?? i} sx={listItemWrapperSx}>
           {renderItem ? (
             renderItem(item, i)
           ) : (
-            <Typography sx={{ fontFamily }} color={colors.primary[100]} fontWeight={900}>
+            <Typography
+              variant="body2"
+              color={colors.primary[100]}
+              sx={{ fontFamily, fontWeight: FW_LIST, lineHeight: 1.2 }}
+            >
               {String(item)}
             </Typography>
           )}
@@ -260,18 +276,14 @@ const TargetList = ({
     </Box>
   );
 
-  // =========================
-  // ✅ VERTICAL / HERO
-  // =========================
   const isHero = variant === "hero" || orientation === "vertical";
 
   if (isHero) {
-    const iconSize = mediaSize; 
+    const iconSize = mediaSize;
     const minH = headerMinHeight ?? 240;
 
     return (
       <Box sx={cardSx} onClick={toggle}>
-        {/* HEADER VERTICAL */}
         <Box
           sx={{
             position: "relative",
@@ -289,17 +301,15 @@ const TargetList = ({
           }}
         >
           <ExpandIcon />
-
           {imgSrc ? mediaImage(iconSize) : icon ? mediaCircle(iconSize) : null}
-
           <ValueWithLabel variant="h4" />
 
           {!!title && (
             <Typography
-              variant="body1"
-              fontWeight={900}
+              variant="h6"
+              fontWeight={FW_BOLD}
               color={resolvedTitle}
-              sx={{ ...titleSx, textAlign: "center", whiteSpace: "normal"}}
+              sx={{ ...titleSx, textAlign: "center", whiteSpace: "normal" }}
               title={title}
             >
               {title}
@@ -309,7 +319,7 @@ const TargetList = ({
           {!!subtitle && (
             <Typography
               variant="caption"
-              fontWeight={700}
+              fontWeight={FW_MED}
               color={resolvedSubtitle}
               sx={{ fontFamily, opacity: 0.9 }}
               title={subtitle}
@@ -319,15 +329,7 @@ const TargetList = ({
           )}
         </Box>
 
-        {/* EXPANDED */}
-        <Box
-          sx={{
-            flex: open ? 1 : "0 0 auto",
-            minHeight: 0,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+        <Box sx={{ flex: open ? 1 : "0 0 auto", minHeight: 0, display: "flex", flexDirection: "column" }}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             {expandedDivider && <Divider sx={{ borderColor: colors.primary[300] }} />}
 
@@ -351,16 +353,12 @@ const TargetList = ({
     );
   }
 
-  // =========================
-  // HORIZONTAL / DASH
-  // =========================
   const iconSize = mediaSize;
   const py = headerPaddingY ?? 1.6;
   const minH = headerMinHeight ?? (iconSize >= 64 ? 84 : 74);
 
   return (
     <Box sx={cardSx} onClick={toggle}>
-      {/* HEADER HORIZONTAL */}
       <Box
         sx={{
           position: "relative",
@@ -380,14 +378,21 @@ const TargetList = ({
 
         <Box sx={{ minWidth: 0, flex: 1 }}>
           {!!title && (
-            <Typography variant="body1" fontWeight={900} color={resolvedTitle} sx={{...titleSx, mb: 0.6}}>
+            <Typography
+              variant="h6"
+              fontWeight={FW_BOLD}
+              color={resolvedTitle}
+              sx={{ ...titleSx, mb: 0.6 }}
+              title={title}
+            >
               {title}
             </Typography>
           )}
+
           {!!subtitle && (
             <Typography
               variant="caption"
-              fontWeight={700}
+              fontWeight={FW_MED}
               color={resolvedSubtitle}
               sx={{
                 fontFamily,
@@ -398,23 +403,17 @@ const TargetList = ({
                 textOverflow: "ellipsis",
                 mt: 0.25,
               }}
+              title={subtitle}
             >
               {subtitle}
             </Typography>
           )}
+
           <ValueWithLabel variant="h4" />
         </Box>
       </Box>
 
-      {/* EXPANDED */}
-      <Box
-        sx={{
-          flex: open ? 1 : "0 0 auto",
-          minHeight: 0,
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      <Box sx={{ flex: open ? 1 : "0 0 auto", minHeight: 0, display: "flex", flexDirection: "column" }}>
         <Collapse in={open} timeout="auto" unmountOnExit>
           {expandedDivider && <Divider sx={{ borderColor: colors.primary[300] }} />}
 

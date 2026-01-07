@@ -52,14 +52,14 @@ const TargetMet = ({
 }) => {
   const colors = tokens();
   const theme = useTheme();
-  const fontFamily = theme.typography?.fontFamily;
+
+  const fontFamily = theme.typography?.fontFamily || "inherit";
+  const FW_BOLD = theme.typography?.fontWeightBold ?? 700;
+  const FW_MED = theme.typography?.fontWeightMedium ?? 600;
+  const FW_REG = theme.typography?.fontWeightRegular ?? 400;
 
   const [open, setOpen] = useState(defaultExpanded);
-
-
   const [activeKey, setActiveKey] = useState(null);
-
-
   const [modalOpen, setModalOpen] = useState(false);
 
   const hasCollapse = detailMode === "collapse" || detailMode === "both";
@@ -80,6 +80,10 @@ const TargetMet = ({
 
   const cardSx = {
     fontFamily,
+    "&, & *": { fontFamily },
+    "& .MuiTypography-root": { fontFamily },
+    "& .MuiListItemText-primary, & .MuiListItemText-secondary": { fontFamily },
+
     backgroundColor: resolvedBg,
     border: `1px solid ${resolvedBorder}`,
     borderRadius: `${radius}px`,
@@ -97,7 +101,6 @@ const TargetMet = ({
 
   const titleSx = titleWrap
     ? {
-        fontFamily,
         lineHeight: 1.15,
         display: "-webkit-box",
         WebkitLineClamp: 2,
@@ -105,7 +108,6 @@ const TargetMet = ({
         overflow: "hidden",
       }
     : {
-        fontFamily,
         lineHeight: 1.05,
         whiteSpace: "nowrap",
         overflow: "hidden",
@@ -138,15 +140,12 @@ const TargetMet = ({
 
   const handleStatClick = (s, idx, e) => {
     e.stopPropagation();
-
     const key = s.key ?? `${s.label}-${idx}`;
-
 
     if (detailMode === "modal") {
       setModalOpen(true);
       return;
     }
-
     if (!hasCollapse) return;
 
     setActiveKey((prev) => (prev === key ? null : key));
@@ -181,7 +180,6 @@ const TargetMet = ({
     );
   };
 
-
   const ExpandIcon = () => (
     <IconButton
       onClick={(e) => {
@@ -191,7 +189,7 @@ const TargetMet = ({
       sx={{
         position: "absolute",
         right: 10,
-        top: 54, 
+        top: 54,
         zIndex: 2,
         width: 36,
         height: 36,
@@ -246,18 +244,18 @@ const TargetMet = ({
       >
         <Typography
           variant="caption"
-          fontWeight={900}
+          fontWeight={FW_BOLD}
           color={colors?.primary?.[100] ?? "inherit"}
-          sx={{ fontFamily, opacity: 0.9 }}
+          sx={{ opacity: 0.9 }}
         >
           {s.label}
         </Typography>
 
         <Typography
           variant="h6"
-          fontWeight={900}
+          fontWeight={FW_BOLD}
           color={colors?.green?.[200] ?? "inherit"}
-          sx={{ fontFamily, lineHeight: 1.1 }}
+          sx={{ lineHeight: 1.1 }}
         >
           {typeof s.value === "number" ? s.value.toLocaleString("es-CL") : s.value}
         </Typography>
@@ -265,7 +263,7 @@ const TargetMet = ({
         {(hasCollapse || detailMode === "modal") && (
           <Typography
             variant="caption"
-            sx={{ fontFamily, opacity: 0.75, display: "block", mt: 0.4 }}
+            sx={{ opacity: 0.75, display: "block", mt: 0.4, fontWeight: FW_REG }}
           >
             {detailMode === "modal"
               ? "Ver detalle"
@@ -292,7 +290,6 @@ const TargetMet = ({
         ))}
       </Box>
 
-
       {hasCollapse && (
         <Collapse in={!!activeStat} timeout="auto" unmountOnExit>
           <Box sx={{ mt: 1.4 }}>
@@ -300,9 +297,9 @@ const TargetMet = ({
 
             <Typography
               variant="body2"
-              fontWeight={900}
+              fontWeight={FW_BOLD}
               color={colors.primary[100]}
-              sx={{ fontFamily, mb: 0.8 }}
+              sx={{ mb: 0.8 }}
             >
               {activeStat?.label}
             </Typography>
@@ -321,7 +318,9 @@ const TargetMet = ({
                     <ListItem>
                       <ListItemText
                         primary="Sin datos"
-                        primaryTypographyProps={{ sx: { fontFamily, opacity: 0.8 } }}
+                        primaryTypographyProps={{
+                          sx: { opacity: 0.8, fontWeight: FW_REG },
+                        }}
                       />
                     </ListItem>
                   ) : (
@@ -339,7 +338,7 @@ const TargetMet = ({
                         <ListItemText
                           primary={txt}
                           primaryTypographyProps={{
-                            sx: { fontFamily, fontSize: 13, opacity: 0.92 },
+                            sx: { fontSize: 13, opacity: 0.92, fontWeight: FW_BOLD },
                           }}
                         />
                       </ListItem>
@@ -360,13 +359,18 @@ const TargetMet = ({
       onClose={() => setModalOpen(false)}
       PaperProps={{
         sx: {
+          fontFamily,
+          "&, & *": { fontFamily },
+          "& .MuiTypography-root": { fontFamily },
+          "& .MuiListItemText-primary, & .MuiListItemText-secondary": { fontFamily },
+
           borderRadius: 2,
           width: "92vw",
           maxWidth: `${modalMaxWidth}px`,
         },
       }}
     >
-      <DialogTitle sx={{ fontFamily, fontWeight: 900 }}>
+      <DialogTitle sx={{ fontWeight: FW_BOLD }}>
         {allDetailsTitle}
       </DialogTitle>
 
@@ -379,8 +383,8 @@ const TargetMet = ({
             <Box key={`modal-${key}`} sx={{ mb: 1.8 }}>
               <Typography
                 variant="body2"
-                fontWeight={900}
-                sx={{ fontFamily, mb: 0.6, color: colors.primary[100] }}
+                fontWeight={FW_BOLD}
+                sx={{ mb: 0.6, color: colors.primary[100] }}
               >
                 {s.label}
               </Typography>
@@ -400,7 +404,7 @@ const TargetMet = ({
                         <ListItemText
                           primary="Sin datos"
                           primaryTypographyProps={{
-                            sx: { fontFamily, opacity: 0.8 },
+                            sx: { opacity: 0.8, fontWeight: FW_REG },
                           }}
                         />
                       </ListItem>
@@ -419,7 +423,7 @@ const TargetMet = ({
                           <ListItemText
                             primary={txt}
                             primaryTypographyProps={{
-                              sx: { fontFamily, fontSize: 13, opacity: 0.92 },
+                              sx: { fontSize: 13, opacity: 0.92, fontWeight: FW_BOLD },
                             }}
                           />
                         </ListItem>
@@ -462,7 +466,7 @@ const TargetMet = ({
             {!!title && (
               <Typography
                 variant="h5"
-                fontWeight={900}
+                fontWeight={FW_BOLD}
                 color={resolvedTitle}
                 sx={{ ...titleSx, textAlign: "center" }}
                 title={title}
@@ -494,7 +498,7 @@ const TargetMet = ({
      HORIZONTAL / DASH
      ============================= */
   const py = headerPaddingY ?? 2.2;
-  const minH = Math.max(headerMinHeight ?? 0, 95); 
+  const minH = Math.max(headerMinHeight ?? 0, 95);
 
   return (
     <>
@@ -518,7 +522,7 @@ const TargetMet = ({
             {!!title && (
               <Typography
                 variant="h6"
-                fontWeight={900}
+                fontWeight={FW_BOLD}
                 color={resolvedTitle}
                 sx={titleSx}
                 title={title}

@@ -99,11 +99,7 @@ const Dashboard = () => {
             display: "grid",
             gridTemplateColumns: "repeat(12, 1fr)",
 
-            gridAutoRows: {
-              xs: "minmax(5px, auto)",
-              sm: "minmax(5px, auto)",
-              md: "minmax(5px, auto)",
-            },
+            gridAutoRows: "auto",
 
             gap: { xs: "10px", sm: "12px", md: "20px" }, 
             alignContent: "start",
@@ -130,8 +126,8 @@ const Dashboard = () => {
           >
             <Box sx={{ height: 42, display: "flex", alignItems: "center", mb: 1.5, }}>
               <Typography
-                variant="h4"
-                fontWeight={900}
+                variant="h3"
+                fontWeight={700}
                 color={colors.primary[100]}
                 sx={{ lineHeight: 1, m: 0, fontFamily: "inherit" }}
               >
@@ -190,7 +186,7 @@ const Dashboard = () => {
               <Clickable to={ROUTES.formacion_niveles}>
                 <TargetMin
                   icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
-                  value={experience.find((c) => c.id === "novel")?.value || 0}
+                  value={experience.find((c) => c.id === "Novel")?.value || 0}
                   title="Novel"
                   titlePosition="bottom"
                   duration={1500}
@@ -202,7 +198,7 @@ const Dashboard = () => {
               <Clickable to={ROUTES.formacion_niveles}>
                 <TargetMin
                   icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
-                  value={experience.find((c) => c.id === "intermedio")?.value || 0}
+                  value={experience.find((c) => c.id === "Intermedio")?.value || 0}
                   title="Intermedio"
                   titlePosition="bottom"
                   duration={1500}
@@ -214,7 +210,7 @@ const Dashboard = () => {
               <Clickable to={ROUTES.formacion_niveles}>
                 <TargetMin
                   icon={<PsychologyIcon sx={{ color: colors.green[200] }} />}
-                  value={experience.find((c) => c.id === "experto")?.value || 0}
+                  value={experience.find((c) => c.id === "Experto")?.value || 0}
                   title="Experto"
                   titlePosition="bottom"
                   duration={1500}
@@ -315,7 +311,12 @@ const Dashboard = () => {
 
             <Box
               display="grid"
-              gridTemplateColumns={{ xs: "repeat(1, 1fr)", md: "repeat(4, 1fr)" }}
+              gridTemplateColumns={{
+                xs: "repeat(1, minmax(0, 1fr))",
+                sm: "repeat(2, minmax(0, 1fr))",
+                md: "repeat(2, minmax(0, 1fr))",
+                lg: "repeat(4, minmax(0, 1fr))",
+              }}
               gap={{ xs: "10px", md: "20px" }}
             >
               <Clickable to={ROUTES.formacion_titulo}>
@@ -591,6 +592,7 @@ const Dashboard = () => {
                   height: "100%", 
                   flexShrink: 0,
                   overflow: "hidden",
+                  
                   // border: "1px solid red",
                 }}
               >

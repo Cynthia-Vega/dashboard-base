@@ -37,12 +37,16 @@ const TargetMin = ({
 }) => {
   const colors = tokens();
   const theme = useTheme();
-  const fontFamily = theme.typography?.fontFamily;
+
+  const fontFamily = theme.typography?.fontFamily || "inherit";
+  const FW_BOLD = theme.typography?.fontWeightBold ?? 700;
+  const FW_MED = theme.typography?.fontWeightMedium ?? 600;
+  const FW_REG = theme.typography?.fontWeightRegular ?? 400;
 
   const [displayValue, setDisplayValue] = useState(0);
 
   const formatted = useMemo(
-    () => displayValue.toLocaleString("es-CL"),
+    () => (Number(displayValue) || 0).toLocaleString("es-CL"),
     [displayValue]
   );
 
@@ -67,8 +71,12 @@ const TargetMin = ({
   const resolvedSubtitle = subtitleColor ?? colors.primary[100];
   const resolvedValue = valueColor ?? colors.green[200];
 
+
   const cardSx = {
     fontFamily,
+    "&, & *": { fontFamily },
+    "& .MuiTypography-root": { fontFamily },
+
     backgroundColor: resolvedBg,
     border: `1px solid ${resolvedBorder}`,
     borderRadius: `${radius}px`,
@@ -126,34 +134,33 @@ const TargetMin = ({
   const ValueWithLabel = ({ variant: v = "h4" }) => (
     <Typography
       variant={v}
-      fontWeight={900}
+      fontWeight={FW_BOLD}
       color={resolvedValue}
-      sx={{ fontFamily, lineHeight: 1, mt: v === "h4" ? 0.2 : 0 }}
+      sx={{ lineHeight: 1, mt: v === "h4" ? 0.2 : 0 }}
     >
       {formatted}
       {!!valueLabel && (
-    <Typography
-      component="span"
-      sx={{
-        ml: 1,
-        fontWeight: 900,
-        opacity: 0.9,
-        fontSize: v === "h2" ? "0.60em" : v === "h3" ? "0.65em" : "0.70em",
-        position: "relative",
-        top: v === "h2" ? "-0.10em" : "-0.08em",
-        verticalAlign: "middle",
-        lineHeight: 1,
-      }}
-    >
-  {valueLabel}
-</Typography>
+        <Typography
+          component="span"
+          sx={{
+            ml: 1,
+            fontWeight: FW_BOLD,
+            opacity: 0.9,
+            fontSize: v === "h2" ? "0.60em" : v === "h3" ? "0.65em" : "0.70em",
+            position: "relative",
+            top: v === "h2" ? "-0.10em" : "-0.08em",
+            verticalAlign: "middle",
+            lineHeight: 1,
+          }}
+        >
+          {valueLabel}
+        </Typography>
       )}
     </Typography>
   );
 
   const titleSx = titleWrap
     ? {
-        fontFamily,
         lineHeight: 1.15,
         display: "-webkit-box",
         WebkitLineClamp: 2,
@@ -161,7 +168,6 @@ const TargetMin = ({
         overflow: "hidden",
       }
     : {
-        fontFamily,
         lineHeight: 1.05,
         whiteSpace: "nowrap",
         overflow: "hidden",
@@ -188,20 +194,19 @@ const TargetMin = ({
             pb: 3,
             minHeight: headerMinHeight ?? 240,
             gap: 1.0,
+            textAlign: "center",
           }}
         >
           {imgSrc ? mediaImage(size) : icon ? mediaCircle(size) : null}
 
-          <Box sx={{ textAlign: "center" }}>
-            <ValueWithLabel variant="h2" />
-          </Box>
+          <ValueWithLabel variant="h2" />
 
           {!!title && (
             <Typography
               variant="h5"
-              fontWeight={900}
+              fontWeight={FW_BOLD}
               color={resolvedTitle}
-              sx={{ ...titleSx, textAlign: "center" }}
+              sx={{ ...titleSx, textAlign: "center", whiteSpace: "normal" }}
               title={title}
             >
               {title}
@@ -210,10 +215,10 @@ const TargetMin = ({
 
           {!!subtitle && (
             <Typography
-              variant="body2"
-              fontWeight={700}
+              variant="caption"
+              fontWeight={FW_MED}
               color={resolvedSubtitle}
-              sx={{ fontFamily, opacity: 0.9, textAlign: "center" }}
+              sx={{ opacity: 0.9, textAlign: "center" }}
               title={subtitle}
             >
               {subtitle}
@@ -249,10 +254,10 @@ const TargetMin = ({
         <Box sx={{ minWidth: 0, flex: 1 }}>
           {!!title && (
             <Typography
-              variant="body1"
-              fontWeight={900}
+              variant="h6"             
+              fontWeight={FW_BOLD}
               color={resolvedTitle}
-              sx={{titleSx, mb:0.6}}
+              sx={{ ...titleSx, mb: 0.6 }}
               title={title}
             >
               {title}
@@ -262,10 +267,9 @@ const TargetMin = ({
           {!!subtitle && (
             <Typography
               variant="caption"
-              fontWeight={700}
+              fontWeight={FW_MED}
               color={resolvedSubtitle}
               sx={{
-                fontFamily,
                 opacity: 0.9,
                 display: "block",
                 whiteSpace: "nowrap",

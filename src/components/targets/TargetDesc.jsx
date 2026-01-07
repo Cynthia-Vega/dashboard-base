@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Box, Typography, Collapse, IconButton, Divider } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { tokens } from "../../theme"; 
+import { tokens } from "../../theme";
 
 const TargetDesc = ({
   title = "",
@@ -36,7 +36,6 @@ const TargetDesc = ({
   defaultExpanded = false,
   onToggle,
 
-
   expandedPaddingTop = 12,
 
   titleWrap = false,
@@ -45,23 +44,28 @@ const TargetDesc = ({
   expandIconPosition = "br",
 
   description = "",
-  descriptionTitle = "", 
+  descriptionTitle = "",
   formadores = "",
+
   items = [],
   renderItem,
+
   maxHeight = 260,
   gap = 10,
-
 }) => {
   const colors = tokens();
   const theme = useTheme();
-  const fontFamily = theme.typography?.fontFamily;
+
+  const fontFamily = theme.typography?.fontFamily || "inherit";
+  const FW_BOLD = theme.typography?.fontWeightBold ?? 700;
+  const FW_MED = theme.typography?.fontWeightMedium ?? 600;
+  const FW_LIST = 600; 
 
   const [displayValue, setDisplayValue] = useState(0);
   const [open, setOpen] = useState(defaultExpanded);
 
   const formatted = useMemo(
-    () => displayValue.toLocaleString("es-CL"),
+    () => (Number(displayValue) || 0).toLocaleString("es-CL"),
     [displayValue]
   );
 
@@ -96,8 +100,12 @@ const TargetDesc = ({
   const resolvedSubtitle = subtitleColor ?? colors.primary[100];
   const resolvedValue = valueColor ?? colors.green[200];
 
+
   const cardSx = {
     fontFamily,
+    "&, & *": { fontFamily },
+    "& .MuiTypography-root": { fontFamily },
+
     backgroundColor: resolvedBg,
     border: `1px solid ${resolvedBorder}`,
     borderRadius: `${radius}px`,
@@ -155,27 +163,28 @@ const TargetDesc = ({
   const ValueWithLabel = ({ variant: v = "h4" }) => (
     <Typography
       variant={v}
-      fontWeight={900}
+      fontWeight={FW_BOLD}
       color={resolvedValue}
       sx={{ fontFamily, lineHeight: 1, mt: v === "h4" ? 0.2 : 0 }}
     >
       {formatted}
       {!!valueLabel && (
-    <Typography
-      component="span"
-      sx={{
-        ml: 1,
-        fontWeight: 900,
-        opacity: 0.9,
-        fontSize: v === "h2" ? "0.60em" : v === "h3" ? "0.65em" : "0.70em",
-        position: "relative",
-        top: v === "h2" ? "-0.10em" : "-0.08em",
-        verticalAlign: "middle",
-        lineHeight: 1,
-      }}
-    >
-  {valueLabel}
-</Typography>
+        <Typography
+          component="span"
+          sx={{
+            fontFamily,
+            ml: 1,
+            fontWeight: FW_BOLD,
+            opacity: 0.9,
+            fontSize: v === "h2" ? "0.60em" : v === "h3" ? "0.65em" : "0.70em",
+            position: "relative",
+            top: v === "h2" ? "-0.10em" : "-0.08em",
+            verticalAlign: "middle",
+            lineHeight: 1,
+          }}
+        >
+          {valueLabel}
+        </Typography>
       )}
     </Typography>
   );
@@ -226,8 +235,17 @@ const TargetDesc = ({
         textOverflow: "ellipsis",
       };
 
-
   const resolvedGap = typeof gap === "number" ? `${gap}px` : gap;
+
+
+  const listItemWrapperSx = {
+    fontFamily,
+    "&, & *": { fontFamily },
+    "& .MuiTypography-root": {
+      fontFamily,
+      fontWeight: `${FW_LIST} !important`,
+    },
+  };
 
   const BodyList = () => (
     <Box
@@ -238,14 +256,19 @@ const TargetDesc = ({
         display: "flex",
         flexDirection: "column",
         gap: resolvedGap,
+        fontFamily,
       }}
     >
       {items.map((item, i) => (
-        <Box key={item?.id ?? i}>
+        <Box key={item?.id ?? i} sx={listItemWrapperSx}>
           {renderItem ? (
             renderItem(item, i)
           ) : (
-            <Typography sx={{ fontFamily }} color={colors.primary[100]} fontWeight={900}>
+            <Typography
+              variant="body2"
+              color={colors.primary[100]}
+              sx={{ fontFamily, fontWeight: FW_LIST, lineHeight: 1.2 }}
+            >
               {String(item)}
             </Typography>
           )}
@@ -253,13 +276,16 @@ const TargetDesc = ({
       ))}
 
       {!items.length && (
-        <Typography color={colors.primary[100]} sx={{ opacity: 0.8, fontFamily }}>
+        <Typography
+          variant="body2"
+          color={colors.primary[100]}
+          sx={{ opacity: 0.8, fontFamily, fontWeight: FW_MED }}
+        >
           No hay participantes asociados.
         </Typography>
       )}
     </Box>
   );
-
 
   const Expanded = () => (
     <Collapse in={open} timeout="auto" unmountOnExit>
@@ -273,16 +299,18 @@ const TargetDesc = ({
               py: 1.1,
               textAlign: "center",
               color: colors.primary[100],
+              fontFamily,
             }}
           >
             {!!descriptionTitle && (
               <Typography
+                variant="body2"
                 sx={{
                   fontFamily,
-                  fontWeight: 900,      
+                  fontWeight: "900 !important",
                   fontSize: "13.8px",
                   lineHeight: 1.2,
-                  mb: 0.5,              
+                  mb: 0.5,
                   whiteSpace: "normal",
                   overflowWrap: "anywhere",
                   wordBreak: "break-word",
@@ -294,10 +322,11 @@ const TargetDesc = ({
 
             {!!formadores && (
               <Typography
+                variant="body2"
                 sx={{
                   fontFamily,
-                  fontStyle: "italic",   
-                  fontWeight: 400,       
+                  fontStyle: "italic",
+                  fontWeight: 400,
                   fontSize: "13.2px",
                   lineHeight: 1.2,
                   mb: 0.55,
@@ -307,14 +336,17 @@ const TargetDesc = ({
                   wordBreak: "break-word",
                 }}
               >
-                {Array.isArray(formadores) ? formadores.filter(Boolean).join(", ") : formadores}
+                {Array.isArray(formadores)
+                  ? formadores.filter(Boolean).join(", ")
+                  : formadores}
               </Typography>
             )}
 
-
             <Typography
+              variant="body2"
               sx={{
                 fontFamily,
+                fontWeight: FW_MED,
                 fontSize: "13.5px",
                 lineHeight: 1.25,
                 whiteSpace: "normal",
@@ -326,17 +358,16 @@ const TargetDesc = ({
             </Typography>
           </Box>
 
-
           <Divider sx={{ borderColor: colors.primary[300], opacity: 0.7 }} />
         </Box>
       )}
-
 
       <Box
         sx={{
           px: 2,
           pt: description ? "12px" : `${expandedPaddingTop}px`,
           pb: 2,
+          fontFamily,
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -377,7 +408,7 @@ const TargetDesc = ({
           {!!title && (
             <Typography
               variant="h5"
-              fontWeight={900}
+              fontWeight={FW_BOLD}
               color={resolvedTitle}
               sx={{ ...titleSx, textAlign: "center" }}
               title={title}
@@ -389,7 +420,7 @@ const TargetDesc = ({
           {!!subtitle && (
             <Typography
               variant="body2"
-              fontWeight={700}
+              fontWeight={FW_MED}
               color={resolvedSubtitle}
               sx={{ fontFamily, opacity: 0.9, textAlign: "center" }}
               title={subtitle}
@@ -432,10 +463,10 @@ const TargetDesc = ({
         <Box sx={{ minWidth: 0, flex: 1 }}>
           {!!title && (
             <Typography
-              variant="body1"
-              fontWeight={900}
+              variant="h6"          
+              fontWeight={FW_BOLD}
               color={resolvedTitle}
-              sx={{titleSx, mb:0.6,}}
+              sx={{ ...titleSx, mb: 0.6 }}
               title={title}
             >
               {title}
@@ -445,7 +476,7 @@ const TargetDesc = ({
           {!!subtitle && (
             <Typography
               variant="caption"
-              fontWeight={700}
+              fontWeight={FW_MED}
               color={resolvedSubtitle}
               sx={{
                 fontFamily,
