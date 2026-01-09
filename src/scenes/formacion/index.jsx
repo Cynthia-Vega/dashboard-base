@@ -37,23 +37,11 @@ const PROGRAM_KEYS = [
 
 const Formacion = () => {
   const colors = tokens();
-  const { loading, frecuencyData, rawData } = ParticipantesData();
+  const { loading, frecuencyData, rawData, displayName, personKey } = ParticipantesData();
 
   if (loading) return <div>Cargando datos…</div>;
 
   const safeRaw = Array.isArray(rawData) ? rawData : [];
-
-  const displayName = (row) =>
-    String(row?.["Nombre y apellido"] ?? "").trim() ||
-    String(row?.username ?? "").trim() ||
-    String(row?.rut ?? "").trim() ||
-    "Sin nombre";
-
-
-  const personKey = (row) =>
-    String(row?.rut ?? "").trim() ||
-    String(row?.username ?? "").trim() ||
-    String(displayName(row)).trim();
 
 
   const uniqueNamesByValue = (columnName, valueToMatch) => {

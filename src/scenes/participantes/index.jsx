@@ -11,88 +11,13 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 const TablaParticipantes = () => {
   const colors = tokens();
 
-  const {
-    loading,
-    rawData,
-    isMarked: isMarkedFromData,
-    detectEventColumns: detectEventColumnsFromData,
-  } = ParticipantesData();
-
-
-  const isMarked =
-    isMarkedFromData ??
-    ((v) => {
-      if (v === null || v === undefined) return false;
-      if (typeof v === "number") return v !== 0 && !Number.isNaN(v);
-      if (typeof v === "boolean") return v;
-      const s = String(v).trim().toLowerCase();
-      if (!s) return false;
-      return ["1", "x", "si", "sí", "true", "ok", "✔"].includes(s);
-    });
-
-  const detectEventColumns =
-    detectEventColumnsFromData ??
-    ((columns) => ({
-      tallerCols: columns.filter((c) => /^taller/i.test(c)),
-      reunionCols: columns.filter((c) => /^reuni[oó]n/i.test(c)),
-      encuentroCols: columns.filter((c) => /encuentro/i.test(c)),
-      lanzamientoCols: columns.filter((c) => /lanzamiento/i.test(c)),
-    }));
+  const { loading, rawData, isMarked, detectEventColumns, pickFirst, programasTextFromRow, sumMarkedKeys, countMarkedInColumns } = ParticipantesData();
 
   if (loading) return <div>Cargando datos…</div>;
 
   const cols = rawData?.length ? Object.keys(rawData[0]) : [];
   const { tallerCols, reunionCols, encuentroCols } =
     detectEventColumns(cols);
-
-
-  const pick = (row, keys) => {
-    for (const k of keys) {
-      if (row?.[k] !== undefined) return row[k];
-    }
-    return undefined;
-  };
-
-
-  const countCell = (v) => {
-    if (v === null || v === undefined) return 0;
-    if (typeof v === "number" && Number.isFinite(v)) return v;
-    return isMarked(v) ? 1 : 0;
-  };
-
-
-  const sumKeys = (row, keys) => keys.reduce((acc, k) => acc + countCell(row?.[k]), 0);
-
-  const getProgramasText = (row) => {
-    const v = row?.programa_categorias_str;
-
-    const arr = Array.isArray(v)
-      ? v
-      : !v
-      ? []
-      : String(v).split(/[;,|]/g).map((x) => x.trim());
-
-   
-    const seen = new Set();
-    let cleaned = arr
-      .map((x) => String(x ?? "").trim())
-      .filter(Boolean)
-      .filter((x) => {
-        const k = x.toLowerCase();
-        if (seen.has(k)) return false;
-        seen.add(k);
-        return true;
-      });
-
-
-    const idx = cleaned.findIndex((x) => x.toLowerCase() === "otras carreras");
-    if (idx !== -1) {
-      const [oc] = cleaned.splice(idx, 1);
-      cleaned.push(oc);
-    }
-
-    return cleaned.join(", ");
-  };
 
   const renderCheck = ({ value }) => (
     <Typography
@@ -106,32 +31,31 @@ const TablaParticipantes = () => {
 
 
   const rows = (rawData ?? []).map((r, idx) => {
-    const countInCols = (arr) =>
-      arr.reduce((acc, c) => acc + (isMarked(r[c]) ? 1 : 0), 0);
+    const countInCols = (arr) => countMarkedInColumns(r, arr);
 
     const finalizo = isMarked(
-      pick(r, ["CURSO - Finalizaron módulos", "CURSO - Finalizaron modulos"])
+      pickFirst(r, ["CURSO - Finalizaron módulos", "CURSO - Finalizaron modulos"])
     );
 
 
-    const trabajoCount = sumKeys(r, [
+    const trabajoCount = sumMarkedKeys(r, [
       "Presenta Osorno",
     ]);
 
-    const posterCount = sumKeys(r, ["Presenta Magallanes"]);
+    const posterCount = sumMarkedKeys(r, ["Presenta Magallanes"]);
 
 
     const presentaciones = trabajoCount + posterCount;
 
     const adjudicaFondo = isMarked(
-      pick(r, [
+      pickFirst(r, [
         "Adjudica fondo proyecto innovación",
         "Adjudica fondo proyecto innovacion",
       ])
     );
 
     const participaNumeroEspecial = isMarked(
-      pick(r, ["Participa Numero Especial", "Participa Número Especial"])
+      pickFirst(r, ["Participa Numero Especial", "Participa Número Especial"])
     );
 
     const talleres = countInCols(tallerCols);
@@ -156,7 +80,7 @@ const TablaParticipantes = () => {
       talleres,
       reuniones,
       participaciones,
-      programas: getProgramasText(r),
+      programas: programasTextFromRow(r),
       finalizo_curso: finalizo,
       presentaciones, 
       adjudica_fondo: adjudicaFondo,

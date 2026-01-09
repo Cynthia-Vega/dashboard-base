@@ -1,8 +1,16 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+// shared hooks handle state
 import { Box, Typography, Collapse, IconButton, Divider } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { tokens } from "../../theme";
+import {
+  getFontPack,
+  getTitleSx,
+  TargetMedia,
+  useCountUp,
+  useIOSSafeToggle,
+  ValueWithLabel,
+} from "./targetShared";
 
 const TargetList = ({
   title = "",
@@ -55,51 +63,14 @@ const TargetList = ({
   const colors = tokens();
   const theme = useTheme();
 
-  const fontFamily = theme.typography?.fontFamily || "inherit";
+  const { fontFamily, FW_BOLD, FW_MED } = getFontPack(theme);
   const FW_LIST = 600;
-  const FW_BOLD = theme.typography?.fontWeightBold ?? 700;
-  const FW_MED = theme.typography?.fontWeightMedium ?? 600;
 
-  const [displayValue, setDisplayValue] = useState(0);
-  const [open, setOpen] = useState(defaultExpanded);
-
-  // ✅ iOS: evita doble toggle (touch -> click)
-  const ignoreClickRef = useRef(false);
-  const lastToggleRef = useRef(0);
-
-  const safeToggle = () => {
-    const now = Date.now();
-    if (now - lastToggleRef.current < 350) return; // anti doble-fire
-    lastToggleRef.current = now;
-
-    setOpen((prev) => {
-      const next = !prev;
-      onToggle?.(next);
-      return next;
-    });
-  };
-
-  const formatted = useMemo(
-    () => (Number(displayValue) || 0).toLocaleString("es-CL"),
-    [displayValue]
-  );
-
-  useEffect(() => {
-    let raf;
-    const start = performance.now();
-    const target = Number(value) || 0;
-
-    const animate = (now) => {
-      const p = Math.min((now - start) / duration, 1);
-      setDisplayValue(Math.floor(p * target));
-      if (p < 1) raf = requestAnimationFrame(animate);
-    };
-
-    raf = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(raf);
-  }, [value, duration]);
-
-  useEffect(() => setOpen(defaultExpanded), [defaultExpanded]);
+  const { formatted } = useCountUp({ value, duration, locale: "es-CL" });
+  const { open, cardHandlers, iconHandlers, touchSx } = useIOSSafeToggle({
+    defaultOpen: defaultExpanded,
+    onToggle,
+  });
 
   const resolvedBg = bgColor ?? colors.primary[200];
   const resolvedBorder = borderColor ?? "rgba(0,0,0,0.10)";
@@ -124,100 +95,22 @@ const TargetList = ({
     display: "flex",
     flexDirection: "column",
     height: "100%",
-    // ✅ iOS: reduce delay/doble tap zoom issues
-    touchAction: "manipulation",
-    WebkitTapHighlightColor: "transparent",
+    ...touchSx,
     ...sx,
   };
 
-  const mediaCircle = (size) => (
-    <Box
-      sx={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        display: "grid",
-        placeItems: "center",
-        flexShrink: 0,
-        border: `1px solid ${resolvedBorder}`,
-        backgroundColor: "rgba(0,0,0,0.03)",
-        overflow: "hidden",
-        "& svg": { width: "68%", height: "68%", fontSize: "unset !important" },
-      }}
-    >
-      {icon}
-    </Box>
-  );
-
-  const mediaImage = (size) => (
-    <Box
-      component="img"
-      src={imgSrc}
-      alt={title}
-      sx={{
-        width: size,
-        height: size,
-        flexShrink: 0,
-        border: `1px solid ${resolvedBorder}`,
-        backgroundColor: "rgba(255,255,255,0.75)",
-        overflow: "hidden",
-        borderRadius: imgRound ? "50%" : "12px",
-        objectFit: imgFit,
-        p: imgFit === "contain" ? 0.6 : 0,
-        boxSizing: "border-box",
-      }}
-    />
-  );
-
-  const ValueWithLabel = ({ variant: v = "h4" }) => (
-    <Typography
-      variant={v}
-      fontWeight={FW_BOLD}
-      color={resolvedValue}
-      sx={{ fontFamily, lineHeight: 1, mt: v === "h4" ? 0.2 : 0 }}
-    >
-      {formatted}
-      {!!valueLabel && (
-        <Typography
-          component="span"
-          sx={{
-            fontFamily,
-            ml: 1,
-            fontWeight: FW_BOLD,
-            opacity: 0.9,
-            fontSize: v === "h2" ? "0.60em" : v === "h3" ? "0.65em" : "0.70em",
-            position: "relative",
-            top: v === "h2" ? "-0.10em" : "-0.08em",
-            verticalAlign: "middle",
-            lineHeight: 1,
-          }}
-        >
-          {valueLabel}
-        </Typography>
-      )}
-    </Typography>
-  );
+  const titleSx = getTitleSx({ titleWrap, fontFamily, withFamily: true });
 
   const expandIconSx =
     expandIconPosition === "tr" ? { right: 10, top: 10 } : { right: 10, bottom: 10 };
 
   const ExpandIcon = () => (
     <IconButton
-      onClick={(e) => {
-        e.stopPropagation();
-        if (ignoreClickRef.current) return;
-        safeToggle();
-      }}
-      onTouchEnd={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        ignoreClickRef.current = true;
-        safeToggle();
-        window.setTimeout(() => (ignoreClickRef.current = false), 450);
-      }}
+      {...iconHandlers}
       sx={{
         position: "absolute",
         ...expandIconSx,
+        ...touchSx,
         color: colors.primary[100],
         transform: open ? "rotate(180deg)" : "rotate(0deg)",
         transition: "transform .2s ease",
@@ -232,23 +125,6 @@ const TargetList = ({
       <ExpandMoreIcon />
     </IconButton>
   );
-
-  const titleSx = titleWrap
-    ? {
-        fontFamily,
-        lineHeight: 1.15,
-        display: "-webkit-box",
-        WebkitLineClamp: 2,
-        WebkitBoxOrient: "vertical",
-        overflow: "hidden",
-      }
-    : {
-        fontFamily,
-        lineHeight: 1.05,
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-      };
 
   const resolvedGap = typeof gap === "number" ? `${gap}px` : gap;
 
@@ -293,19 +169,6 @@ const TargetList = ({
     </Box>
   );
 
-  const handleCardClick = () => {
-    if (ignoreClickRef.current) return;
-    safeToggle();
-  };
-
-  const handleCardTouchEnd = (e) => {
-    // ✅ toggle por touch + bloquea click fantasma
-    e.preventDefault();
-    ignoreClickRef.current = true;
-    safeToggle();
-    window.setTimeout(() => (ignoreClickRef.current = false), 450);
-  };
-
   const isHero = variant === "hero" || orientation === "vertical";
 
   if (isHero) {
@@ -313,7 +176,7 @@ const TargetList = ({
     const minH = headerMinHeight ?? 240;
 
     return (
-      <Box sx={cardSx} onClick={handleCardClick} onTouchEnd={handleCardTouchEnd}>
+      <Box sx={cardSx} {...cardHandlers}>
         <Box
           sx={{
             position: "relative",
@@ -331,8 +194,26 @@ const TargetList = ({
           }}
         >
           <ExpandIcon />
-          {imgSrc ? mediaImage(iconSize) : icon ? mediaCircle(iconSize) : null}
-          <ValueWithLabel variant="h4" />
+
+          <TargetMedia
+            imgSrc={imgSrc}
+            icon={icon}
+            size={iconSize}
+            title={title}
+            imgFit={imgFit}
+            imgRound={imgRound}
+            border={resolvedBorder}
+          />
+
+          <ValueWithLabel
+            variant="h4"
+            formatted={formatted}
+            valueLabel={valueLabel}
+            fontFamily={fontFamily}
+            fontWeight={FW_BOLD}
+            color={resolvedValue}
+            sx={{ mt: 0.2 }}
+          />
 
           {!!title && (
             <Typography
@@ -389,7 +270,7 @@ const TargetList = ({
   const minH = headerMinHeight ?? (iconSize >= 64 ? 84 : 74);
 
   return (
-    <Box sx={cardSx} onClick={handleCardClick} onTouchEnd={handleCardTouchEnd}>
+    <Box sx={cardSx} {...cardHandlers}>
       <Box
         sx={{
           position: "relative",
@@ -405,7 +286,16 @@ const TargetList = ({
         }}
       >
         <ExpandIcon />
-        {imgSrc ? mediaImage(iconSize) : icon ? mediaCircle(iconSize) : null}
+
+        <TargetMedia
+          imgSrc={imgSrc}
+          icon={icon}
+          size={iconSize}
+          title={title}
+          imgFit={imgFit}
+          imgRound={imgRound}
+          border={resolvedBorder}
+        />
 
         <Box sx={{ minWidth: 0, flex: 1 }}>
           {!!title && (
@@ -440,7 +330,15 @@ const TargetList = ({
             </Typography>
           )}
 
-          <ValueWithLabel variant="h4" />
+          <ValueWithLabel
+            variant="h4"
+            formatted={formatted}
+            valueLabel={valueLabel}
+            fontFamily={fontFamily}
+            fontWeight={FW_BOLD}
+            color={resolvedValue}
+            sx={{ mt: 0.2 }}
+          />
         </Box>
       </Box>
 

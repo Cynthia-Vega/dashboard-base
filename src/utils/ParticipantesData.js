@@ -25,7 +25,7 @@ function frecuency(data, columnName) {
   }));
 }
 
-function isMarked(v) {
+export function isMarked(v) {
   if (v === null || v === undefined) return false;
 
   if (typeof v === "number") return v !== 0 && !Number.isNaN(v);
@@ -41,6 +41,105 @@ function getColumns(data) {
   if (!Array.isArray(data) || data.length === 0) return [];
   return Object.keys(data[0] || {});
 }
+
+
+/** ============================
+ *  Helpers reutilizables (Scenes)
+ *  ============================ */
+
+export const normText = (v) => String(v ?? "").trim();
+
+export function displayName(row) {
+  return (
+    normText(row?.["Nombre y apellido"]) ||
+    normText(row?.username) ||
+    normText(row?.rut) ||
+    "Sin nombre"
+  );
+}
+
+export function personKey(row) {
+  return normText(row?.rut) || normText(row?.username) || normText(displayName(row));
+}
+
+export function pickFirst(row, keys = []) {
+  const arr = Array.isArray(keys) ? keys : [keys];
+  for (const k of arr) {
+    if (k == null) continue;
+    if (row?.[k] !== undefined) return row[k];
+  }
+  return undefined;
+}
+
+export function programasTextFromRow(row, col = "programa_categorias_str") {
+  const v = row?.[col];
+
+  const arr = Array.isArray(v)
+    ? v
+    : !v
+    ? []
+    : String(v).split(/[;,|]/g).map((x) => x.trim());
+
+  const seen = new Set();
+  let cleaned = arr
+    .map((x) => String(x ?? "").trim())
+    .filter(Boolean)
+    .filter((x) => {
+      const k = x.toLowerCase();
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+
+  // "Otras carreras" al final
+  const idx = cleaned.findIndex((x) => x.toLowerCase() === "otras carreras");
+  if (idx !== -1) {
+    const [oc] = cleaned.splice(idx, 1);
+    cleaned.push(oc);
+  }
+
+  return cleaned.join(", ");
+}
+
+export function sumMarkedKeys(row, keys = [], isMarkedFn = isMarked) {
+  const arr = Array.isArray(keys) ? keys : [keys];
+  return arr.reduce((acc, k) => acc + (isMarkedFn(row?.[k]) ? 1 : 0), 0);
+}
+
+export function countMarkedInColumns(row, columns = [], isMarkedFn = isMarked) {
+  const cols = Array.isArray(columns) ? columns : [];
+  return cols.reduce((acc, c) => acc + (isMarkedFn(row?.[c]) ? 1 : 0), 0);
+}
+
+export function detectEventColumns(columns = [], opts = {}) {
+  const cols = Array.isArray(columns) ? columns.map((c) => String(c)) : [];
+
+  const {
+    excludeMatchers = [
+      /^curso\s*-/i,
+      /^compromiso/i,
+      /^consentimiento/i,
+      /^direcci[oó]n de correo/i,
+      /^id$/i,
+    ],
+    tallerRx = /^taller/i,
+    reunionRx = /^reuni[oó]n/i,
+    encuentroRx = /encuentro/i,
+    lanzamientoRx = /lanzamiento/i,
+    webinarRx = /webinar/i,
+  } = opts;
+
+  const filtered = cols.filter((c) => !excludeMatchers.some((rx) => rx.test(c)));
+
+  return {
+    tallerCols: filtered.filter((c) => tallerRx.test(c)),
+    reunionCols: filtered.filter((c) => reunionRx.test(c)),
+    encuentroCols: filtered.filter((c) => encuentroRx.test(c)),
+    lanzamientoCols: filtered.filter((c) => lanzamientoRx.test(c)),
+    webinarCols: filtered.filter((c) => webinarRx.test(c)),
+  };
+}
+
 
 
 function eventsFrequencyAll(data, opts = {}) {
@@ -398,6 +497,15 @@ function regionStats() {
   return {
     loading,
     rawData,     
+    // helpers (para evitar duplicación en Scenes)
+    isMarked,
+    detectEventColumns,
+    pickFirst,
+    programasTextFromRow,
+    displayName,
+    personKey,
+    sumMarkedKeys,
+    countMarkedInColumns,
     frecuencyData,   
     cumulativeFrequencyData,
     eventsData,

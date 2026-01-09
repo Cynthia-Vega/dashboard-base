@@ -1,7 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { tokens } from "../../theme";
+import {
+  getFontPack,
+  getTitleSx,
+  TargetMedia,
+  useCountUp,
+  ValueWithLabel,
+} from "./targetShared";
 
 const TargetMin = ({
   title = "",
@@ -38,32 +44,8 @@ const TargetMin = ({
   const colors = tokens();
   const theme = useTheme();
 
-  const fontFamily = theme.typography?.fontFamily || "inherit";
-  const FW_BOLD = theme.typography?.fontWeightBold ?? 700;
-  const FW_MED = theme.typography?.fontWeightMedium ?? 600;
-  const FW_REG = theme.typography?.fontWeightRegular ?? 400;
-
-  const [displayValue, setDisplayValue] = useState(0);
-
-  const formatted = useMemo(
-    () => (Number(displayValue) || 0).toLocaleString("es-CL"),
-    [displayValue]
-  );
-
-  useEffect(() => {
-    let raf;
-    const start = performance.now();
-    const target = Number(value) || 0;
-
-    const animate = (now) => {
-      const p = Math.min((now - start) / duration, 1);
-      setDisplayValue(Math.floor(p * target));
-      if (p < 1) raf = requestAnimationFrame(animate);
-    };
-
-    raf = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(raf);
-  }, [value, duration]);
+  const { fontFamily, FW_BOLD, FW_MED } = getFontPack(theme);
+  const { formatted } = useCountUp({ value, duration, locale: "es-CL" });
 
   const resolvedBg = bgColor ?? colors.primary[200];
   const resolvedBorder = borderColor ?? "rgba(0,0,0,0.10)";
@@ -92,87 +74,7 @@ const TargetMin = ({
     ...sx,
   };
 
-  const mediaCircle = (size) => (
-    <Box
-      sx={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        display: "grid",
-        placeItems: "center",
-        flexShrink: 0,
-        border: `1px solid ${resolvedBorder}`,
-        backgroundColor: "rgba(0,0,0,0.03)",
-        overflow: "hidden",
-        "& svg": { width: "68%", height: "68%", fontSize: "unset !important" },
-      }}
-    >
-      {icon}
-    </Box>
-  );
-
-  const mediaImage = (size) => (
-    <Box
-      component="img"
-      src={imgSrc}
-      alt={title}
-      sx={{
-        width: size,
-        height: size,
-        flexShrink: 0,
-        border: `1px solid ${resolvedBorder}`,
-        backgroundColor: "rgba(255,255,255,0.75)",
-        overflow: "hidden",
-        borderRadius: imgRound ? "50%" : "12px",
-        objectFit: imgFit,
-        p: imgFit === "contain" ? 0.6 : 0,
-        boxSizing: "border-box",
-      }}
-    />
-  );
-
-  const ValueWithLabel = ({ variant: v = "h4" }) => (
-    <Typography
-      variant={v}
-      fontWeight={FW_BOLD}
-      color={resolvedValue}
-      sx={{ lineHeight: 1, mt: v === "h4" ? 0.2 : 0 }}
-    >
-      {formatted}
-      {!!valueLabel && (
-        <Typography
-          component="span"
-          sx={{
-            ml: 1,
-            fontWeight: FW_BOLD,
-            opacity: 0.9,
-            fontSize: v === "h2" ? "0.60em" : v === "h3" ? "0.65em" : "0.70em",
-            position: "relative",
-            top: v === "h2" ? "-0.10em" : "-0.08em",
-            verticalAlign: "middle",
-            lineHeight: 1,
-          }}
-        >
-          {valueLabel}
-        </Typography>
-      )}
-    </Typography>
-  );
-
-  const titleSx = titleWrap
-    ? {
-        lineHeight: 1.15,
-        display: "-webkit-box",
-        WebkitLineClamp: 2,
-        WebkitBoxOrient: "vertical",
-        overflow: "hidden",
-      }
-    : {
-        lineHeight: 1.05,
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-      };
+  const titleSx = getTitleSx({ titleWrap, fontFamily, withFamily: false });
 
   /* =============================
      VERTICAL / HERO
@@ -197,9 +99,24 @@ const TargetMin = ({
             textAlign: "center",
           }}
         >
-          {imgSrc ? mediaImage(size) : icon ? mediaCircle(size) : null}
+          <TargetMedia
+            imgSrc={imgSrc}
+            icon={icon}
+            size={size}
+            title={title}
+            imgFit={imgFit}
+            imgRound={imgRound}
+            border={resolvedBorder}
+          />
 
-          <ValueWithLabel variant="h2" />
+          <ValueWithLabel
+            variant="h2"
+            formatted={formatted}
+            valueLabel={valueLabel}
+            fontFamily={fontFamily}
+            fontWeight={FW_BOLD}
+            color={resolvedValue}
+          />
 
           {!!title && (
             <Typography
@@ -249,7 +166,15 @@ const TargetMin = ({
           minHeight: minH,
         }}
       >
-        {imgSrc ? mediaImage(iconSize) : icon ? mediaCircle(iconSize) : null}
+        <TargetMedia
+          imgSrc={imgSrc}
+          icon={icon}
+          size={iconSize}
+          title={title}
+          imgFit={imgFit}
+          imgRound={imgRound}
+          border={resolvedBorder}
+        />
 
         <Box sx={{ minWidth: 0, flex: 1 }}>
           {!!title && (
@@ -283,7 +208,15 @@ const TargetMin = ({
             </Typography>
           )}
 
-          <ValueWithLabel variant="h4" />
+          <ValueWithLabel
+            variant="h4"
+            formatted={formatted}
+            valueLabel={valueLabel}
+            fontFamily={fontFamily}
+            fontWeight={FW_BOLD}
+            color={resolvedValue}
+            sx={{ mt: 0.2 }}
+          />
         </Box>
       </Box>
     </Box>

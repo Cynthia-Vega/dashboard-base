@@ -6,7 +6,7 @@ import TargetList from "../../components/targets/TargetList";
 
 const Universidades = () => {
   const colors = tokens();
-  const { loading, frecuencyData, universityImage, rawData } = ParticipantesData();
+  const { loading, frecuencyData, universityImage, rawData, displayName } = ParticipantesData();
   if (loading) return <div>Cargando datos…</div>;
 
   const universidadesData = frecuencyData("nombre_universidad");
@@ -14,12 +14,6 @@ const Universidades = () => {
   const sorted = [...universidadesData].sort(
     (a, b) => (b.value ?? 0) - (a.value ?? 0)
   );
-
-  const displayName = (row) =>
-    String(row?.["Nombre y apellido"] ?? "").trim() ||
-    row?.username ||
-    row?.rut ||
-    "Sin nombre";
 
   return (
     <Box m="20px" ml="5px" pb="100px">
