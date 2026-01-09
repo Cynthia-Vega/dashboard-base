@@ -181,7 +181,7 @@ const parseDateFromId = (id) => {
 export const ENCUENTROS_CONFIG = {
   title: "Encuentros Nacionales de Formadores de Profesores",
   iconKey: "groups",
-  valueLabel: "participaciones",
+  valueLabel: "participantes",
   filter: (id) => /encuentro/i.test(String(id)),
   sort: (a, b) => orderByList(ENCUENTRO_ORDER, String(a.id), String(b.id)),
   meta: ENCUENTRO_META,
@@ -190,7 +190,7 @@ export const ENCUENTROS_CONFIG = {
 export const REUNIONES_CONFIG = {
   title: "REUNIONES",
   iconKey: "eventNote",
-  valueLabel: "participaciones",
+  valueLabel: "participantes",
   filter: (id) => /^reuni[oó]n/i.test(String(id)),
   sort: (a, b) => parseDateFromId(a.id) - parseDateFromId(b.id),
   meta: REUNION_META,
@@ -199,7 +199,7 @@ export const REUNIONES_CONFIG = {
 export const TALLERES_2025_CONFIG = {
   title: "TALLERES 2025",
   iconKey: "handyman",
-  valueLabel: "participaciones",
+  valueLabel: "participantes",
   filter: (id) => /^taller/i.test(String(id)) && /2025/.test(String(id)),
   sort: (a, b) => String(a.id).localeCompare(String(b.id), "es"),
   meta: TALLER_META,
@@ -208,7 +208,7 @@ export const TALLERES_2025_CONFIG = {
 export const TALLERES_2024_CONFIG = {
   title: "TALLERES 2024",
   iconKey: "handyman",
-  valueLabel: "participaciones",
+  valueLabel: "participantes",
   filter: (id) => /^taller/i.test(String(id)) && /2024/.test(String(id)),
   sort: (a, b) => String(a.id).localeCompare(String(b.id), "es"),
   meta: TALLER_META,
@@ -217,7 +217,7 @@ export const TALLERES_2024_CONFIG = {
 export const TALLERES_2023_CONFIG = {
   title: "TALLERES 2023",
   iconKey: "handyman",
-  valueLabel: "participaciones",
+  valueLabel: "participantes",
   filter: (id) => /^taller/i.test(String(id)) && /2023/.test(String(id)),
   sort: (a, b) => String(a.id).localeCompare(String(b.id), "es"),
   meta: TALLER_META,
@@ -226,7 +226,7 @@ export const TALLERES_2023_CONFIG = {
 export const WEBINARS_CONFIG = {
   title: "WEBINARS",
   iconKey: "videocam",
-  valueLabel: "participaciones",
+  valueLabel: "participantes",
   filter: (id) => /webinar/i.test(String(id)),
   sort: (a, b) => String(a.id).localeCompare(String(b.id), "es"),
   meta: WEBINAR_META,

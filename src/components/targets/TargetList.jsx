@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Box, Typography, Collapse, IconButton, Divider } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -56,12 +56,28 @@ const TargetList = ({
   const theme = useTheme();
 
   const fontFamily = theme.typography?.fontFamily || "inherit";
-  const FW_LIST = 600; 
+  const FW_LIST = 600;
   const FW_BOLD = theme.typography?.fontWeightBold ?? 700;
   const FW_MED = theme.typography?.fontWeightMedium ?? 600;
 
   const [displayValue, setDisplayValue] = useState(0);
   const [open, setOpen] = useState(defaultExpanded);
+
+  // ✅ iOS: evita doble toggle (touch -> click)
+  const ignoreClickRef = useRef(false);
+  const lastToggleRef = useRef(0);
+
+  const safeToggle = () => {
+    const now = Date.now();
+    if (now - lastToggleRef.current < 350) return; // anti doble-fire
+    lastToggleRef.current = now;
+
+    setOpen((prev) => {
+      const next = !prev;
+      onToggle?.(next);
+      return next;
+    });
+  };
 
   const formatted = useMemo(
     () => (Number(displayValue) || 0).toLocaleString("es-CL"),
@@ -84,14 +100,6 @@ const TargetList = ({
   }, [value, duration]);
 
   useEffect(() => setOpen(defaultExpanded), [defaultExpanded]);
-
-  const toggle = () => {
-    setOpen((prev) => {
-      const next = !prev;
-      onToggle?.(next);
-      return next;
-    });
-  };
 
   const resolvedBg = bgColor ?? colors.primary[200];
   const resolvedBorder = borderColor ?? "rgba(0,0,0,0.10)";
@@ -116,6 +124,9 @@ const TargetList = ({
     display: "flex",
     flexDirection: "column",
     height: "100%",
+    // ✅ iOS: reduce delay/doble tap zoom issues
+    touchAction: "manipulation",
+    WebkitTapHighlightColor: "transparent",
     ...sx,
   };
 
@@ -188,15 +199,21 @@ const TargetList = ({
   );
 
   const expandIconSx =
-    expandIconPosition === "tr"
-      ? { right: 10, top: 10 }
-      : { right: 10, bottom: 10 };
+    expandIconPosition === "tr" ? { right: 10, top: 10 } : { right: 10, bottom: 10 };
 
   const ExpandIcon = () => (
     <IconButton
       onClick={(e) => {
         e.stopPropagation();
-        toggle();
+        if (ignoreClickRef.current) return;
+        safeToggle();
+      }}
+      onTouchEnd={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        ignoreClickRef.current = true;
+        safeToggle();
+        window.setTimeout(() => (ignoreClickRef.current = false), 450);
       }}
       sx={{
         position: "absolute",
@@ -276,6 +293,19 @@ const TargetList = ({
     </Box>
   );
 
+  const handleCardClick = () => {
+    if (ignoreClickRef.current) return;
+    safeToggle();
+  };
+
+  const handleCardTouchEnd = (e) => {
+    // ✅ toggle por touch + bloquea click fantasma
+    e.preventDefault();
+    ignoreClickRef.current = true;
+    safeToggle();
+    window.setTimeout(() => (ignoreClickRef.current = false), 450);
+  };
+
   const isHero = variant === "hero" || orientation === "vertical";
 
   if (isHero) {
@@ -283,7 +313,7 @@ const TargetList = ({
     const minH = headerMinHeight ?? 240;
 
     return (
-      <Box sx={cardSx} onClick={toggle}>
+      <Box sx={cardSx} onClick={handleCardClick} onTouchEnd={handleCardTouchEnd}>
         <Box
           sx={{
             position: "relative",
@@ -344,6 +374,7 @@ const TargetList = ({
                 flexDirection: "column",
               }}
               onClick={(e) => e.stopPropagation()}
+              onTouchEnd={(e) => e.stopPropagation()}
             >
               <BodyList />
             </Box>
@@ -358,7 +389,7 @@ const TargetList = ({
   const minH = headerMinHeight ?? (iconSize >= 64 ? 84 : 74);
 
   return (
-    <Box sx={cardSx} onClick={toggle}>
+    <Box sx={cardSx} onClick={handleCardClick} onTouchEnd={handleCardTouchEnd}>
       <Box
         sx={{
           position: "relative",
@@ -428,6 +459,7 @@ const TargetList = ({
               flexDirection: "column",
             }}
             onClick={(e) => e.stopPropagation()}
+            onTouchEnd={(e) => e.stopPropagation()}
           >
             <BodyList />
           </Box>

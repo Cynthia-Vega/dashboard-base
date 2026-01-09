@@ -16,6 +16,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import CloseIcon from "@mui/icons-material/Close";
 import { tokens } from "../../theme";
 
 const TargetMet = ({
@@ -68,6 +69,13 @@ const TargetMet = ({
   const resolvedBg = bgColor ?? colors.primary[200];
   const resolvedBorder = borderColor ?? "rgba(0,0,0,0.10)";
   const resolvedTitle = titleColor ?? colors.primary[100];
+
+  // Accent “seguro” por si tu tokens no tiene colors.green
+  const ACCENT =
+    colors?.greenAccent?.[500] ??
+    colors?.green?.[200] ??
+    colors?.primary?.[100] ??
+    "#2e7d32";
 
   const toggle = () => {
     setOpen((prev) => {
@@ -254,7 +262,7 @@ const TargetMet = ({
         <Typography
           variant="h6"
           fontWeight={FW_BOLD}
-          color={colors?.green?.[200] ?? "inherit"}
+          color={colors?.green?.[200] ?? ACCENT}
           sx={{ lineHeight: 1.1 }}
         >
           {typeof s.value === "number" ? s.value.toLocaleString("es-CL") : s.value}
@@ -353,58 +361,163 @@ const TargetMet = ({
     </Box>
   );
 
-  const DetailsModal = () => (
-    <Dialog
-      open={modalOpen}
-      onClose={() => setModalOpen(false)}
-      PaperProps={{
-        sx: {
-          fontFamily,
-          "&, & *": { fontFamily },
-          "& .MuiTypography-root": { fontFamily },
-          "& .MuiListItemText-primary, & .MuiListItemText-secondary": { fontFamily },
+const DetailsModal = () => (
+  <Dialog
+    open={modalOpen}
+    onClose={() => setModalOpen(false)}
+    PaperProps={{
+      sx: {
+        fontFamily,
+        "&, & *": { fontFamily },
+        "& .MuiTypography-root": { fontFamily },
+        "& .MuiListItemText-primary, & .MuiListItemText-secondary": { fontFamily },
 
-          borderRadius: 2,
-          width: "92vw",
-          maxWidth: `${modalMaxWidth}px`,
-        },
+        borderRadius: 3,
+        width: "92vw",
+        maxWidth: `${modalMaxWidth}px`,
+        overflow: "hidden",
+
+        background: `linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(236,236,236,1) 100%)`,
+        border: `1px solid ${colors.primary[300]}`,
+        boxShadow: "0 18px 40px rgba(0,0,0,0.20)",
+      },
+    }}
+  >
+
+    <DialogTitle
+      sx={{
+        px: 2.2,
+        py: 1.6,
+        borderBottom: `1px solid ${colors.primary[300]}`,
+        backgroundColor: "rgba(255,255,255,0.55)",
       }}
     >
-      <DialogTitle sx={{ fontWeight: FW_BOLD }}>
-        {allDetailsTitle}
-      </DialogTitle>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 1.5,
+        }}
+      >
+        <Box sx={{ minWidth: 0 }}>
+          <Typography
+            sx={{
+              fontWeight: FW_BOLD,
+              fontSize: 18,
+              lineHeight: 1.15,
+              color: colors.primary[100],
+            }}
+          >
+            {allDetailsTitle}
+          </Typography>
 
-      <DialogContent sx={{ pt: 1, maxHeight: "70vh", overflowY: "auto" }}>
+   
+          <Typography
+            sx={{
+              mt: 0.35,
+              fontSize: 12.5,
+              opacity: 0.75,
+              color: colors.primary[100],
+            }}
+          >
+            Desglose por categoría
+          </Typography>
+        </Box>
+
+        <IconButton
+          onClick={() => setModalOpen(false)}
+          sx={{
+            width: 36,
+            height: 36,
+            border: `1px solid ${colors.primary[300]}`,
+            backgroundColor: "rgba(255,255,255,0.65)",
+            "&:hover": { backgroundColor: "rgba(255,255,255,0.90)" },
+            color: colors.primary[100],
+            flex: "0 0 auto",
+          }}
+        >
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </Box>
+    </DialogTitle>
+
+    <DialogContent
+      sx={{
+        pt: 1.4,
+        pb: 2,
+        px: 2.2,
+        maxHeight: "70vh",
+        overflowY: "auto",
+      }}
+    >
+
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 1.6 }}>
         {stats.map((s, i) => {
           const key = s.key ?? `${s.label}-${i}`;
           const items = normalizeItems(s.items);
 
           return (
-            <Box key={`modal-${key}`} sx={{ mb: 1.8 }}>
-              <Typography
-                variant="body2"
-                fontWeight={FW_BOLD}
-                sx={{ mb: 0.6, color: colors.primary[100] }}
-              >
-                {s.label}
-              </Typography>
+            <Box key={`modal-${key}`}>
 
               <Box
                 sx={{
+                  display: "flex",
+                  alignItems: "baseline",
+                  justifyContent: "space-between",
+                  gap: 1,
+                  mb: 0.7,
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontWeight: FW_BOLD,
+                    fontSize: 15.5,
+                    color: colors.primary[100],
+                  }}
+                >
+                  {s.label}
+                </Typography>
+
+                <Typography
+                  sx={{
+                    fontSize: 12.5,
+                    fontWeight: FW_MED,
+                    opacity: 0.75,
+                    color: colors.primary[100],
+                  }}
+                >
+                  {items.length}
+                </Typography>
+              </Box>
+
+
+              <Box
+                sx={{
+                  borderRadius: 2,
                   border: `1px solid ${colors.primary[300]}`,
-                  borderRadius: "10px",
-                  backgroundColor: "rgba(255,255,255,0.55)",
+                  backgroundColor: "rgba(255,255,255,0.60)",
                   overflow: "hidden",
                 }}
               >
-                <Box sx={{ maxHeight: 220, overflowY: "auto" }}>
-                  <List dense sx={{ py: 0 }}>
+                <Box
+                  sx={{
+                    maxHeight: 160,          
+                    overflowY: "auto",
+                  }}
+                >
+                  <List dense sx={{ py: 0.6 }}>
                     {items.length === 0 ? (
-                      <ListItem>
+                      <ListItem sx={{ py: 0.6 }}>
                         <ListItemText
                           primary="Sin datos"
                           primaryTypographyProps={{
-                            sx: { opacity: 0.8, fontWeight: FW_REG },
+                            sx: {
+                              opacity: 0.75,
+                              fontStyle: "italic",
+                              fontSize: 13,
+                              fontWeight: FW_REG,
+                            },
                           }}
                         />
                       </ListItem>
@@ -413,17 +526,38 @@ const TargetMet = ({
                         <ListItem
                           key={`modal-${key}-item-${idx}`}
                           sx={{
-                            py: 0.6,
+                            py: 0.5,
+                            px: 1.4,
+                            
+                            display: "flex",
+                            alignItems: "center",
                             borderBottom:
                               idx === items.length - 1
                                 ? "none"
                                 : `1px solid ${colors.primary[300]}`,
                           }}
                         >
+                          
+                          <Box
+                            sx={{
+                              mr: 1.2,
+                              width: 6,
+                              height: 6,
+                              borderRadius: "50%",
+                              backgroundColor: ACCENT,
+                              opacity: 0.9,
+                              flex: "0 0 auto",
+                            }}
+                          />
                           <ListItemText
                             primary={txt}
                             primaryTypographyProps={{
-                              sx: { fontSize: 13, opacity: 0.92, fontWeight: FW_BOLD },
+                              sx: {
+                                fontSize: 13.2,
+                                lineHeight: 1.3,
+                                opacity: 0.92,
+                                fontWeight: FW_MED,
+                              },
                             }}
                           />
                         </ListItem>
@@ -435,9 +569,11 @@ const TargetMet = ({
             </Box>
           );
         })}
-      </DialogContent>
-    </Dialog>
-  );
+      </Box>
+    </DialogContent>
+  </Dialog>
+);
+
 
   /* =============================
      VERTICAL / HERO

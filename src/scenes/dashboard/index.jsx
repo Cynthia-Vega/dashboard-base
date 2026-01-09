@@ -243,7 +243,7 @@ const Dashboard = () => {
                 color={colors.primary[100]}
                 sx={{ lineHeight: 1, m: 0, fontFamily: "inherit" }}
               >
-                GRADO
+                GRADO ACADÉMICO
               </Typography>
             </Box>
 
@@ -436,7 +436,7 @@ const Dashboard = () => {
                 color={colors.primary[100]}
                 sx={{ lineHeight: 1, m: 0, fontFamily: "inherit" }}
               >
-                TRAYECTORIA RedFID
+                CRECIMIENTO RedFID
               </Typography>
             </Box>
 
