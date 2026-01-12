@@ -1,11 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Box, Typography } from "@mui/material";
 
-/**
- * Helpers compartidos para Targets.
- * - Evita duplicación de count-up, estilos de título y media (img/icon)
- * - Incluye toggle seguro para iOS (touch -> click doble)
- */
 
 export const getFontPack = (theme) => {
   const fontFamily = theme.typography?.fontFamily || "inherit";
@@ -157,63 +152,4 @@ export const ValueWithLabel = ({
   );
 };
 
-/**
- * Toggle seguro para iOS:
- * - Evita doble fire de touch -> click
- * - Debounce de toggles para que no "parpadee"
- */
-export const useIOSSafeToggle = ({ defaultOpen = false, onToggle, debounceMs = 350 } = {}) => {
-  const [open, setOpen] = useState(defaultOpen);
 
-  const ignoreClickRef = useRef(false);
-  const lastToggleRef = useRef(0);
-
-  useEffect(() => setOpen(defaultOpen), [defaultOpen]);
-
-  const toggle = () => {
-    const now = Date.now();
-    if (now - lastToggleRef.current < debounceMs) return;
-    lastToggleRef.current = now;
-
-    setOpen((prev) => {
-      const next = !prev;
-      onToggle?.(next);
-      return next;
-    });
-  };
-
-  const cardHandlers = {
-    onClick: () => {
-      if (ignoreClickRef.current) return;
-      toggle();
-    },
-    onTouchEnd: (e) => {
-      e.preventDefault();
-      ignoreClickRef.current = true;
-      toggle();
-      window.setTimeout(() => (ignoreClickRef.current = false), 450);
-    },
-  };
-
-  const iconHandlers = {
-    onClick: (e) => {
-      e.stopPropagation();
-      if (ignoreClickRef.current) return;
-      toggle();
-    },
-    onTouchEnd: (e) => {
-      e.stopPropagation();
-      e.preventDefault();
-      ignoreClickRef.current = true;
-      toggle();
-      window.setTimeout(() => (ignoreClickRef.current = false), 450);
-    },
-  };
-
-  const touchSx = {
-    touchAction: "manipulation",
-    WebkitTapHighlightColor: "transparent",
-  };
-
-  return { open, setOpen, toggle, cardHandlers, iconHandlers, touchSx };
-};

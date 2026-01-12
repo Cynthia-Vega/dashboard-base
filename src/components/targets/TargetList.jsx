@@ -1,14 +1,14 @@
-// shared hooks handle state
+import React, { useEffect, useState } from "react";
 import { Box, Typography, Collapse, IconButton, Divider } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { tokens } from "../../theme";
+
 import {
   getFontPack,
   getTitleSx,
   TargetMedia,
   useCountUp,
-  useIOSSafeToggle,
   ValueWithLabel,
 } from "./targetShared";
 
@@ -67,10 +67,26 @@ const TargetList = ({
   const FW_LIST = 600;
 
   const { formatted } = useCountUp({ value, duration, locale: "es-CL" });
-  const { open, cardHandlers, iconHandlers, touchSx } = useIOSSafeToggle({
-    defaultOpen: defaultExpanded,
-    onToggle,
-  });
+
+
+  const [open, setOpen] = useState(!!defaultExpanded);
+
+  useEffect(() => {
+    setOpen(!!defaultExpanded);
+  }, [defaultExpanded]);
+
+  const toggle = () => {
+    setOpen((prev) => {
+      const next = !prev;
+      onToggle?.(next);
+      return next;
+    });
+  };
+
+  const touchSx = {
+    touchAction: "manipulation",
+    WebkitTapHighlightColor: "transparent",
+  };
 
   const resolvedBg = bgColor ?? colors.primary[200];
   const resolvedBorder = borderColor ?? "rgba(0,0,0,0.10)";
@@ -102,11 +118,16 @@ const TargetList = ({
   const titleSx = getTitleSx({ titleWrap, fontFamily, withFamily: true });
 
   const expandIconSx =
-    expandIconPosition === "tr" ? { right: 10, top: 10 } : { right: 10, bottom: 10 };
+    expandIconPosition === "tr"
+      ? { right: 10, top: 10 }
+      : { right: 10, bottom: 10 };
 
   const ExpandIcon = () => (
     <IconButton
-      {...iconHandlers}
+      onClick={(e) => {
+        e.stopPropagation();
+        toggle();
+      }}
       sx={{
         position: "absolute",
         ...expandIconSx,
@@ -176,7 +197,7 @@ const TargetList = ({
     const minH = headerMinHeight ?? 240;
 
     return (
-      <Box sx={cardSx} {...cardHandlers}>
+      <Box sx={cardSx} onClick={toggle}>
         <Box
           sx={{
             position: "relative",
@@ -254,8 +275,7 @@ const TargetList = ({
                 display: "flex",
                 flexDirection: "column",
               }}
-              onClick={(e) => e.stopPropagation()}
-              onTouchEnd={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()} 
             >
               <BodyList />
             </Box>
@@ -270,7 +290,7 @@ const TargetList = ({
   const minH = headerMinHeight ?? (iconSize >= 64 ? 84 : 74);
 
   return (
-    <Box sx={cardSx} {...cardHandlers}>
+    <Box sx={cardSx} onClick={toggle}>
       <Box
         sx={{
           position: "relative",
@@ -357,7 +377,6 @@ const TargetList = ({
               flexDirection: "column",
             }}
             onClick={(e) => e.stopPropagation()}
-            onTouchEnd={(e) => e.stopPropagation()}
           >
             <BodyList />
           </Box>

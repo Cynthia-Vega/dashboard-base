@@ -509,7 +509,7 @@ export async function parseExcel(participantesFile, encuestaFile) {
 
     const newRows = renameCols(cleaned, Columns);
 
-    console.log("Merge final:", newRows.slice(0, 3));
+    // console.log("Merge final:", newRows.slice(0, 3));
     return newRows;
   } catch (error) {
     console.error("Error en parseExcel (participantes + encuesta + merge):", error);

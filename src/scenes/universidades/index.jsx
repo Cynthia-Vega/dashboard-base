@@ -2,11 +2,12 @@ import { Box, Typography } from "@mui/material";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
 import { ParticipantesData } from "../../utils/ParticipantesData";
-import TargetList from "../../components/targets/TargetList"; 
+import TargetDesc from "../../components/targets/TargetDesc";
 
 const Universidades = () => {
   const colors = tokens();
-  const { loading, frecuencyData, universityImage, rawData, displayName } = ParticipantesData();
+  const { loading, frecuencyData, universityImage, rawData, displayName } =
+    ParticipantesData();
   if (loading) return <div>Cargando datos…</div>;
 
   const universidadesData = frecuencyData("nombre_universidad");
@@ -41,7 +42,7 @@ const Universidades = () => {
           );
 
           return (
-            <TargetList
+            <TargetDesc
               key={u.id}
               variant="hero"
               fullWidth
@@ -54,12 +55,12 @@ const Universidades = () => {
               imgFit="contain"
               imgRound={false}
               valueLabel="formadores/as"
+              description=""     
               items={participants}
               maxHeight={260}
               gap={0}
               renderItem={(p, i) => {
                 const nameShown = displayName(p);
-
                 const key = `${uniName}-${p?.rut ?? p?.username ?? i}`;
 
                 return (

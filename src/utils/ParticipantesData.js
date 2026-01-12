@@ -313,7 +313,7 @@ function getUniImgSrc(universityName) {
   return `/assets/universities/${ref.folder}/${ref.file}`;
 }
 
-// ✅ Reutilizable: listado único + ordenado de participantes para una columna binaria (evento)
+
 export const getParticipantsList = (
   usersEventsFn,
   colName,
@@ -322,10 +322,10 @@ export const getParticipantsList = (
 ) => {
   if (!colName || typeof usersEventsFn !== "function") return [];
 
-  const raw = usersEventsFn(colName, nameField); // <- usa tu usersEvents(binCol, userCol)
+  const raw = usersEventsFn(colName, nameField); 
   const arr = Array.isArray(raw) ? raw : [];
 
-  // limpia + dedup
+
   const cleaned = arr
     .map((x) => String(x ?? "").trim())
     .filter(Boolean);
@@ -344,7 +344,7 @@ export function ParticipantesData() {
     async function load() {
       try {
         const merged = await parseExcel("/participantes.xlsx", "/encuesta.xlsx");
-        console.log("JSON limpio desde Excel:", merged);
+        // console.log("JSON limpio desde Excel:", merged);
         setRawData(merged);
       } catch (err) {
         console.error("Error cargando datos de participantes:", err);
@@ -377,7 +377,7 @@ const programsCategoryCounts = () => {
     });
   });
 
-  console.log(counts)
+  // console.log(counts)
   return [
     { id: "educacion_media", label: "Educación Media", value: counts.educacion_media },
     { id: "educacion_basica", label: "Educación Básica", value: counts.educacion_basica },
@@ -423,7 +423,7 @@ function regionStats() {
       const pRaw = norm(r?.["Nombre y apellido"]);
       if (pRaw) participantsSet.add(pRaw);
 
-      // Universidades (según tu columna)
+      // Universidades 
       const uRaw = norm(r?.["nombre_universidad"]);
       if (uRaw) universitiesSet.add(uRaw);
 
@@ -497,7 +497,6 @@ function regionStats() {
   return {
     loading,
     rawData,     
-    // helpers (para evitar duplicación en Scenes)
     isMarked,
     detectEventColumns,
     pickFirst,

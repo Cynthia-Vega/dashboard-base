@@ -1,4 +1,4 @@
-// (no React hooks needed here; shared hooks handle state)
+import React, { useEffect, useState } from "react";
 import { Box, Typography, Collapse, IconButton, Divider } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -8,7 +8,6 @@ import {
   getTitleSx,
   TargetMedia,
   useCountUp,
-  useIOSSafeToggle,
   ValueWithLabel,
 } from "./targetShared";
 
@@ -69,17 +68,32 @@ const TargetDesc = ({
 
   const { formatted } = useCountUp({ value, duration, locale: "es-CL" });
 
-  const { open, cardHandlers, iconHandlers, touchSx } = useIOSSafeToggle({
-    defaultOpen: defaultExpanded,
-    onToggle,
-  });
+  
+  const [open, setOpen] = useState(!!defaultExpanded);
+
+  useEffect(() => {
+    setOpen(!!defaultExpanded);
+  }, [defaultExpanded]);
+
+  const toggle = () => {
+    setOpen((prev) => {
+      const next = !prev;
+      onToggle?.(next);
+      return next;
+    });
+  };
+
+  
+  const touchSx = {
+    touchAction: "manipulation",
+    WebkitTapHighlightColor: "transparent",
+  };
 
   const resolvedBg = bgColor ?? colors.primary[200];
   const resolvedBorder = borderColor ?? "rgba(0,0,0,0.10)";
   const resolvedTitle = titleColor ?? colors.primary[100];
   const resolvedSubtitle = subtitleColor ?? colors.primary[100];
   const resolvedValue = valueColor ?? colors.green[200];
-
 
   const cardSx = {
     fontFamily,
@@ -110,7 +124,10 @@ const TargetDesc = ({
 
   const ExpandIcon = () => (
     <IconButton
-      {...iconHandlers}
+      onClick={(e) => {
+        e.stopPropagation();
+        toggle();
+      }}
       sx={{
         position: "absolute",
         ...expandIconSx,
@@ -131,9 +148,7 @@ const TargetDesc = ({
   );
 
   const titleSx = getTitleSx({ titleWrap, fontFamily, withFamily: true });
-
   const resolvedGap = typeof gap === "number" ? `${gap}px` : gap;
-
 
   const listItemWrapperSx = {
     fontFamily,
@@ -280,7 +295,7 @@ const TargetDesc = ({
     const size = Math.max(96, mediaSize);
 
     return (
-      <Box sx={cardSx} {...cardHandlers}>
+      <Box sx={cardSx} onClick={toggle}>
         <Box
           sx={{
             position: "relative",
@@ -356,7 +371,7 @@ const TargetDesc = ({
   const minH = headerMinHeight ?? (iconSize >= 64 ? 84 : 74);
 
   return (
-    <Box sx={cardSx} {...cardHandlers}>
+    <Box sx={cardSx} onClick={toggle}>
       <Box
         sx={{
           position: "relative",
@@ -385,7 +400,7 @@ const TargetDesc = ({
         <Box sx={{ minWidth: 0, flex: 1 }}>
           {!!title && (
             <Typography
-              variant="h6"          
+              variant="h6"
               fontWeight={FW_BOLD}
               color={resolvedTitle}
               sx={{ ...titleSx, mb: 0.6 }}
