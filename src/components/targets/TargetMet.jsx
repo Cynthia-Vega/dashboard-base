@@ -70,12 +70,6 @@ const TargetMet = ({
   const resolvedBorder = borderColor ?? "rgba(0,0,0,0.10)";
   const resolvedTitle = titleColor ?? colors.primary[100];
 
-  // Accent “seguro” por si tu tokens no tiene colors.green
-  const ACCENT =
-    colors?.greenAccent?.[500] ??
-    colors?.green?.[200] ??
-    colors?.primary?.[100] ??
-    "#2e7d32";
 
   const toggle = () => {
     setOpen((prev) => {
@@ -233,8 +227,8 @@ const TargetMet = ({
           p: "10px 12px",
           border: `1px solid ${
             isActive
-              ? (colors?.green?.[200] ?? "rgba(0,0,0,0.25)")
-              : (colors?.primary?.[200] ?? "rgba(0,0,0,0.08)")
+              ? (colors.green[200] ?? "rgba(0,0,0,0.25)")
+              : (colors.primary[200] ?? "rgba(0,0,0,0.08)")
           }`,
           cursor: hasCollapse || detailMode === "modal" ? "pointer" : "default",
           outline: "none",
@@ -253,7 +247,7 @@ const TargetMet = ({
         <Typography
           variant="caption"
           fontWeight={FW_BOLD}
-          color={colors?.primary?.[100] ?? "inherit"}
+          color={colors.primary[100] ?? "inherit"}
           sx={{ opacity: 0.9 }}
         >
           {s.label}
@@ -262,7 +256,7 @@ const TargetMet = ({
         <Typography
           variant="h6"
           fontWeight={FW_BOLD}
-          color={colors?.green?.[200] ?? ACCENT}
+          color={colors.green[200]}
           sx={{ lineHeight: 1.1 }}
         >
           {typeof s.value === "number" ? s.value.toLocaleString("es-CL") : s.value}
@@ -544,7 +538,7 @@ const DetailsModal = () => (
                               width: 6,
                               height: 6,
                               borderRadius: "50%",
-                              backgroundColor: ACCENT,
+                              backgroundColor: colors.green[200],
                               opacity: 0.9,
                               flex: "0 0 auto",
                             }}
