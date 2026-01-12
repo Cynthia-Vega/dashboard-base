@@ -473,68 +473,57 @@ const Dashboard = () => {
               </Typography>
             </Box>
 
-            <Box flex="1" minHeight={0} overflow="auto">
+
+            <Box flex="1" minHeight={0} overflow="auto" sx={{ pr: 1, WebkitOverflowScrolling: "touch" }}>
               {universidades.map((uni, i) => {
-                const name = uni.label || uni.id || "Universidad";
+                const name = (uni.label || uni.id || "Universidad").trim();
                 const imgSrc = universityImage(name);
 
                 return (
-                  <Clickable key={`${uni.id}-${i}`} to={ROUTES.universidades}>
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      borderBottom={`4px solid ${colors.primary[200]}`}
-                      p="12px"
-                      pl="0px"
-                      gap="12px"
-                    >
-                      <Box display="flex" alignItems="center" gap="10px" minWidth={0}>
-                        {imgSrc ? (
-                          <Box
-                            component="img"
-                            src={imgSrc}
-                            alt={name}
-                            sx={{ width: 26, height: 26, objectFit: "contain", flexShrink: 0 }}
-                          />
-                        ) : (
-                          <Box
-                            sx={{
-                              width: 26,
-                              height: 26,
-                              borderRadius: "50%",
-                              backgroundColor: colors.primary[300],
-                              flexShrink: 0,
-                            }}
-                          />
-                        )}
+                  <Clickable key={`${uni.id}-${i}`} to={ROUTES.universidades} style={{ textDecoration: "none" }}>
+                    <TargetMin
+                      fullWidth
+                      title={name}
+                      titleWrap
+                      value={uni.value ?? 0}
+                      valueLabel="personas"
+                      imgSrc={imgSrc}
+                      mediaSize={35}
+                      imgFit="contain"
+                      imgRound={false}
+                      bgColor="transparent"
+                      shadow={false}
+                      sx={{
+                        py: 0,
+                        px: 0,
+                        mb: 0,
 
-                        <Typography
-                          color={colors.green[200]}
-                          variant="h5"
-                          fontWeight="600"
-                          noWrap
-                          sx={{ minWidth: 0, fontFamily: "inherit" }}
-                          title={name}
-                        >
-                          {name}
-                        </Typography>
-                      </Box>
+                        border: "none !important",
+                        boxShadow: "none !important",
+                        transform: "none !important",
+                        borderRadius: 0,
+                        "&:hover": {
+                          boxShadow: "none !important",
+                          transform: "none !important",
+                        },
 
-                      <Box
-                        backgroundColor={colors.green[200]}
-                        p="6px 16px"
-                        borderRadius="4px"
-                        whiteSpace="nowrap"
-                        flexShrink={0}
-                      >
-                        {uni.value} personas
-                      </Box>
-                    </Box>
+                        "& img": {
+                          border: "none !important",
+                          backgroundColor: "transparent !important",
+                          padding: "0 !important",
+                          boxShadow: "none !important",
+                        },
+
+                        "& .MuiBox-root": {
+                          backgroundColor: "transparent",
+                        },
+                      }}
+                    />
                   </Clickable>
                 );
               })}
-            </Box>
+</Box>
+
           </Box>
         </Box>
 

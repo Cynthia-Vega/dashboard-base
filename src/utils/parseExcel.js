@@ -86,9 +86,9 @@ const colsToRemove = [
 ];
 
 const PROGRAM_LABEL = {
-  educacion_media: "Educación Media",
-  educacion_basica: "Educación Básica",
-  educacion_parvularia: "Educación Parvularia",
+  educacion_media: "Educación en Media",
+  educacion_basica: "Educación en Básica",
+  educacion_parvularia: "Educación en Parvularia",
   formacion_pedagogica: "Formación pedagógica",
   postgrado: "Postgrado",
   otras_carreras: "Otras carreras",

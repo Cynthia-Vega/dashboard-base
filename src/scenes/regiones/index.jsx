@@ -157,8 +157,8 @@ const Regiones = () => {
     items: r.stats.universidades_items,
   },
   {
-    key: "carreras",
-    label: "Carreras",
+    key: "título profesional",
+    label: "Título profesional",
     value: r.stats.carreras,
     items: r.stats.carreras_items,
   },

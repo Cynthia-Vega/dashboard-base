@@ -46,6 +46,7 @@ const Universidades = () => {
               key={u.id}
               variant="hero"
               fullWidth
+              titleWrap
               title={uniName}
               value={u.value ?? 0}
               imgSrc={imgSrc}

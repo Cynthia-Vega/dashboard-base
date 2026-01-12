@@ -379,9 +379,9 @@ const programsCategoryCounts = () => {
 
   // console.log(counts)
   return [
-    { id: "educacion_media", label: "Educación Media", value: counts.educacion_media },
-    { id: "educacion_basica", label: "Educación Básica", value: counts.educacion_basica },
-    { id: "educacion_parvularia", label: "Educación Parvularia", value: counts.educacion_parvularia },
+    { id: "educacion_media", label: "Educación en Media", value: counts.educacion_media },
+    { id: "educacion_basica", label: "Educación en Básica", value: counts.educacion_basica },
+    { id: "educacion_parvularia", label: "Educación en Parvularia", value: counts.educacion_parvularia },
     { id: "formacion_pedagogica", label: "Formación pedagógica", value: counts.formacion_pedagogica },
     { id: "postgrado", label: "Postgrado", value: counts.postgrado },
     { id: "otras_carreras", label: "Otras carreras", value: counts.otras_carreras },
@@ -392,14 +392,8 @@ const programsCategoryCounts = () => {
 function regionStats() {
   if (!Array.isArray(rawData)) return {};
 
-  const norm = (v) => String(v ?? "").trim();
 
-  const titleCase = (s) =>
-    String(s ?? "")
-      .toLowerCase()
-      .replace(/\s+/g, " ")
-      .trim()
-      .replace(/(^|\s|[-(])([a-záéíóúñ])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+  const norm = (v) => String(v ?? "").replace(/\s+/g, " ").trim();
 
   const by = new Map();
 
@@ -423,7 +417,7 @@ function regionStats() {
       const pRaw = norm(r?.["Nombre y apellido"]);
       if (pRaw) participantsSet.add(pRaw);
 
-      // Universidades 
+      // Universidades
       const uRaw = norm(r?.["nombre_universidad"]);
       if (uRaw) universitiesSet.add(uRaw);
 
@@ -446,21 +440,22 @@ function regionStats() {
       });
     });
 
-    const participantes_items = Array.from(participantsSet)
-      .map(titleCase)
-      .sort((a, b) => a.localeCompare(b, "es"));
 
-    const universidades_items = Array.from(universitiesSet)
-      .map(titleCase)
-      .sort((a, b) => a.localeCompare(b, "es"));
+    const participantes_items = Array.from(participantsSet).sort((a, b) =>
+      a.localeCompare(b, "es")
+    );
 
-    const carreras_items = Array.from(careersSet)
-      .map(titleCase)
-      .sort((a, b) => a.localeCompare(b, "es"));
+    const universidades_items = Array.from(universitiesSet).sort((a, b) =>
+      a.localeCompare(b, "es")
+    );
 
-    const programas_items = Array.from(programsSet)
-      .map(titleCase)
-      .sort((a, b) => a.localeCompare(b, "es"));
+    const carreras_items = Array.from(careersSet).sort((a, b) =>
+      a.localeCompare(b, "es")
+    );
+
+    const programas_items = Array.from(programsSet).sort((a, b) =>
+      a.localeCompare(b, "es")
+    );
 
     out[String(rid)] = {
       region_id: String(rid),
@@ -479,6 +474,7 @@ function regionStats() {
 
   return out;
 }
+
 
 
 

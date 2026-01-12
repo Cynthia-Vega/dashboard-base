@@ -23,9 +23,9 @@ const nivelDescById = {
 const norm = (x) => String(x ?? "").trim().toLowerCase();
 
 const PROGRAM_KEYS = [
-  { id: "educacion_parvularia", label: "Educación Párvularia" },
-  { id: "educacion_basica", label: "Educación Básica" },
-  { id: "educacion_media", label: "Educación Media" },
+  { id: "educacion_parvularia", label: "Educación en Párvularia" },
+  { id: "educacion_basica", label: "Educación en Básica" },
+  { id: "educacion_media", label: "Educación en Media" },
   { id: "formacion_pedagogica", label: "Formación pedagógica" },
   { id: "postgrado", label: "Postgrado" },
   { id: "otras_carreras", label: "Otras carreras" },
@@ -190,6 +190,7 @@ const Formacion = () => {
                 key={n.id ?? label}
                 variant="dash"
                 fullWidth
+                titleWrap
                 icon={<GroupsIcon sx={{ color: colors.green[200] }} />}
                 bgColor={colors.primary[200]}
                 sx={{ minHeight: 84, borderRadius: "18px" }}
@@ -229,6 +230,7 @@ const Formacion = () => {
               <TargetDesc
                 key={g.id}
                 variant="dash"
+                titleWrap
                 fullWidth
                 icon={<GroupsIcon sx={{ color: colors.green[200] }} />}
                 bgColor={colors.primary[200]}
@@ -270,6 +272,7 @@ const Formacion = () => {
                 key={t.id}
                 variant="dash"
                 fullWidth
+                titleWrap
                 icon={<GroupsIcon sx={{ color: colors.green[200] }} />}
                 bgColor={colors.primary[200]}
                 sx={{ minHeight: 84, borderRadius: "18px" }}
@@ -306,6 +309,7 @@ const Formacion = () => {
               key={p.id}
               variant="dash"
               fullWidth
+              titleWrap
               icon={<GroupsIcon sx={{ color: colors.green[200] }} />}
               bgColor={colors.primary[200]}
               sx={{ minHeight: 84, borderRadius: "18px" }}
